@@ -1,0 +1,14 @@
+{
+  "name": "javatutor-online",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "build": "make_xhrfs_index listings.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browserfs": "^1.4.3"
+  }
+}
