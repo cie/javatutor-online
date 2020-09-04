@@ -1,10 +1,85 @@
+<meta charset=utf-8>
+<meta name=viewport value="device-width: 100%; inital-scale: 1">
+<title>JavaTutor</title>
 <script src="https://cdn.jsdelivr.net/npm/alpine-webcomponent@1.x.x"></script>
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.6.0/dist/alpine.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gun@0.2020.520/gun.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gun@0.2020.520/lib/open.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/alpine-gun@0.0.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/browserfs@1.4.3"></script>
-<script src="https://cdn.jsdelivr.net/npm/doppiojvm@0.5.0"></script>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.20.0/min/vs/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.20.0/min/vs/editor/editor.main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.20.0/min/vs/basic-languages/java/java.min.js"></script>
+
+<template x-webcomponent="code-editor">
+  <main x-data="{
+      options: {
+        language: 'java'
+      }
+    }"
+    x-init="require(['vs/editor/editor.main', 'vs/basic-languages/java/java'], _ => {
+      monaco.editor.setTheme('vs-dark')
+      const editor = window.editor = monaco.editor.create($el.querySelector('.editor', options));
+      monaco.editor.setModelLanguage(editor.getModel(), 'java');
+      window.addEventListener('resize', () => editor.layout())
+    })">
+    <div class="editor"></div>
+    <style>
+      @import url(https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.css);
+    </style>
+  </main>
+  <style>
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #1e1e1e;
+      padding: 8px 0;
+    }
+    .editor {
+      width: 100vw;
+      height: 70vh;
+    }
+  </style>
+</template>
+
+<template x-webcomponent="menu-bar">
+  <style>
+    :host {
+      display: block;
+      height: 42px;
+      display: flex;
+      background: #2a2a2a;
+    }
+  </style>
+</template>
+
+<template x-webcomponent="nav-breadcrumb">
+  <nav>
+  </nav>
+  <style>
+    
+  </style>
+</template>
+
+<style>
+  html, body {
+    margin: 0; height: 100%; padding: 0;
+    overflow: hidden;
+  }
+  *, *::before, *::after {
+    box-sizing: content-box;
+  }
+</style>
+
+<menu-bar>
+  <nav-breadcrumb/>
+</menu-bar>
+<code-editor/>
 
 
-helo
+
+
+
+

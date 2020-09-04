@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "browserfs": "^1.4.3"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.20.0"
   }
 }
