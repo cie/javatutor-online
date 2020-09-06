@@ -73,11 +73,17 @@
   }
 </style>
 
-<menu-bar>
-  <nav-breadcrumb/>
-</menu-bar>
-<code-editor/>
-
+<main x-data="{path: (location.hash || '#/').substr(1)}" @hashchange.window="path = (location.hash || '#/').substr(1)">
+  <template x-if="path=='/'">
+    <a href="#/task/arrays/hi">Arrays</a>
+  </template>
+  <template x-if="path.startsWith('/task/')">
+    <menu-bar>
+      <nav-breadcrumb/>
+    </menu-bar>
+    <code-editor/>
+  </template>
+</main>
 
 
 
