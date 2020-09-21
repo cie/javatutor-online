@@ -1,0 +1,60 @@
+{
+  "projectName": "JavaTutor",
+  "description": "",
+  "features": [
+    {
+      "name": "Bubbles UI",
+      "order": 0,
+      "description": "",
+      "documentation": "<p>The bubble appears.</p>\n<p>It has a tail.</p>\n<p>It is yellow.</p>",
+      "categories": "Java code(I): something(\"\"\"\n    public class {\n        int x;\n\n        public static void main(String[] args) {\n\n        }\n    }\n    \"\"\")\nBubble(O): #present\nBubble content(O): Hello World; \nHint(I): Hello World (\"Hello <i>World</i>\");\nHint line number(I): 6",
+      "constraints": "PRECONDITION Welcome IS done \n\nbubble appears: \nWHEN Hint IS Hello World \nTHEN Bubble IS #present \n AND Bubble content IS Hello World\n\nbubble is moved:\nWHEN Java code IS something \nWHEN Hint IS Hello World AND Hint line number IS 6\n\n",
+      "tests": [
+        {
+          "name": "PRECONDITION of BLOCK 1"
+        },
+        {
+          "name": "bubble appears"
+        },
+        {
+          "name": "bubble is moved"
+        }
+      ],
+      "attachments": [],
+      "id": ""
+    },
+    {
+      "name": "Java running",
+      "order": 1,
+      "description": "",
+      "documentation": "<p>R1 The program is able to run Java code.</p>\n<p>R2 It outputs its output to the Output pane</p>\n<p>R3 It can receive input from the input pane&nbsp;</p>",
+      "categories": "Java code(I): \n    hello world (\n        \"\"\"\n        public class HelloWorld {\n            public static void main(String[] args) {\n                System.out.println(\"Hello, world!\");\n            }\n        }\n        \"\"\"\n    );\nRun(A): #pressed; \nOutput(O): hello world(\"Hello, World!\"); ",
+      "constraints": "PRECONDITION Welcome IS done \n\nhello world (R1; R2):\n    WHEN Java code IS hello world \n    WHEN Run IS #pressed\n    THEN Output IS hello world \n\n\n",
+      "tests": [
+        {
+          "name": "PRECONDITION of BLOCK 1"
+        },
+        {
+          "name": "hello world"
+        }
+      ],
+      "attachments": [],
+      "id": ""
+    },
+    {
+      "name": "Welcome",
+      "order": 2,
+      "description": "",
+      "documentation": "<p><br></p>",
+      "categories": "URL(I): ${SUT};\nMessage(O): welcome message (#like \"*Hello*\"); \nStart button(A): #pressed; \nJava code(O): #present",
+      "constraints": "done:\nWHEN URL IS ${SUT}\nTHEN Message IS welcome message \nWHEN Start button IS #pressed\nTHEN Java code IS #present",
+      "tests": [
+        {
+          "name": "done"
+        }
+      ],
+      "attachments": [],
+      "id": ""
+    }
+  ]
+}
