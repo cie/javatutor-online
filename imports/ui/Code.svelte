@@ -1,26 +1,36 @@
 <script>
+  import { onMount } from "svelte";
+
   const editorOptions = {
     minimap: {
       enabled: false,
     },
   };
 
-  let editorEl, javaCode, output;
+  let editorEl,
+    javaCode = "{}",
+    output,
+    editor;
 
+  onMount(setupEditor);
   function setupEditor() {
-    require(["vs/editor/editor.main", "vs/basic-languages/java/java"], (_) => {
-      monaco.editor.setTheme("vs-dark");
-      const editor = (window.editor = monaco.editor.create(editorEl, options));
-      monaco.editor.setModelLanguage(editor.getModel(), "java");
-      window.addEventListener("resize", () => editor.layout());
-    });
+    if (typeof monaco === "undefined") {
+      setTimeout(setupEditor, 10);
+      return;
+    }
+
+    monaco.editor.setTheme("vs-dark");
+    editor = window.editor = monaco.editor.create(editorEl, editorOptions);
+    monaco.editor.setModelLanguage(editor.getModel(), "java");
+    window.addEventListener("resize", () => editor.layout());
   }
+  $: if (editor) editor.getModel().setValue(javaCode);
 
   let hint = null;
   let hintLineNumber = 1;
 
   function run() {
-    output = "Hello, World!"
+    output = "Hello, World!";
   }
 </script>
 
@@ -31,7 +41,11 @@
     </nav>
   </div>
   <div class="flex-1 flex py-2" style="background: #1e1e1e;">
-    <input type="hidden" data-harmony-id="Java code" bind:value={javaCode} />
+    <input
+      type="hidden"
+      data-harmony-id="Java code"
+      bind:value={javaCode}
+      on:change={(e) => e.currentTarget.dispatchEvent(new Event('input'))} />
     <div class="flex-1" style="background: #1e1e1e;" bind:this={editorEl} />
 
     <input
