@@ -1,43 +1,23 @@
 <script>
-  import { onMount } from "svelte";
-
-  const editorOptions = {
-    minimap: {
-      enabled: false,
-    },
-  };
+  import Editor from './Editor.svelte'
 
   let editorEl,
-    javaCode = "{}",
-    output,
-    editor;
+    javaCode = '{}',
+    output
 
-  onMount(setupEditor);
-  function setupEditor() {
-    if (typeof monaco === "undefined") {
-      setTimeout(setupEditor, 10);
-      return;
-    }
-
-    monaco.editor.setTheme("vs-dark");
-    editor = window.editor = monaco.editor.create(editorEl, editorOptions);
-    monaco.editor.setModelLanguage(editor.getModel(), "java");
-    window.addEventListener("resize", () => editor.layout());
-  }
-  $: if (editor) editor.getModel().setValue(javaCode);
-
-  let hint = null;
-  let hintLineNumber = 1;
+  let hint = null
+  let hintLineNumber = 1
 
   function run() {
-    output = "Hello, World!";
+    output = 'Hello, World!'
   }
 </script>
 
 <div class="flex flex-col h-full">
   <div class="flex" style="background: #2e2e2e;">
     <nav class="text-white">
-      <a class="text-white" href="#/">JavaTutor</a> › Arrays
+      <a class="text-white" href="#/">JavaTutor</a>
+      › Arrays
     </nav>
   </div>
   <div class="flex-1 flex py-2" style="background: #1e1e1e;">
@@ -45,19 +25,21 @@
       type="hidden"
       data-harmony-id="Java code"
       bind:value={javaCode}
-      on:change={(e) => e.currentTarget.dispatchEvent(new Event('input'))} />
-    <div class="flex-1" style="background: #1e1e1e;" bind:this={editorEl} />
+      on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
+    <div class="flex-1 grid grid-rows-1 items-stretch content-stretch">
+      <Editor value={javaCode} />
+    </div>
 
     <input
       type="hidden"
       data-harmony-id="Hint"
       bind:value={hint}
-      on:change={(e) => e.currentTarget.dispatchEvent(new Event('input'))} />
+      on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
     <input
       type="hidden"
       data-harmony-id="Hint line number"
       bind:value={hintLineNumber}
-      on:change={(e) => e.currentTarget.dispatchEvent(new Event('input'))} />
+      on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
     {#if hint}
       <div
         data-harmony-id="Bubble"
@@ -69,8 +51,8 @@
     {/if}
 
     <aside
-      class="text-white px-4 py-3"
-      style="width: 20vw; background: #aaa ; color: #000">
+      class="text-white px-4 py-3 bg-gray-800 text-white"
+      style="width: 25vw">
       This is the task description.
     </aside>
   </div>
@@ -87,7 +69,8 @@
         class="bg-green-600 text-white px-4 py-3 rounded-lg"
         on:click={run}
         data-harmony-id="Run">
-        Run<span class="ml-2 font-mono">▶</span>
+        Run
+        <span class="ml-2 font-mono">▶</span>
       </button>
       <small class="text-gray-500">(Ctrl+Enter)</small>
     </div>
