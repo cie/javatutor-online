@@ -1,14 +1,8 @@
-const harmony = require('@harmony.ac/js-runner')
+const fs = require('fs')
 const project = require('../JavaTutor.harmony.json')
 const child_process = require('child_process')
 
 jest.setTimeout(300000)
-
-try {
-  child_process.execSync('git diff --quiet --exit-code')
-} catch {
-  throw new Error('Working directory not clean')
-}
 
 describe('e2e tests', () => {
   harmony(project, {
@@ -26,5 +20,21 @@ describe('e2e tests', () => {
 function sleep(t) {
   return new Promise(resolve => {
     setTimeout(resolve, t)
+  })
+}
+
+function harmony(project, { describe, test, start }) {
+  describe('Harmony tests', () => {
+    test('harmony tests', async () => {
+      await start()
+      const resultFile = 'harmony_result.json'
+      while (!fs.existsSync(resultFile)) {
+        await sleep(1000)
+      }
+      const result = JSON.parse(fs.readFileSync(resultFile).toString())
+      fs.unlinkSync(resultFile)
+      if (result === true) return
+      throw new Error(result || 'Failed')
+    })
   })
 }
