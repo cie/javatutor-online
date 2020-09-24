@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutator": "javascript",
+  "packageManager": "npm",
+  "reporters": ["html", "clear-text", "progress"],
+  "mutate": ["{server,client,imports}/**/*.js?(x)"],
+  "maxConcurrentTestRunners": 1,
+  "plugins": ["@stryker-mutator/*"],
+  "testRunner": "jest",
+  "timeoutMS": 30000,
+  "jest": {
+    "enableFindRelatedTests": false
+  },
+  "transpilers": ["babel"],
+  "coverageAnalysis": "off",
+  "babel": {
+    "optionsFile": ".babelrc"
+  }
+}
