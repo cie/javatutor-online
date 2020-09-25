@@ -1,5 +1,6 @@
 <script>
   import { navigate } from 'svelte-routing'
+  import Button from './Button.svelte'
   function start() {
     navigate('/code')
   }
@@ -14,12 +15,7 @@
     <p>Welcome to JavaTutor.</p>
     This is a research project ...
   </section>
-  <button
-    class="bg-green-600 text-white px-4 py-3 rounded-lg"
-    on:click={start}
-    data-harmony-id="Start button">
-    Let's start!
-  </button>
+  <Button on:click={start} data-harmony-id="Start button">Let's start!</Button>
 </main>
 
 <style>

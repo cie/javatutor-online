@@ -2,6 +2,8 @@ const fs = require('fs')
 const project = require('../JavaTutor.harmony.json')
 const child_process = require('child_process')
 
+// THIS FILE IS only an experiment.
+
 jest.setTimeout(300000)
 
 describe('e2e tests', () => {

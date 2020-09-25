@@ -1,8 +1,8 @@
 <script>
   import Editor from './Editor.svelte'
+  import Button from './Button.svelte'
 
-  let editorEl,
-    javaCode = '{}',
+  let javaCode = '{}',
     output
 
   let hint = null
@@ -11,9 +11,17 @@
   function run() {
     output = 'Hello, World!'
   }
+
+  function keydown(e) {
+    if (e.key === 'Enter' && e.ctrlKey && !e.shiftKey && !e.altKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      run()
+    }
+  }
 </script>
 
-<div class="flex flex-col h-full">
+<div class="flex flex-col h-full" on:keydown|capture={keydown}>
   <div class="flex" style="background: #2e2e2e;">
     <nav class="text-white">
       <a class="text-white" href="#/">JavaTutor</a>
@@ -30,16 +38,11 @@
       <Editor value={javaCode} />
     </div>
 
-    <input
-      type="hidden"
-      data-harmony-id="Hint"
-      bind:value={hint}
-      on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
+    <input type="hidden" data-harmony-id="Hint" bind:value={hint} />
     <input
       type="hidden"
       data-harmony-id="Hint line number"
-      bind:value={hintLineNumber}
-      on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
+      bind:value={hintLineNumber} />
     {#if hint}
       <div
         data-harmony-id="Bubble"
@@ -65,13 +68,10 @@
     </div>
     <div
       class="h-full flex items-center justify-center content-center flex-col">
-      <button
-        class="bg-green-600 text-white px-4 py-3 rounded-lg"
-        on:click={run}
-        data-harmony-id="Run">
+      <Button on:click={run}>
         Run
         <span class="ml-2 font-mono">▶</span>
-      </button>
+      </Button>
       <small class="text-gray-500">(Ctrl+Enter)</small>
     </div>
     <div class="flex-1 flex flex-col h-full p-2">
