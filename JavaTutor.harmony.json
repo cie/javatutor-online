@@ -3,8 +3,38 @@
   "description": "",
   "features": [
     {
-      "name": "Bubbles UI",
+      "name": "Welcome",
       "order": 0,
+      "description": "",
+      "documentation": "<p><br></p>",
+      "categories": "#URL(I): ${SUT}; ${SUT}/logout\nMessage(O): welcome message (#like \"*Welcome*\"); \nNickname(I): \"\"; Joe\nError message(O): \"Please enter a nickname\"; \nStart button(A): #pressed; \nJava code(O): #present",
+      "constraints": "done:\nWHEN #URL IS ${SUT}/logout\nTHEN Message IS welcome message \nWHEN Nickname IS \"\"  AND Start button IS #pressed \nTHEN Error message IS \"Please enter a nickname\"\nWHEN Nickname IS Joe \nWHEN Start button IS #pressed\nTHEN Java code IS #present\nWHEN #URL IS ${SUT}\nTHEN Java code IS #present ",
+      "tests": [
+        {
+          "name": "done"
+        }
+      ],
+      "attachments": [],
+      "id": ""
+    },
+    {
+      "name": "Code UI",
+      "order": 1,
+      "description": "",
+      "documentation": "",
+      "categories": "URL(I): ${SUT}/code\nPage(O): the editor, the task assignment, the input and the output (#screenshot 6mv18jhddahm2asrr3mqlgjav)",
+      "constraints": "looks fine:\nGIVEN URL IS ${SUT}/code \nINITIALLY Page HAS the editor, the task assignment, the input and the output \n",
+      "tests": [
+        {
+          "name": "looks fine"
+        }
+      ],
+      "attachments": [],
+      "id": ""
+    },
+    {
+      "name": "Bubbles UI",
+      "order": 2,
       "description": "",
       "documentation": "<p>The bubble appears.</p>\n<p>It has a tail.</p>\n<p>It is yellow.</p>",
       "categories": "Java code(I): something(\"\"\"\n    public class {\n        int x;\n\n        public static void main(String[] args) {\n\n        }\n    }\n    \"\"\")\nBubble(O): #present\nBubble content(O): Hello World; \nHint(I): Hello World (\"Hello <i>World</i>\");\nHint line number(I): 6",
@@ -25,7 +55,7 @@
     },
     {
       "name": "Java running",
-      "order": 1,
+      "order": 3,
       "description": "",
       "documentation": "<p>R1 The program is able to run Java code.</p>\n<p>R2 It outputs its output to the Output pane</p>\n<p>R3 It can receive input from the input pane&nbsp;</p>",
       "categories": "Java code(I): \n    hello world (\n        \"\"\"\n        public class HelloWorld {\n            public static void main(String[] args) {\n                System.out.println(\"Hello, world!\");\n            }\n        }\n        \"\"\"\n    );\nRun(A): #pressed; \nOutput(O): hello world(\"Hello, World!\"); ",
@@ -42,15 +72,30 @@
       "id": ""
     },
     {
-      "name": "Welcome",
-      "order": 2,
+      "name": "Instructor login",
+      "order": 4,
       "description": "",
-      "documentation": "<p><br></p>",
-      "categories": "URL(I): ${SUT};\nMessage(O): welcome message (#like \"*Hello*\"); \nStart button(A): #pressed; \nJava code(O): #present",
-      "constraints": "done:\nWHEN URL IS ${SUT}\nTHEN Message IS welcome message \nWHEN Start button IS #pressed\nTHEN Java code IS #present",
+      "documentation": "",
+      "categories": "#Session(I): instructor\n#URL(IO): ${SUT}; ${SUT}/instructor; ${SUT}/logout\nInstructor login(I): #pressed; \nPassword(I): entered (${PASSWORD}); bad(\"notgoodpassword\");\nError message(O): \"Incorrect password\"; \nOK(I): #pressed\nClassroom(O): #present; ",
+      "constraints": "logged in:\nGIVEN #Session IS instructor AND #URL IS ${SUT}/logout\nWHEN Instructor login IS #pressed\nTHEN #URL IS ${SUT}/instructor\nWHEN Password IS bad AND OK IS #pressed \nTHEN Error message IS \"Incorrect password\"\nWHEN Password IS entered AND OK IS #pressed \nTHEN Classroom IS #present\nWHEN #URL IS ${SUT}/instructor\nTHEN Classroom IS #present\n\n",
       "tests": [
         {
-          "name": "done"
+          "name": "logged in"
+        }
+      ],
+      "attachments": [],
+      "id": ""
+    },
+    {
+      "name": "Student list",
+      "order": 5,
+      "description": "",
+      "documentation": "",
+      "categories": "#Session(I): instructor; student 1\nStudents(O): \"No students\"; \"Joe\"; \nAll students(IO): removed; ",
+      "constraints": "empty student list:\nWHEN #Session IS instructor AND Instructor login IS logged in \nAND All students ARE removed\nTHEN Students ARE \"No students\" \nWHEN #Session IS student 1 AND Welcome IS done \nWHEN #Session IS instructor \nTHEN Students ARE \"Joe\"",
+      "tests": [
+        {
+          "name": "empty student list"
         }
       ],
       "attachments": [],

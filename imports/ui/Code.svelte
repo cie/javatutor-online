@@ -21,7 +21,7 @@
   }
 </script>
 
-<div class="flex flex-col h-full" on:keydown|capture={keydown}>
+<div class="h-full flex flex-col" on:keydown|capture={keydown}>
   <div class="flex" style="background: #2e2e2e;">
     <nav class="text-white">
       <a class="text-white" href="#/">JavaTutor</a>
@@ -68,7 +68,7 @@
     </div>
     <div
       class="h-full flex items-center justify-center content-center flex-col">
-      <Button on:click={run}>
+      <Button on:click={run} data-harmony-id="Run">
         Run
         <span class="ml-2 font-mono">▶</span>
       </Button>

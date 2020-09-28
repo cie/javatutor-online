@@ -1,8 +1,31 @@
 <script>
+  import { onMount } from 'svelte'
+
   import { navigate } from 'svelte-routing'
   import Button from './Button.svelte'
+
+  onMount(() => {
+    if (localStorage.getItem('student_id')) {
+      navigate('/code')
+    }
+  })
+
+  let errorMessage,
+    nickname = ''
+
   function start() {
-    navigate('/code')
+    if (!nickname && !nickname.trim()) {
+      errorMessage = 'Please enter a nickname'
+      return
+    }
+    Meteor.call('startSession', { nickname }, (err, _id) => {
+      if (err) {
+        errorMessage = err.reason || err.message
+        return
+      }
+      localStorage.setItem('student_id', _id)
+      navigate('/code')
+    })
   }
 </script>
 
@@ -15,7 +38,25 @@
     <p>Welcome to JavaTutor.</p>
     This is a research project ...
   </section>
+  <p class="my-2">
+    <input
+      class="text-black p-2 rounded-sm"
+      bind:value={nickname}
+      data-harmony-id="Nickname"
+      placeholder="Nickname"
+      on:keydown={e => {
+        if (e.key === 'Enter') start()
+      }} />
+  </p>
+  {#if errorMessage}
+    <p data-harmony-id="Error message" class="text-red-800">{errorMessage}</p>
+  {/if}
   <Button on:click={start} data-harmony-id="Start button">Let's start!</Button>
+  <div class="absolute right-0 bottom-0 text-sm">
+    <a href="/instructor" data-harmony-id="Instructor login">
+      Instructor login
+    </a>
+  </div>
 </main>
 
 <style>
