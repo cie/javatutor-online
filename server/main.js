@@ -10,10 +10,19 @@ Meteor.startup(() => {
 })
 
 Meteor.methods({
-  startSession({ nickname }) {
-    const _id = Students.insert({
-      nickname
+  startSession({ nickname, experiment_id }) {
+    const student_id = Students.insert({
+      nickname,
+      experiment_id
     })
-    return _id
+    this.setUserId(student_id)
+    return student_id
+  },
+  rejoinSession({ student_id }) {
+    this.setUserId(student_id)
   }
+})
+
+Meteor.methods({
+  run(javaCode) {}
 })
