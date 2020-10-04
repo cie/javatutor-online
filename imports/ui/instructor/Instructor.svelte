@@ -13,7 +13,7 @@
     {#if !$LOGGED_IN}
       <InstructorLogin />
     {:else}
-      <Route path="/experiments/:experiment_id" component={Experiment} />
+      <Route path="/experiments/:experiment_id/*" component={Experiment} />
       <Route path="/" component={ExperimentList} />
     {/if}
   </Router>

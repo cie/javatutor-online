@@ -9,7 +9,10 @@
   let hintLineNumber = 1
 
   function run() {
-    output = 'Hello, World!'
+    Meteor.call('run', javaCode, (err, res) => {
+      if (err) return
+      output = res
+    })
   }
 
   function keydown(e) {

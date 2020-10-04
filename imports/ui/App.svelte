@@ -1,6 +1,5 @@
 <script>
   import { Router, Route, navigate } from 'svelte-routing'
-  import { useTracker } from 'meteor/rdb:svelte-meteor-data'
   import Code from './Code.svelte'
   import Instructor from './instructor/Instructor.svelte'
   import Logout from './Logout.svelte'

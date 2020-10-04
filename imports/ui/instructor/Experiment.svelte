@@ -1,31 +1,58 @@
 <script>
   import { useTracker } from 'meteor/rdb:svelte-meteor-data'
+  import { Route, Router } from 'svelte-routing'
+  import Redirect from '../Redirect.svelte'
+  import StudentsTab from './StudentsTab.svelte'
+  import Tab from './Tab.svelte'
+  import TasksTab from './TasksTab.svelte'
   export let experiment_id
-  $: console.log(experiment_id)
   $: EXPERIMENT = useTracker(() => Experiments.findOne(experiment_id))
-
-  function removeAllStudents() {
-    Students.find({ experiment_id })
-      .fetch()
-      .forEach(student => Students.remove(student._id))
-  }
-
-  $: STUDENTS = Students.find({ experiment_id })
 </script>
 
 {#if $EXPERIMENT}
-  <main data-harmony-id="Classroom">
-    <nav data-harmony-id="Students">
-      {#each $STUDENTS as student}
-        <p>{student.nickname}</p>
-      {:else}No students{/each}
+  <main>
+    <nav class="flex">
+      <a
+        class="py-1 px-2 my-2"
+        data-harmony-id="Experiments link"
+        href="/instructor">
+        Experiments
+      </a>
+      <tt class="py-1 px-2 my-2">▶</tt>
+      <span class="py-1 px-2 my-2 mr-8">{$EXPERIMENT.title}</span>
+      <Router>
+        <Route path="/:currentTab" let:params={p}>
+          <Tab
+            id="tasks"
+            title="Tasks"
+            {experiment_id}
+            currentTab={p.currentTab} />
+          <Tab
+            id="students"
+            title="Students"
+            {experiment_id}
+            currentTab={p.currentTab} />
+        </Route>
+      </Router>
+      <ion-toggle class="ml-8 my-2" size="large" color="success" />
+      <span class="my-2 py-1">Active</span>
     </nav>
+    <Router>
+      <Route path="tasks" component={TasksTab} {experiment_id} />
+      <Route path="students" component={StudentsTab} {experiment_id} />
+      <Route>
+        <Redirect to="/instructor/experiments/{experiment_id}/tasks" />
+      </Route>
+    </Router>
   </main>
 {/if}
 
-<input
-  type="hidden"
-  data-harmony-id="All students"
-  on:change={e => {
-    if (e.target.value === 'removed') removeAllStudents()
-  }} />
+<style>
+  main {
+    min-width: 76vw;
+    min-height: 90vh;
+  }
+  ion-toggle {
+    width: 40px;
+  }
+</style>

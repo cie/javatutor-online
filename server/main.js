@@ -17,12 +17,11 @@ Meteor.methods({
     })
     this.setUserId(student_id)
     return student_id
-  },
-  rejoinSession({ student_id }) {
-    this.setUserId(student_id)
   }
 })
 
 Meteor.methods({
-  run(javaCode) {}
+  run(javaCode) {
+    return 'Hello, Server!'
+  }
 })
