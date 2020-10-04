@@ -1,6 +1,4 @@
 <script>
-  import { error } from 'console'
-
   import { onMount } from 'svelte'
 
   let input

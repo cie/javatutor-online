@@ -1,5 +1,5 @@
 <script>
-  import { onMount, onUnmout } from 'svelte'
+  import { onMount, onDestroy } from 'svelte'
   import setupLanguageClient from './languageClient'
   export let value
 
@@ -25,7 +25,7 @@
     monaco.editor.setModelLanguage(editor.getModel(), 'java')
 
     const dispose = setupLanguageClient(editor)
-    onUnmout(dispose)
+    onDestroy(dispose)
 
     window.addEventListener('resize', () => {
       // ugly hack

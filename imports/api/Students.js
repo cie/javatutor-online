@@ -1,4 +1,4 @@
-export default this.Students = new Meteor.Collection('Students')
+export const Students = new Meteor.Collection('Students')
 
 Students.allow({
   remove() {

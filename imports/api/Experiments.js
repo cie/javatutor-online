@@ -1,4 +1,4 @@
-export default this.Experiments = new Meteor.Collection('Experiments')
+export const Experiments = new Meteor.Collection('Experiments')
 
 Experiments.allow({
   insert() {

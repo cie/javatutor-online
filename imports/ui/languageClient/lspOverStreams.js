@@ -24,7 +24,6 @@ class MessageReader extends AbstractMessageReader {
 }
 
 class MessageWriter extends AbstractMessageWriter {
-  stream: ClientStream
   constructor(stream) {
     super()
     this.stream = stream

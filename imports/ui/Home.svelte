@@ -5,8 +5,6 @@
   import Button from './Button.svelte'
   import Logo from './Logo.svelte'
 
-  export let experiment_id
-
   onMount(() => {
     if (localStorage.getItem('student_id')) {
       navigate('/code')
