@@ -15,9 +15,12 @@
     "dockerode": "^3.2.1",
     "jquery": "^3.5.1",
     "meteor-node-stubs": "^1.0.1",
+    "monaco-languageclient": "^0.13.0",
     "stryker-cli": "^1.0.0",
     "svelte": "^3.25.1",
-    "svelte-routing": "^1.4.2"
+    "svelte-routing": "^1.4.2",
+    "vscode": "./vendor/vscode",
+    "vscode-jsonrpc": "^5.0.1"
   },
   "meteor": {
     "mainModule": {

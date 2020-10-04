@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import '../imports/api'
+import { startLanguageServer } from './languageServer'
 
 Meteor.startup(() => {
   Meteor.users.upsert('instructor', { username: 'instructor' })
@@ -16,12 +17,7 @@ Meteor.methods({
       experiment_id
     })
     this.setUserId(student_id)
+    startLanguageServer(student_id)
     return student_id
-  }
-})
-
-Meteor.methods({
-  run(javaCode) {
-    return 'Hello, Server!'
   }
 })

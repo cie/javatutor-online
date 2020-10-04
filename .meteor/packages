@@ -24,3 +24,4 @@ svelte:compiler
 session
 accounts-password
 matb33:collection-hooks
+mmack:m-stream

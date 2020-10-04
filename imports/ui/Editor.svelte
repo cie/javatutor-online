@@ -1,5 +1,6 @@
 <script>
-  import { onMount } from 'svelte'
+  import { onMount, onUnmout } from 'svelte'
+  import setupLanguageClient from './languageClient'
   export let value
 
   let editor, editorEl
@@ -22,8 +23,12 @@
     monaco.editor.setTheme('vs-dark')
     editor = window.editor = monaco.editor.create(editorEl, editorOptions)
     monaco.editor.setModelLanguage(editor.getModel(), 'java')
+
+    const dispose = setupLanguageClient(editor)
+    onUnmout(dispose)
+
     window.addEventListener('resize', () => {
-      // ugly hack :/
+      // ugly hack
       editor._domElement.style.display = 'none'
       editor.layout()
       editor._domElement.style.display = ''
