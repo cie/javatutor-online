@@ -38,7 +38,7 @@
 </script>
 
 <main
-  class="h-screen overflow-hidden bg-gray-800"
+  class="h-screen overflow-auto bg-gray-800"
   on:click|capture={handleLinks}
   data-harmony-id="Page">
   <Router>

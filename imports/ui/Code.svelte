@@ -37,13 +37,22 @@
       › Arrays
     </nav>
   </div>
-  <div class="flex-1 flex py-2" style="background: #1e1e1e;">
+  <div
+    class="flex-1 flex py-2 flex-col md:flex-row-reverse"
+    style="background: #1e1e1e;">
+    <aside class="text-white px-4 py-3 bg-gray-800 text-white w-full md:w-1/4">
+      This is the task description.
+    </aside>
+
     <input
       type="hidden"
       data-harmony-id="Java code"
       bind:value={javaCode}
       on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
-    <div class="flex-1 grid grid-rows-1 items-stretch content-stretch relative">
+    <div
+      class="flex-1 grid grid-rows-1 items-stretch content-stretch relative mt-2
+      md:mt-0"
+      style="min-height: 210px">
       <Editor value={javaCode} />
       <HelpButton />
     </div>
@@ -63,16 +72,14 @@
       </div>
     {/if}
 
-    <aside
-      class="text-white px-4 py-3 bg-gray-800 text-white"
-      style="width: 25vw">
-      This is the task description.
-    </aside>
   </div>
-  <footer class="flex text-white" style="height: 25vh; background: #333;">
+  <footer
+    class="flex flex-col md:flex-row text-white"
+    style="background: #333;">
     <div class="flex-1 flex flex-col h-full p-2">
       <h2 class="font-bold mb-1">Input</h2>
       <textarea
+        rows="5"
         id="input"
         class="bg-transparent block flex-1 font-mono outline-none" />
     </div>
@@ -87,6 +94,7 @@
     <div class="flex-1 flex flex-col h-full p-2">
       <h2 class="font-bold mb-1">Output</h2>
       <textarea
+        rows="5"
         id="output"
         bind:value={output}
         readonly

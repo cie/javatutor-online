@@ -1,11 +1,12 @@
 <script>
   import { tick } from 'svelte'
   let active = false
-  let input
+  let textarea
+  let message = ''
   async function raiseHand() {
     active = true
     await tick()
-    input.focus()
+    textarea.focus()
   }
   function cancel() {
     active = false
@@ -16,7 +17,11 @@
       sendMessage()
     }
   }
-  function sendMessage() {}
+  async function sendMessage(e) {
+    message = ''
+    await tick()
+    textarea.focus()
+  }
 </script>
 
 <div class="helpButtonContainer" class:active>
@@ -26,28 +31,37 @@
       Ask for help
     {:else}
       Explain your problem:
-      <input bind:this={input} on:keydown={handleKeydown} />
-      <button
-        class="text-primary hover:underline mr-2"
-        on:click|preventDefault={sendMessage}>
-        Send
-      </button>
-      <button
-        class="text-primary hover:underline"
-        on:click|preventDefault={cancel}>
-        Cancel
-      </button>
+      <br />
+      <textarea
+        bind:value={message}
+        bind:this={textarea}
+        on:keydown={handleKeydown}
+        rows="2"
+        cols="38" />
+      <br />
+      <div class="text-right">
+        <button
+          class="text-primary hover:underline mr-2"
+          on:click|preventDefault={sendMessage}>
+          Send
+        </button>
+        <button
+          class="text-primary hover:underline"
+          on:click|preventDefault={cancel}>
+          Cancel
+        </button>
+      </div>
     {/if}
   </div>
   <button class="hand" on:click|preventDefault={raiseHand} class:active />
 </div>
 
 <style>
-  input {
+  textarea {
     background: rgba(255, 255, 255, 0.14);
     outline: none;
     padding: 0.2em 0.4em;
-    margin-left: 0.3em;
+    vertical-align: middle;
   }
   .helpButtonContainer * {
     box-sizing: border-box;
