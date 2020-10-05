@@ -1,16 +1,21 @@
 <script>
   import Editor from './Editor.svelte'
   import Button from './Button.svelte'
+  import HelpButton from './HelpButton.svelte'
 
-  let javaCode = '{}',
-    output,
-    student_id = localStorage.getItem('student_id')
+  let javaCode = (window.javaCode = `public class Code {
+    public static void main(String [] args) {
+        
+    }
+}`),
+    output
 
   let hint = null
   let hintLineNumber = 1
 
   function run() {
-    Meteor.call('run', javaCode, (err, res) => {
+    output = ''
+    Meteor.call('run', window.javaCode, (err, res) => {
       if (err) return
       output = res
     })
@@ -38,8 +43,9 @@
       data-harmony-id="Java code"
       bind:value={javaCode}
       on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
-    <div class="flex-1 grid grid-rows-1 items-stretch content-stretch">
+    <div class="flex-1 grid grid-rows-1 items-stretch content-stretch relative">
       <Editor value={javaCode} />
+      <HelpButton />
     </div>
 
     <input type="hidden" data-harmony-id="Hint" bind:value={hint} />

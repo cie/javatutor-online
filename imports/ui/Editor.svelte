@@ -1,4 +1,6 @@
 <script>
+  import { nextTick } from 'process'
+
   import { onMount, onDestroy } from 'svelte'
   import setupLanguageClient from './languageClient'
   export let value
@@ -30,6 +32,9 @@
     monaco.editor.setTheme('vs-dark')
     editor = window.editor = monaco.editor.create(editorEl, editorOptions)
     monaco.editor.setModelLanguage(editor.getModel(), 'java')
+    editor.getModel().onDidChangeContent(() => {
+      window.javaCode = editor.getModel().getValue()
+    })
 
     dispose.push(setupLanguageClient(editor))
 

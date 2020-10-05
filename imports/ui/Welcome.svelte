@@ -26,6 +26,7 @@
         errorMessage = err.reason || err.message
         return
       }
+      Meteor.connection.setUserId(_id)
       localStorage.setItem('student_id', _id)
       navigate('/code')
     })

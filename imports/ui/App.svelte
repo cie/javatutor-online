@@ -8,7 +8,17 @@
   import { onMount } from 'svelte'
   import { useTracker } from 'meteor/rdb:svelte-meteor-data'
 
-  // TODO if connection lost and userID is undefined, reauthenticate!
+  // if connection lost and userID is undefined, reauthenticate!
+  $: userId = useTracker(() => Meteor.userId())
+  $: if (userId !== undefined) {
+    if (userId === null) {
+      const student_id = localStorage.get('student_id')
+      Meteor.call('reauthenticate', { student_id }, err => {
+        if (err) return alert(err.reason || err.message || err)
+        Meteor.connection.setUserId(student_id)
+      })
+    }
+  }
 
   let experiment = undefined
   onMount(() => {
