@@ -14,7 +14,8 @@
   const editorOptions = {
     minimap: {
       enabled: false
-    }
+    },
+    scrollBeyondLastLine: false
   }
   onMount(() => {
     window.require(['vs/editor/editor.main'], () => {
