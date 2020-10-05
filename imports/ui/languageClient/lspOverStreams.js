@@ -1,9 +1,11 @@
-import { ClientStream } from 'meteor/mmack:m-stream'
+import ClientStream from 'meteor/mmack:m-stream'
 import { createMessageConnection } from 'vscode-jsonrpc'
 import { AbstractMessageReader } from 'vscode-jsonrpc/lib/messageReader'
+import { AbstractMessageWriter } from 'vscode-jsonrpc/lib/messageWriter'
 
 export function lspOverStreamsMessageConnection(id) {
-  const stream = new ClientStream(`lsp-${id}`)
+  const stream = (window.stream = new ClientStream(`lsp-${id}`))
+  stream.init()
   return createMessageConnection(
     new MessageReader(stream),
     new MessageWriter(stream)
@@ -17,7 +19,7 @@ class MessageReader extends AbstractMessageReader {
   }
   listen(callback) {
     this.callback = callback
-    this.stream.on('message', message => {
+    this.stream.on('down', message => {
       callback(message)
     })
   }
@@ -29,6 +31,6 @@ class MessageWriter extends AbstractMessageWriter {
     this.stream = stream
   }
   write(message) {
-    this.stream.emit('message', message)
+    this.stream.emit('up', message)
   }
 }

@@ -26,7 +26,10 @@
 <nav data-harmony-id="Experiments" class="pb-4">
   {#each $EXPERIMENTS as { title, _id }}
     <p>
-      <a href="/instructor/experiments/{_id}" data-harmony-id={title}>
+      <a
+        class="hover:underline text-primary"
+        href="/instructor/experiments/{_id}"
+        data-harmony-id={title}>
         {title}
       </a>
     </p>

@@ -3,7 +3,8 @@
   import Button from './Button.svelte'
 
   let javaCode = '{}',
-    output
+    output,
+    student_id = localStorage.getItem('student_id')
 
   let hint = null
   let hintLineNumber = 1
@@ -38,7 +39,7 @@
       bind:value={javaCode}
       on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
     <div class="flex-1 grid grid-rows-1 items-stretch content-stretch">
-      <Editor value={javaCode} />
+      <Editor value={javaCode} {student_id} />
     </div>
 
     <input type="hidden" data-harmony-id="Hint" bind:value={hint} />

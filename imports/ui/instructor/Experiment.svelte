@@ -13,12 +13,12 @@
   <main>
     <nav class="flex">
       <a
-        class="py-1 px-2 my-2"
+        class="text-primary hover:underline py-1 px-2 my-2"
         data-harmony-id="Experiments link"
         href="/instructor">
         Experiments
       </a>
-      <tt class="py-1 px-2 my-2">▶</tt>
+      <span class="py-1 px-2 my-2">‣</span>
       <span class="py-1 px-2 my-2 mr-8">{$EXPERIMENT.title}</span>
       <Router>
         <Route path="/:currentTab" let:params={p}>

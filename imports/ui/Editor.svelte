@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte'
   import setupLanguageClient from './languageClient'
-  export let value
+  export let value, student_id
 
   let editor, editorEl
 
@@ -14,7 +14,14 @@
       enabled: false
     }
   }
-  onMount(setupEditor)
+  onMount(() => {
+    window.require(['vs/editor/editor.main'], () => {
+      setupEditor()
+    })
+  })
+  const dispose = []
+  onDestroy(() => dispose.forEach(x => x()))
+
   function setupEditor() {
     if (typeof monaco === 'undefined') {
       setTimeout(setupEditor, 10)
@@ -24,8 +31,7 @@
     editor = window.editor = monaco.editor.create(editorEl, editorOptions)
     monaco.editor.setModelLanguage(editor.getModel(), 'java')
 
-    const dispose = setupLanguageClient(editor)
-    onDestroy(dispose)
+    dispose.push(setupLanguageClient(editor, student_id))
 
     window.addEventListener('resize', () => {
       // ugly hack

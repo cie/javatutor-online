@@ -6,28 +6,8 @@
   import Logo from './Logo.svelte'
 
   onMount(() => {
-    if (localStorage.getItem('student_id')) {
-      navigate('/code')
-    }
+    localStorage.removeItem('student_id')
   })
-
-  let errorMessage,
-    nickname = ''
-
-  function start() {
-    if (!nickname && !nickname.trim()) {
-      errorMessage = 'Please enter a nickname'
-      return
-    }
-    Meteor.call('startSession', { nickname }, (err, _id) => {
-      if (err) {
-        errorMessage = err.reason || err.message
-        return
-      }
-      localStorage.setItem('student_id', _id)
-      navigate('/code')
-    })
-  }
 </script>
 
 <main class="h-full w-full bg-gray-800 text-white text-center">

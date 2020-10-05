@@ -7,12 +7,13 @@ const clientConfig = {
   target: 'web',
   entry: './client/main.js',
   resolve: {
+    extensions: ['.mjs', '.js', '.svelte'],
+    alias: {
+      vscode: require.resolve('monaco-languageclient/lib/vscode-compatibility')
+    },
     mainFields: ['svelte', 'browser', 'module', 'main']
   },
   devtool: 'inline-source-map',
-  devServer: {
-    hot: true
-  },
   output: {
     publicPath: '/'
   },
@@ -23,8 +24,7 @@ const clientConfig = {
         use: {
           loader: 'svelte-loader',
           options: {
-            emitCss: true,
-            hotReload: true
+            emitCss: true
           }
         }
       },
@@ -54,9 +54,6 @@ const serverConfig = {
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [meteorExternals(), nodeExternals()], // in order to ignore all modules in node_modules folder
   entry: './server/main.js',
-  devServer: {
-    hot: true
-  },
   plugins: []
 }
 
