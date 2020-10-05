@@ -1,5 +1,6 @@
 <script>
   import { tick } from 'svelte'
+  import trackEvent from './trackEvent'
   let active = false
   let textarea
   let message = ''
@@ -10,9 +11,11 @@
     message = ''
     await tick()
     textarea.focus()
+    trackEvent({ type: 'Ask for help' })
   }
   function cancel() {
     active = false
+    trackEvent({ type: 'Cancel help' })
   }
   async function edit() {
     sent = false
@@ -27,6 +30,7 @@
   }
   async function sendMessage(e) {
     sent = true
+    trackEvent({ type: 'Send problem message', value: message })
   }
 </script>
 

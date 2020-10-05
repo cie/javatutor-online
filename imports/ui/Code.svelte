@@ -4,8 +4,8 @@
   import HelpButton from './HelpButton.svelte'
   import tasks from '../api/tasks.yml'
   import { markdown } from 'markdown'
-  import { init } from 'svelte/internal'
   import { navigate } from 'svelte-routing'
+  import trackEvent from './trackEvent'
 
   let initialCode = '',
     code = '',
@@ -13,6 +13,7 @@
     output
 
   $: task = tasks[taskIndex]
+  $: localStorage.setItem('task_id', task.id)
   $: initialCode = task.initialCode
   $: code = initialCode
   $: input = (task.input || '').replace('$NAME', 'Joe')
@@ -21,10 +22,12 @@
   let hintLineNumber = 1
 
   function run() {
+    trackEvent({ type: 'Run', value: input })
     output = ''
     Meteor.call('run', code, input, (err, res) => {
       if (err) return
       output = res
+      trackEvent({ type: 'Run done', value: output })
     })
   }
 
@@ -45,10 +48,16 @@
     }
   }
   function done() {
+    trackEvent({ type: 'Done task' })
     nextTask()
   }
   function skip() {
+    trackEvent({ type: 'Skip task' })
     nextTask()
+  }
+  function handleCodeChange(e) {
+    code = e.detail.value
+    trackEvent({ type: 'Edit code', value: code })
   }
 </script>
 
@@ -93,7 +102,7 @@
       class="flex-1 grid grid-rows-1 items-stretch content-stretch relative mt-2
       md:mt-0"
       style="min-height: 210px">
-      <Editor value={initialCode} on:change={e => (code = e.detail.value)} />
+      <Editor value={initialCode} on:change={handleCodeChange} />
       <HelpButton />
     </div>
 

@@ -3,7 +3,7 @@ import '../imports/api'
 import App from '../imports/ui/App.svelte'
 import 'vscode'
 
-console.log('134')
+console.log('135')
 Meteor.startup(() => {
   new App({ target: document.getElementById('app') })
 })
