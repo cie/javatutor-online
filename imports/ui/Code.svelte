@@ -2,20 +2,26 @@
   import Editor from './Editor.svelte'
   import Button from './Button.svelte'
   import HelpButton from './HelpButton.svelte'
+  import tasks from '../api/tasks.yml'
+  import { markdown } from 'markdown'
+  import { init } from 'svelte/internal'
 
-  let javaCode = (window.javaCode = `public class Code {
-    public static void main(String [] args) {
-        
-    }
-}`),
+  let initialCode = '',
+    code = '',
+    taskIndex = 0,
     output
+
+  $: task = tasks[taskIndex]
+  $: initialCode = task.initialCode
+  $: code = initialCode
+  $: input = task.input.replace('$NAME', 'Joe')
 
   let hint = null
   let hintLineNumber = 1
 
   function run() {
     output = ''
-    Meteor.call('run', window.javaCode, (err, res) => {
+    Meteor.call('run', code, input, (err, res) => {
       if (err) return
       output = res
     })
@@ -34,26 +40,28 @@
   <div class="flex" style="background: #2e2e2e;">
     <nav class="text-white">
       <a class="text-white" href="#/">JavaTutor</a>
-      › Arrays
+      › {task.title}
     </nav>
   </div>
   <div
-    class="flex-1 flex py-2 flex-col md:flex-row-reverse"
+    class="flex-1 flex py-2 flex-col md:flex-row"
     style="background: #1e1e1e;">
-    <aside class="text-white px-4 py-3 bg-gray-800 text-white w-full md:w-1/4">
-      This is the task description.
+    <aside
+      class="task-description text-white px-4 py-3 bg-gray-800 text-white w-full
+      md:w-1/4">
+      {@html markdown.toHTML(task.description)}
     </aside>
 
     <input
       type="hidden"
       data-harmony-id="Java code"
-      bind:value={javaCode}
+      bind:value={initialCode}
       on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
     <div
       class="flex-1 grid grid-rows-1 items-stretch content-stretch relative mt-2
       md:mt-0"
       style="min-height: 210px">
-      <Editor value={javaCode} />
+      <Editor value={initialCode} on:change={e => (code = e.detail.value)} />
       <HelpButton />
     </div>
 
@@ -79,6 +87,7 @@
     <div class="flex-1 flex flex-col h-full p-2">
       <h2 class="font-bold mb-1">Input</h2>
       <textarea
+        bind:value={input}
         rows="5"
         id="input"
         class="bg-transparent block flex-1 font-mono outline-none" />

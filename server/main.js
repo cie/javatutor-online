@@ -23,16 +23,16 @@ Meteor.methods({
     this.setUserId(student_id)
     return student_id
   },
-  run(javaCode) {
-    console.log({ javaCode })
-    fs.writeFileSync('Code.java', javaCode)
+  run(code, input) {
+    fs.writeFileSync('Code.java', code)
     console.log('wrote', process.cwd())
     try {
       child_process.execSync('javac Code.java')
     } catch (e) {
       return e.message
     }
-    const result = child_process.execSync('java Code').toString()
+    fs.writeFileSync('input.txt', input)
+    const result = child_process.execSync('java Code < input.txt').toString()
     console.log(result)
     return result
   }

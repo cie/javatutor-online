@@ -14,10 +14,11 @@
     "bcrypt": "^5.0.0",
     "dockerode": "^3.2.1",
     "jquery": "^3.5.1",
+    "markdown": "^0.5.0",
     "meteor-node-stubs": "^1.0.1",
     "monaco-languageclient": "^0.13.0",
-    "svelte": "^3.29.0",
     "stryker-cli": "^1.0.0",
+    "svelte": "^3.29.0",
     "svelte-routing": "^1.4.2",
     "vscode-jsonrpc": "^5.0.1"
   },
@@ -47,6 +48,7 @@
     "webpack-hot-middleware": "^2.25.0",
     "webpack-hot-server-middleware": "^0.6.1",
     "webpack-meteor-externals": "0.0.5",
-    "webpack-node-externals": "^2.5.2"
+    "webpack-node-externals": "^2.5.2",
+    "yaml-loader": "^0.6.0"
   }
 }

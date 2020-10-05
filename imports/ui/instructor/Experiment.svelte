@@ -7,6 +7,9 @@
   import TasksTab from './TasksTab.svelte'
   export let experiment_id
   $: EXPERIMENT = useTracker(() => Experiments.findOne(experiment_id))
+  function toggleActive(active) {
+    Experiments.update(experiment_id, { $set: { active } })
+  }
 </script>
 
 {#if $EXPERIMENT}
@@ -34,7 +37,12 @@
             currentTab={p.currentTab} />
         </Route>
       </Router>
-      <ion-toggle class="ml-8 my-2" size="large" color="success" />
+      <ion-toggle
+        class="ml-8 my-2"
+        size="large"
+        color="success"
+        checked={!!$EXPERIMENT.active}
+        on:ionChange={event => toggleActive(event.detail.checked)} />
       <span class="my-2 py-1">Active</span>
     </nav>
     <Router>

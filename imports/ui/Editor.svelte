@@ -1,11 +1,10 @@
 <script>
-  import { nextTick } from 'process'
-
-  import { onMount, onDestroy } from 'svelte'
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte'
   import setupLanguageClient from './languageClient'
   export let value
 
   let editor, editorEl
+  const dispatch = createEventDispatcher()
 
   $: if (editor) {
     editor.getModel().setValue(value)
@@ -22,8 +21,8 @@
       setupEditor()
     })
   })
-  const dispose = []
-  onDestroy(() => dispose.forEach(x => x()))
+  const disposers = []
+  onDestroy(() => disposers.forEach(x => x()))
 
   function setupEditor() {
     if (typeof monaco === 'undefined') {
@@ -34,10 +33,11 @@
     editor = window.editor = monaco.editor.create(editorEl, editorOptions)
     monaco.editor.setModelLanguage(editor.getModel(), 'java')
     editor.getModel().onDidChangeContent(() => {
-      window.javaCode = editor.getModel().getValue()
+      const value = editor.getModel().getValue()
+      dispatch('change', { value })
     })
 
-    dispose.push(setupLanguageClient(editor))
+    disposers.push(setupLanguageClient(editor))
 
     window.addEventListener('resize', () => {
       // ugly hack

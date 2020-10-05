@@ -20,6 +20,11 @@ const clientConfig = {
   module: {
     rules: [
       {
+        test: /\.ya?ml$/,
+        type: 'json',
+        use: 'yaml-loader'
+      },
+      {
         test: /\.svelte$/,
         use: {
           loader: 'svelte-loader',

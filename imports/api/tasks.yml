@@ -1,0 +1,37 @@
+- title: Hello, World!
+  description: |
+    # Hello, World!
+
+    Welcome and thanks for participating! 
+    This is a warm-up task so you can get familiar with the environment.
+
+    **Write a program that asks for the name of the user and then greets them.**
+
+    You can run the program with the Run button and see its output in the Output box.
+
+    The Input box below contains the input the user would enter into the running program:
+    one line in the box is one line entered. These will be sent to the running program.
+  initialCode: |
+    import java.util.Scanner;
+
+    public class Code {
+        public static void main(String [] args) {
+            Scanner input = new Scanner(System.in);
+            System.out.println("Enter your name: ");
+            String name = input.nextLine();
+
+        }
+    }
+  input: $NAME
+
+- title: Simple condition
+  description: |
+    # Simple condition
+
+    **Write a program that asks for a number and tells if it is even or odd**
+  initialCode: |
+    public class Code {
+        public static void main(String [] args) {
+            ho
+        }
+    }
