@@ -5,9 +5,9 @@ import {
   ErrorAction,
   CloseAction
 } from 'monaco-languageclient'
-import { lspOverStreamsMessageConnection } from './lspOverStreams'
+import { lspOverMethodsMessageConnection } from './lspOverMethods'
 
-export default function setupLanguageClient(editor, id) {
+export default function setupLanguageClient(editor) {
   if (!Meteor.isClient) return
 
   MonacoServices.install(editor)
@@ -24,7 +24,7 @@ export default function setupLanguageClient(editor, id) {
     connectionProvider: {
       async get() {
         return createConnection(
-          lspOverStreamsMessageConnection(id),
+          lspOverMethodsMessageConnection(),
           console.error,
           console.warn
         )

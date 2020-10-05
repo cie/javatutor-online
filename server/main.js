@@ -17,7 +17,6 @@ Meteor.methods({
       experiment_id
     })
     this.setUserId(student_id)
-    startLanguageServer(student_id)
     return student_id
   }
 })

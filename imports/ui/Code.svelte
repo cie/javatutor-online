@@ -39,7 +39,7 @@
       bind:value={javaCode}
       on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
     <div class="flex-1 grid grid-rows-1 items-stretch content-stretch">
-      <Editor value={javaCode} {student_id} />
+      <Editor value={javaCode} />
     </div>
 
     <input type="hidden" data-harmony-id="Hint" bind:value={hint} />

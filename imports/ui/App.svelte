@@ -6,6 +6,9 @@
   import Welcome from './Welcome.svelte'
   import Home from './Home.svelte'
   import { onMount } from 'svelte'
+  import { useTracker } from 'meteor/rdb:svelte-meteor-data'
+
+  // TODO if connection lost and userID is undefined, reauthenticate!
 
   let experiment = undefined
   onMount(() => {

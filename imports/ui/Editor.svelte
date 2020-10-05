@@ -1,7 +1,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte'
   import setupLanguageClient from './languageClient'
-  export let value, student_id
+  export let value
 
   let editor, editorEl
 
@@ -31,7 +31,7 @@
     editor = window.editor = monaco.editor.create(editorEl, editorOptions)
     monaco.editor.setModelLanguage(editor.getModel(), 'java')
 
-    dispose.push(setupLanguageClient(editor, student_id))
+    dispose.push(setupLanguageClient(editor))
 
     window.addEventListener('resize', () => {
       // ugly hack
