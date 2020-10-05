@@ -1,30 +1,37 @@
 <script>
+  import { tick } from 'svelte'
   let active = false
-  let showTooltip = false
+  let input
   async function raiseHand() {
-    showTooltip = false
     active = true
+    await tick()
+    input.focus()
   }
   function cancel() {
-    showTooltip = false
     active = false
   }
+  function handleKeydown(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      sendMessage()
+    }
+  }
+  function sendMessage() {}
 </script>
 
-<div
-  class="helpButtonContainer"
-  on:mouseover={() => {
-    showTooltip = true
-  }}
-  on:mouseout={() => {
-    showTooltip = false
-  }}>
+<div class="helpButtonContainer" class:active>
 
-  <div class="tooltip" class:visible={showTooltip}>
+  <div class="tooltip">
     {#if !active}
       Ask for help
     {:else}
-      Asked for help.
+      Explain your problem:
+      <input bind:this={input} on:keydown={handleKeydown} />
+      <button
+        class="text-primary hover:underline mr-2"
+        on:click|preventDefault={sendMessage}>
+        Send
+      </button>
       <button
         class="text-primary hover:underline"
         on:click|preventDefault={cancel}>
@@ -36,6 +43,12 @@
 </div>
 
 <style>
+  input {
+    background: rgba(255, 255, 255, 0.14);
+    outline: none;
+    padding: 0.2em 0.4em;
+    margin-left: 0.3em;
+  }
   .helpButtonContainer * {
     box-sizing: border-box;
   }
@@ -72,9 +85,6 @@
     background-position: 55% 30%;
     opacity: 0.7;
   }
-  button.active {
-    background-color: #ffffff;
-  }
   .tooltip {
     white-space: nowrap;
     background-color: #2b2b2b;
@@ -89,9 +99,12 @@
     padding: 0.8em 1em;
     transition: opacity 0.3s;
   }
-  .tooltip:not(.visible) {
+  .helpButtonContainer:not(:hover):not(.active) .tooltip {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0s;
+  }
+  .helpButtonContainer:not(.active) .tooltip {
+    pointer-events: none;
   }
 </style>
