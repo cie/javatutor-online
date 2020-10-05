@@ -7,6 +7,8 @@
   import Home from './Home.svelte'
   import { onMount } from 'svelte'
   import { useTracker } from 'meteor/rdb:svelte-meteor-data'
+  import Questionnaire from './Questionnaire.svelte'
+  import Thanks from './Thanks.svelte'
 
   // if connection lost and userID is undefined, reauthenticate!
   $: userId = useTracker(() => Meteor.userId())
@@ -52,6 +54,8 @@
       {/if}
     {/if}
     <Route path="/instructor/*" component={Instructor} />
+    <Route path="/questionnaire" component={Questionnaire} />
+    <Route path="/thanks" component={Thanks} />
     <Route path="/logout" component={Logout} />
   </Router>
 </main>

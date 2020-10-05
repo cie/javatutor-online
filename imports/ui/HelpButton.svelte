@@ -3,48 +3,64 @@
   let active = false
   let textarea
   let message = ''
+  let sent
   async function raiseHand() {
     active = true
+    sent = false
+    message = ''
     await tick()
     textarea.focus()
   }
   function cancel() {
     active = false
   }
+  async function edit() {
+    sent = false
+    await tick()
+    textarea.focus()
+  }
   function handleKeydown(e) {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       sendMessage()
     }
   }
   async function sendMessage(e) {
-    message = ''
-    await tick()
-    textarea.focus()
+    sent = true
   }
 </script>
 
 <div class="helpButtonContainer" class:active>
 
-  <div class="tooltip">
+  <div class="tooltip rounded-sm">
     {#if !active}
       Ask for help
     {:else}
       Explain your problem:
-      <br />
-      <textarea
-        bind:value={message}
-        bind:this={textarea}
-        on:keydown={handleKeydown}
-        rows="2"
-        cols="38" />
-      <br />
+      <div>
+        <textarea
+          bind:value={message}
+          bind:this={textarea}
+          on:keydown={handleKeydown}
+          readonly={sent}
+          class:sent
+          rows="2"
+          cols="38" />
+      </div>
       <div class="text-right">
-        <button
-          class="text-primary hover:underline mr-2"
-          on:click|preventDefault={sendMessage}>
-          Send
-        </button>
+        {#if !sent}
+          <button
+            class="text-primary hover:underline mr-2"
+            on:click|preventDefault={sendMessage}>
+            Send
+          </button>
+        {:else}
+          <button
+            class="text-primary hover:underline mr-2"
+            on:click|preventDefault={edit}>
+            Edit
+          </button>
+        {/if}
         <button
           class="text-primary hover:underline"
           on:click|preventDefault={cancel}>
@@ -62,6 +78,9 @@
     outline: none;
     padding: 0.2em 0.4em;
     vertical-align: middle;
+  }
+  textarea.sent {
+    background: transparent;
   }
   .helpButtonContainer * {
     box-sizing: border-box;
@@ -103,7 +122,6 @@
     white-space: nowrap;
     background-color: #2b2b2b;
     color: #ddd;
-    border-radius: 2px;
     display: inline-block;
     font-size: 0.9em;
     position: absolute;

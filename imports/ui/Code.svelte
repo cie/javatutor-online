@@ -5,6 +5,7 @@
   import tasks from '../api/tasks.yml'
   import { markdown } from 'markdown'
   import { init } from 'svelte/internal'
+  import { navigate } from 'svelte-routing'
 
   let initialCode = '',
     code = '',
@@ -14,7 +15,7 @@
   $: task = tasks[taskIndex]
   $: initialCode = task.initialCode
   $: code = initialCode
-  $: input = task.input.replace('$NAME', 'Joe')
+  $: input = (task.input || '').replace('$NAME', 'Joe')
 
   let hint = null
   let hintLineNumber = 1
@@ -34,22 +35,53 @@
       run()
     }
   }
+
+  function nextTask() {
+    if (taskIndex < tasks.length - 1) {
+      ++taskIndex
+      output = ''
+    } else {
+      navigate('/questionnaire')
+    }
+  }
+  function done() {
+    nextTask()
+  }
+  function skip() {
+    nextTask()
+  }
 </script>
 
 <div class="h-full flex flex-col" on:keydown|capture={keydown}>
   <div class="flex" style="background: #2e2e2e;">
-    <nav class="text-white">
-      <a class="text-white" href="#/">JavaTutor</a>
-      › {task.title}
-    </nav>
+    {#each tasks as task, i (i)}
+      <div
+        class="bg-{i === taskIndex ? 'primary-600' : 'gray-600'} h-3 w-12 mx-1" />
+    {/each}
   </div>
   <div
     class="flex-1 flex py-2 flex-col md:flex-row"
     style="background: #1e1e1e;">
     <aside
       class="task-description text-white px-4 py-3 bg-gray-800 text-white w-full
-      md:w-1/4">
-      {@html markdown.toHTML(task.description)}
+      md:w-1/4 flex flex-col">
+      <div class="flex-1">
+        {@html markdown.toHTML(task.description)}
+      </div>
+      <div>
+        <button
+          class="rounded-md w-full mt-4 mb-2 text-center px-1 py-3 bg-gray-700"
+          on:click|preventDefault={done}>
+          <i class="fa fa-check-circle" />
+          Done, move to the next task
+        </button>
+        <button
+          class="rounded-md w-full text-center py-1"
+          on:click|preventDefault={skip}>
+          Skip this task
+        </button>
+      </div>
+
     </aside>
 
     <input

@@ -11,6 +11,8 @@ Meteor.startup(() => {
   )
 })
 
+let group = 2
+
 Meteor.methods({
   reauthenticate({ student_id }) {
     this.setUserId(student_id)
@@ -21,7 +23,8 @@ Meteor.methods({
       experiment_id
     })
     this.setUserId(student_id)
-    return student_id
+    group = group === 1 ? 2 : 1
+    return { student_id, group }
   },
   run(code, input) {
     fs.writeFileSync('Code.java', code)

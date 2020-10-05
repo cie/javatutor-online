@@ -21,13 +21,15 @@
       errorMessage = 'Please enter a nickname'
       return
     }
-    Meteor.call('startSession', { nickname, experiment_id }, (err, _id) => {
+    Meteor.call('startSession', { nickname, experiment_id }, (err, result) => {
       if (err) {
         errorMessage = err.reason || err.message
         return
       }
-      Meteor.connection.setUserId(_id)
-      localStorage.setItem('student_id', _id)
+      const { student_id, group } = result
+      Meteor.connection.setUserId(student_id)
+      localStorage.setItem('student_id', student_id)
+      localStorage.setItem('group', group)
       navigate('/code')
     })
   }

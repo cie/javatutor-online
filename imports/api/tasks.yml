@@ -1,4 +1,5 @@
-- title: Hello, World!
+- id: hello-world
+  title: Hello, World!
   description: |
     # Hello, World!
 
@@ -24,7 +25,8 @@
     }
   input: $NAME
 
-- title: Simple condition
+- id: simple-condition
+  title: Simple condition
   description: |
     # Simple condition
 
