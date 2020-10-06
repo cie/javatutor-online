@@ -21,6 +21,10 @@
     }
   }
   $: someEvents = $events && $events.length > 0
+  let hintText
+  function sendHint() {
+    hintText = ''
+  }
 </script>
 
 <section>
@@ -48,7 +52,18 @@
       <p>No code received</p>
     {/if}
     {#if student.helpAsked && student.helpTaskId === currentTaskId}
-      <div class="hintForm" />
+      <p class="text-primary">Asked for help.</p>
+      {#if student.problemMessage}
+        <p>{student.problemMessage}</p>
+      {/if}
+      <div class="hintForm">
+        <textarea bind:value={hintText} />
+        <button
+          class="text-primary hover:underline"
+          on:click|preventDefault={sendHint}>
+          Send
+        </button>
+      </div>
     {/if}
   {:else}...{/if}
 </section>
@@ -60,6 +75,12 @@
     margin-right: 30px;
     flex-shrink: 0.2;
   }
+  textarea {
+    background: rgba(255, 255, 255, 0.14);
+    outline: none;
+    padding: 0.2em 0.4em;
+    vertical-align: middle;
+  }
   .tab {
     background: none;
     border: none;
@@ -69,7 +90,7 @@
   .tab.active {
     border-bottom: royalblue 2px solid;
   }
-  .tab.active {
+  .tab.help {
     border-bottom: #eaad12 2px solid;
   }
   .tab.active.help {
