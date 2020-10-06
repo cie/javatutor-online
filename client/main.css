@@ -11,6 +11,9 @@
 .bg-primary-600 {
   background: #b1820d;
 }
+.bg-primary-800 {
+  background: #7a5904;
+}
 
 body.dark {
   --ion-color-primary: #428cff;

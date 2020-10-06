@@ -1,7 +1,6 @@
 <script>
   import TaskPlayer from './TaskPlayer.svelte'
   export let student
-  export let tasks
   let task_ids
   let currentTaskId
   Meteor.subscribe('EventsThat', { student_id: student._id })
@@ -32,6 +31,7 @@
           <button
             class="tab mx-2 my-1 outline-none"
             class:active={currentTaskId === task_id}
+            class:help={student.helpTaskId === task_id}
             on:click={() => {
               currentTaskId = task_id
             }}>
@@ -46,6 +46,9 @@
           .map(e => ({ ...e, sec: +new Date(e.createdAt) / 1000 }))} />
     {:else}
       <p>No code received</p>
+    {/if}
+    {#if student.helpAsked && student.helpTaskId === currentTaskId}
+      <div class="hintForm" />
     {/if}
   {:else}...{/if}
 </section>
@@ -65,5 +68,14 @@
   }
   .tab.active {
     border-bottom: royalblue 2px solid;
+  }
+  .tab.active {
+    border-bottom: #eaad12 2px solid;
+  }
+  .tab.active.help {
+    border-bottom: #b1820d 2px solid;
+  }
+  .hintForm {
+    border: 8px solid #b1820d;
   }
 </style>

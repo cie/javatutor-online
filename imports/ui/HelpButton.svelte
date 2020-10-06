@@ -1,23 +1,26 @@
 <script>
   import { tick } from 'svelte'
   import trackEvent from './trackEvent'
-  export let code
+  export let code, task_id
   let active = false
   let textarea
-  let message = ''
+  let problemMessage = ''
   let sent
-  async function raiseHand() {
+  const student_id = localStorage.getItem('student_id')
+  async function askForHelp() {
     if (active) return
     active = true
     sent = false
-    message = ''
+    problemMessage = ''
     await tick()
     textarea.focus()
     trackEvent({ type: 'Ask for help', code })
+    Meteor.call('askForHelp', { student_id, task_id })
   }
-  function cancel() {
+  function cancelHelp() {
     active = false
     trackEvent({ type: 'Cancel help', code })
+    Meteor.call('cancelHelp', { student_id })
   }
   async function edit() {
     sent = false
@@ -27,12 +30,13 @@
   function handleKeydown(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      sendMessage()
+      sendProblemMessage()
     }
   }
-  async function sendMessage(e) {
+  async function sendProblemMessage() {
     sent = true
-    trackEvent({ type: 'Send problem message', value: message, code })
+    trackEvent({ type: 'Send problem message', value: problemMessage, code })
+    Meteor.call('sendProblemMessage', { student_id, problemMessage, task_id })
   }
 </script>
 
@@ -45,7 +49,7 @@
       Explain your problem:
       <div>
         <textarea
-          bind:value={message}
+          bind:value={problemMessage}
           bind:this={textarea}
           on:keydown={handleKeydown}
           readonly={sent}
@@ -57,7 +61,7 @@
         {#if !sent}
           <button
             class="text-primary hover:underline mr-2"
-            on:click|preventDefault={sendMessage}>
+            on:click|preventDefault={sendProblemMessage}>
             Send
           </button>
         {:else}
@@ -69,13 +73,13 @@
         {/if}
         <button
           class="text-primary hover:underline"
-          on:click|preventDefault={cancel}>
+          on:click|preventDefault={cancelHelp}>
           Cancel
         </button>
       </div>
     {/if}
   </div>
-  <button class="hand" on:click|preventDefault={raiseHand} class:active />
+  <button class="hand" on:click|preventDefault={askForHelp} class:active />
 </div>
 
 <style>

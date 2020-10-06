@@ -9,7 +9,7 @@
   import StudentContent from './StudentContent.svelte'
   import StudentHeader from './StudentHeader.svelte'
 
-  let currentStudent
+  let currentStudentId
 </script>
 
 <article>
@@ -18,13 +18,14 @@
       <StudentHeader
         {student}
         {tasks}
-        active={student === currentStudent}
-        on:select={() => (currentStudent = student)} />
+        active={student._id === currentStudentId}
+        on:select={() => (currentStudentId = student._id)} />
     {:else}No students.{/each}
   </aside>
   <main>
-    {#if currentStudent}
-      <StudentContent student={currentStudent} {tasks} />
+    {#if currentStudentId}
+      <StudentContent
+        student={students.find(s => s._id === currentStudentId)} />
     {/if}
   </main>
 </article>

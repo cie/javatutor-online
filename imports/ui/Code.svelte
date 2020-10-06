@@ -13,6 +13,7 @@
     output
 
   $: task = tasks[taskIndex]
+  $: task_id = task.id
   $: localStorage.setItem('task_id', task.id)
   $: initialCode = task.initialCode
   $: code = initialCode
@@ -103,7 +104,7 @@
       md:mt-0"
       style="min-height: 210px">
       <Editor value={initialCode} on:change={handleCodeChange} />
-      <HelpButton {code} />
+      <HelpButton {code} {task_id} />
     </div>
 
     <input type="hidden" data-harmony-id="Hint" bind:value={hint} />

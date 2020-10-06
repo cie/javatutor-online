@@ -14,7 +14,8 @@
         `Are you sure you want to ${active ? 'start' : 'stop'} the experiment?`
       )
     )
-      Experiments.update(experiment_id, { $set: { active } })
+      return
+    Experiments.update(experiment_id, { $set: { active } })
   }
 </script>
 

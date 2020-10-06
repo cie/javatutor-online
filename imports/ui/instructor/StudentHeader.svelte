@@ -30,8 +30,10 @@
 </script>
 
 <main
-  class="hover:bg-gray-800"
-  class:bg-gray-800={active}
+  class="hover:bg-{student.helpAsked ? 'primary-800' : 'gray-800'}"
+  class:bg-gray-800={active && !student.helpAsked}
+  class:bg-primary-800={active && student.helpAsked}
+  class:bg-primary-600={student.helpAsked && !active}
   on:click={() => dispatch('select')}>
   <h1>{student.nickname}</h1>
 
