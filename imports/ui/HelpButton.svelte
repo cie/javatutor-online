@@ -1,21 +1,23 @@
 <script>
   import { tick } from 'svelte'
   import trackEvent from './trackEvent'
+  export let code
   let active = false
   let textarea
   let message = ''
   let sent
   async function raiseHand() {
+    if (active) return
     active = true
     sent = false
     message = ''
     await tick()
     textarea.focus()
-    trackEvent({ type: 'Ask for help' })
+    trackEvent({ type: 'Ask for help', code })
   }
   function cancel() {
     active = false
-    trackEvent({ type: 'Cancel help' })
+    trackEvent({ type: 'Cancel help', code })
   }
   async function edit() {
     sent = false
@@ -30,7 +32,7 @@
   }
   async function sendMessage(e) {
     sent = true
-    trackEvent({ type: 'Send problem message', value: message })
+    trackEvent({ type: 'Send problem message', value: message, code })
   }
 </script>
 

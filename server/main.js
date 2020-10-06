@@ -13,8 +13,10 @@ Meteor.startup(() => {
 
 let group = 2
 
+console.log(3)
 Meteor.methods({
   reauthenticate({ student_id }) {
+    if (student_id === 'instructor') throw new Meteor.Error(403)
     this.setUserId(student_id)
   },
   startSession({ nickname, experiment_id }) {

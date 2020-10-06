@@ -22,12 +22,12 @@
   let hintLineNumber = 1
 
   function run() {
-    trackEvent({ type: 'Run', value: input })
+    trackEvent({ type: 'Run', value: input, code })
     output = ''
     Meteor.call('run', code, input, (err, res) => {
       if (err) return
       output = res
-      trackEvent({ type: 'Run done', value: output })
+      trackEvent({ type: 'Run done', value: output, code })
     })
   }
 
@@ -48,16 +48,16 @@
     }
   }
   function done() {
-    trackEvent({ type: 'Done task' })
+    trackEvent({ type: 'Done task', code })
     nextTask()
   }
   function skip() {
-    trackEvent({ type: 'Skip task' })
+    trackEvent({ type: 'Skip task', code })
     nextTask()
   }
   function handleCodeChange(e) {
     code = e.detail.value
-    trackEvent({ type: 'Edit code', value: code })
+    trackEvent({ type: 'Edit code', code })
   }
 </script>
 
@@ -103,7 +103,7 @@
       md:mt-0"
       style="min-height: 210px">
       <Editor value={initialCode} on:change={handleCodeChange} />
-      <HelpButton />
+      <HelpButton {code} />
     </div>
 
     <input type="hidden" data-harmony-id="Hint" bind:value={hint} />

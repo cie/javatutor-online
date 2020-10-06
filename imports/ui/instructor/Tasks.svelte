@@ -1,0 +1,27 @@
+<script>
+  import tasks from '../../api/tasks.yml'
+  import { markdown } from 'markdown'
+  import CodeWindow from './CodeWindow.svelte'
+</script>
+
+<main class="flex justify-stretch items-stretch">
+  <aside class="mr-2 p-1 h-full flex-1">
+
+    {#each tasks as { id, title, description, initialCode, input }, i}
+      <div>
+        <h1 class="text-lg my-5">
+          {i + 1}
+          <tt>{id}</tt>
+          {title}
+        </h1>
+        <div class="task-description bg-gray-800 max-w-xl px-4 py-4">
+          {@html markdown.toHTML(description)}
+        </div>
+        <CodeWindow code={initialCode} />
+        <p class="text-bold my-2">input</p>
+        <pre>{input}</pre>
+      </div>
+    {:else}No tasks.{/each}
+
+  </aside>
+</main>

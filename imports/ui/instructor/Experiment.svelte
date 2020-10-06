@@ -2,13 +2,19 @@
   import { useTracker } from 'meteor/rdb:svelte-meteor-data'
   import { Route, Router } from 'svelte-routing'
   import Redirect from '../Redirect.svelte'
-  import StudentsTab from './StudentsTab.svelte'
+  import Gateways from './Gateways.svelte'
+  import Students from './Students.svelte'
   import Tab from './Tab.svelte'
-  import TasksTab from './TasksTab.svelte'
+  import Tasks from './Tasks.svelte'
   export let experiment_id
   $: EXPERIMENT = useTracker(() => Experiments.findOne(experiment_id))
   function toggleActive(active) {
-    Experiments.update(experiment_id, { $set: { active } })
+    if (
+      !confirm(
+        `Are you sure you want to ${active ? 'start' : 'stop'} the experiment?`
+      )
+    )
+      Experiments.update(experiment_id, { $set: { active } })
   }
 </script>
 
@@ -46,13 +52,14 @@
       <span class="my-2 py-1">Active</span>
     </nav>
     <Router>
-      <Route path="tasks" component={TasksTab} {experiment_id} />
-      <Route path="students" component={StudentsTab} {experiment_id} />
+      <Route path="tasks" component={Tasks} {experiment_id} />
+      <Route path="students" component={Students} {experiment_id} />
       <Route>
         <Redirect to="/instructor/experiments/{experiment_id}/tasks" />
       </Route>
     </Router>
   </main>
+  <Gateways {experiment_id} />
 {/if}
 
 <style>
