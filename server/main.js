@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import '../imports/api'
 import fs from 'fs'
 import child_process from 'child_process'
+import './languageServer'
 
 Meteor.startup(() => {
   Meteor.users.upsert('instructor', { username: 'instructor' })
@@ -29,15 +30,22 @@ Meteor.methods({
     return { student_id, group }
   },
   run(code, input) {
-    fs.writeFileSync('Code.java', code)
-    console.log('wrote', process.cwd())
+    const m = code.match(/public\s+class\s+(\w+)/)
+    if (!m)
+      throw new Error(
+        'The code must contain a public class, e.g.\npublic class MyClass {\n    ...\n}'
+      )
+    const className = m[1]
+    fs.writeFileSync(`${className}.java`, code)
     try {
-      child_process.execSync('javac Code.java')
+      child_process.execSync(`javac ${className}.java`)
     } catch (e) {
       return e.message
     }
     fs.writeFileSync('input.txt', input)
-    const result = child_process.execSync('java Code < input.txt').toString()
+    const result = child_process
+      .execSync(`java ${className} < input.txt`)
+      .toString()
     console.log(result)
     return result
   }

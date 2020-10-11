@@ -5,7 +5,7 @@ import {
   ErrorAction,
   CloseAction
 } from 'monaco-languageclient'
-import { lspOverMethodsMessageConnection } from './lspOverMethods'
+import { lspOverMeteorMessageConnection } from './lspOverMeteor'
 
 export default function setupLanguageClient(editor) {
   if (!Meteor.isClient) return
@@ -24,7 +24,7 @@ export default function setupLanguageClient(editor) {
     connectionProvider: {
       async get() {
         return createConnection(
-          lspOverMethodsMessageConnection(),
+          lspOverMeteorMessageConnection(),
           console.error,
           console.warn
         )

@@ -3,11 +3,11 @@
   import setupLanguageClient from './languageClient'
   export let value
 
-  let editor, editorEl
+  let editor, editorEl, model
   const dispatch = createEventDispatcher()
 
-  $: if (editor) {
-    editor.getModel().setValue(value)
+  $: if (editor && model) {
+    if (model.getValue() !== value) model.setValue(value)
   }
 
   const editorOptions = {
@@ -30,10 +30,17 @@
       return
     }
     monaco.editor.setTheme('vs-dark')
-    editor = window.editor = monaco.editor.create(editorEl, editorOptions)
-    monaco.editor.setModelLanguage(editor.getModel(), 'java')
-    editor.getModel().onDidChangeContent(() => {
-      const value = editor.getModel().getValue()
+    model = monaco.editor.createModel(
+      value,
+      'java',
+      'file:///home/cie/git/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/products/languageServer.product/linux/gtk/x86_64/workspace/asdf/src/Code.java'
+    )
+    editor = window.editor = monaco.editor.create(editorEl, {
+      ...editorOptions,
+      model
+    })
+    model.onDidChangeContent(() => {
+      const value = model.getValue()
       dispatch('change', { value })
     })
 

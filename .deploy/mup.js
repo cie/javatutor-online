@@ -33,7 +33,10 @@ module.exports = {
       // abernix/meteord:node-12-base works with Meteor 1.9 - 1.10
       // If you are using a different version of Meteor,
       // refer to the docs for the correct image to use.
-      image: 'abernix/meteord:node-12-base'
+      image: 'abernix/meteord:node-12-base',
+      buildInstructions: [
+        'RUN apt-get update && apt-get install -y openjdk-8-jdk'
+      ]
     },
 
     // Show progress bar while uploading bundle to server

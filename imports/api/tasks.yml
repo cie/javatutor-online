@@ -7,10 +7,10 @@
 
     **Write a program that asks for the name of the user and then greets them.**
 
-    You can run the program with the Run button and see its output in the Output box.
+    You can run the program with the green Run button and see its output in the Output box.
 
-    The Input box below contains the input the user would enter into the running program:
-    one line in the box is one line entered. These will be sent to the running program.
+    The Input box below contains the user input that will be sent to your program when you press Run:
+    one line in the box is one line entered.
   initialCode: |
     import java.util.Scanner;
 
@@ -19,7 +19,7 @@
             Scanner input = new Scanner(System.in);
             System.out.println("Enter your name: ");
             String name = input.nextLine();
-
+            
         }
     }
   input: $NAME
@@ -28,7 +28,7 @@
   description: |
     # Simple condition
 
-    **Write a program that asks for a number and tells if it is even or odd**
+    Write a program that asks for a number and tells if it is even or odd
   initialCode: |
     public class Code {
         public static void main(String [] args) {

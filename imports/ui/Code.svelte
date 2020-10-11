@@ -7,16 +7,13 @@
   import { navigate } from 'svelte-routing'
   import trackEvent from './trackEvent'
 
-  let initialCode = '',
-    code = '',
-    taskIndex = 0,
+  let taskIndex = 0,
+    code = tasks[taskIndex].initialCode,
     output
 
   $: task = tasks[taskIndex]
   $: task_id = task.id
   $: localStorage.setItem('task_id', task.id)
-  $: initialCode = task.initialCode
-  $: code = initialCode
   $: input = (task.input || '').replace('$NAME', 'Joe')
 
   let hint = null
@@ -52,10 +49,6 @@
     trackEvent({ type: 'Done task', code })
     nextTask()
   }
-  function skip() {
-    trackEvent({ type: 'Skip task', code })
-    nextTask()
-  }
   function handleCodeChange(e) {
     code = e.detail.value
     trackEvent({ type: 'Edit code', code })
@@ -85,11 +78,6 @@
           <i class="fa fa-check-circle" />
           Done, move to the next task
         </button>
-        <button
-          class="rounded-md w-full text-center py-1"
-          on:click|preventDefault={skip}>
-          Skip this task
-        </button>
       </div>
 
     </aside>
@@ -97,13 +85,13 @@
     <input
       type="hidden"
       data-harmony-id="Java code"
-      bind:value={initialCode}
+      bind:value={code}
       on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
     <div
       class="flex-1 grid grid-rows-1 items-stretch content-stretch relative mt-2
       md:mt-0"
-      style="min-height: 210px">
-      <Editor value={initialCode} on:change={handleCodeChange} />
+      style="min-height: 410px">
+      <Editor value={code} on:change={handleCodeChange} />
       <HelpButton {code} {task_id} />
     </div>
 
