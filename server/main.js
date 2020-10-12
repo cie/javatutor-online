@@ -3,6 +3,7 @@ import '../imports/api'
 import fs from 'fs'
 import child_process from 'child_process'
 import './languageServer'
+import './hints'
 
 Meteor.startup(() => {
   Meteor.users.upsert('instructor', { username: 'instructor' })

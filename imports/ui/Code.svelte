@@ -6,6 +6,7 @@
   import { markdown } from 'markdown'
   import { navigate } from 'svelte-routing'
   import trackEvent from './trackEvent'
+  import { onMount } from 'svelte'
 
   let taskIndex = 0,
     code = tasks[taskIndex].initialCode,
@@ -18,6 +19,9 @@
 
   let hint = null
   let hintLineNumber = 1
+  const hintTimeoutSec = Meteor.isDevelopment ? 5 : 30
+  const hintHideTimeoutSec = Meteor.isDevelopment ? 3 : 4
+  let hintTimeout
 
   function run() {
     trackEvent({ type: 'Run', value: input, code })
@@ -52,7 +56,33 @@
   function handleCodeChange(e) {
     code = e.detail.value
     trackEvent({ type: 'Edit code', code })
+    if (hintTimeout) clearTimeout(hintTimeout)
+    hintTimeout = setTimeout(
+      getHint,
+      (hint ? hintTimeoutSec : hintHideTimeoutSec) * 1000
+    )
   }
+
+  function getHint() {
+    console.log({ code, task_id })
+    Meteor.call('getHint', code, task_id, (err, newHint) => {
+      if (err) {
+        trackEvent({ type: 'Internal error', code, value: err })
+        return
+      }
+      if (!hint) {
+        hint = newHint
+      } else if (newHint !== hint) {
+        hint = null
+        setTimeout(getHint, hintTimeoutSec * 1000)
+      }
+      trackEvent({ type: 'Automatic hint', code, value: hint })
+    })
+  }
+
+  onMount(() => {
+    setTimeout(getHint, hintTimeoutSec * 1000)
+  })
 </script>
 
 <div class="h-full flex flex-col" on:keydown|capture={keydown}>
@@ -103,7 +133,8 @@
     {#if hint}
       <div
         data-harmony-id="Bubble"
-        class="bg-yellow-300 w-16 h-16 rounded-lg absolute">
+        class="text-sm px-3 py-2 bg-yellow-300 w-64 rounded-lg absolute
+        shadow-md right-0 mr-16">
         <div data-harmony-id="Bubble content">
           {@html hint}
         </div>

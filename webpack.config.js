@@ -65,6 +65,15 @@ const serverConfig = {
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [meteorExternals(), nodeExternals()], // in order to ignore all modules in node_modules folder
   entry: './server/main.js',
+  module: {
+    rules: [
+      {
+        test: /\.ya?ml$/,
+        type: 'json',
+        use: 'yaml-loader'
+      }
+    ]
+  },
   plugins: []
 }
 

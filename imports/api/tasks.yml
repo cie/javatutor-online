@@ -23,6 +23,33 @@
         }
     }
   input: $NAME
+  hints:
+    - hint: Use System.out.println()
+      spec: count(does console print) <= 1
+      yes:
+        - |
+          import java.util.Scanner;
+
+          public class Code {
+              public static void main(String [] args) {
+                  Scanner input = new Scanner(System.in);
+                  System.out.println("Enter your name: ");
+                  String name = input.nextLine();
+                  
+              }
+          }
+      no:
+        - |
+          import java.util.Scanner;
+
+          public class Code {
+              public static void main(String [] args) {
+                  Scanner input = new Scanner(System.in);
+                  System.out.println("Enter your name: ");
+                  String name = input.nextLine();
+                  System.out.println();
+              }
+          }
 
 - id: simple-condition
   description: |
