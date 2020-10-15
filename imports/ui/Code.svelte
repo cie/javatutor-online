@@ -138,6 +138,17 @@
         <div data-harmony-id="Bubble content">
           {@html hint}
         </div>
+        <div
+          class="goodHintButtons flex justify-end items-center"
+          style="opacity: 0.5; margin-bottom: -8px; margin-right: -8px">
+          <small class="goodHint text-xs mr-1">Good hint?</small>
+          <button class="p-1">
+            <i class="fa fa-smile-o" />
+          </button>
+          <button class="p-1">
+            <i class="fa fa-frown-o" />
+          </button>
+        </div>
       </div>
     {/if}
 
@@ -173,3 +184,9 @@
     </div>
   </footer>
 </div>
+
+<style>
+  .goodHintButtons:not(:hover) > .goodHint {
+    visibility: hidden;
+  }
+</style>

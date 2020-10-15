@@ -4,6 +4,7 @@
 
     Welcome and thanks for participating! 
     This is a warm-up task so you can get familiar with the environment.
+    Whenever you are stuck, feel free to use the yellow hand button to ask for help.
 
     **Write a program that asks for the name of the user and then greets them.**
 
@@ -24,6 +25,8 @@
     }
   input: $NAME
   hints:
+    - hint: You should call nextLine()
+      spec: '! calls nextLine'
     - hint: Use System.out.println()
       spec: count(does console print) <= 1
       yes:
