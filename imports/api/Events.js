@@ -14,7 +14,6 @@ Meteor.methods({
 })
 
 if (Meteor.isServer) {
-  console.log('sre')
   Meteor.publish('EventsThat', function (query) {
     if (this.userId === 'instructor') {
       return Events.find(query, { sort: { createdAt: 1 } })

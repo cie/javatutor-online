@@ -7,3 +7,6 @@ reports/
 harmony_result.json
 
 .deploy/settings.json
+
+.env
+*.log

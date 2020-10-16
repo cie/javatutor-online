@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "stryker": "git diff --exit-code && (stryker run --logLevel trace; git checkout client server imports)",
-    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "stryker": "stryker run",
+    "test": "if [ -f ../../.env ]; then cp -f ../../.env .; fi && harmony >> harmony.log 2>> harmony.log",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
     "deploy": "mup setup --config .deploy/mup.js && mup deploy --config .deploy/mup.js --settings .deploy/settings.json"

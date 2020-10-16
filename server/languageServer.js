@@ -39,12 +39,12 @@ function receivedMessage() {
 
     try {
       const object = JSON.parse(message)
-      console.log(util.inspect(object, { showHidden: false, depth: null }))
+      //console.log(util.inspect(object, { showHidden: false, depth: null }))
       const _id = Random.id()
       if (publication) publication.added('LSPMessages', _id, { message })
     } catch (e) {
       console.error(e)
-      console.log({ pendingMessages, message })
+      //console.log({ pendingMessages, message })
     }
   }
 }
@@ -55,10 +55,10 @@ Meteor.publish('LSPMessages', function () {
 
 Meteor.methods({
   async sendLSPMessage(message) {
-    console.log(
-      this.userId,
-      util.inspect(message, { showHidden: false, depth: null })
-    )
+    //console.log(
+    //this.userId,
+    //util.inspect(message, { showHidden: false, depth: null })
+    //)
     let promise
     if ('id' in message) {
       promise = new Promise(r => (pendingMessages[message.id] = r))

@@ -1,0 +1,4 @@
+sut: http://localhost:3000
+command: meteor
+projects:
+  - https://master.works.harmony.ac/project/2bde12d8-e1ef-49f8-ad52-730cf9b20814

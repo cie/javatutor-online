@@ -3,15 +3,14 @@
   "mutator": "javascript",
   "packageManager": "npm",
   "reporters": ["html", "clear-text", "progress"],
-  "mutate": ["{server,client,imports}/**/*.js?(x)"],
+  "mutate": ["{server,client,imports}/**/*.js"],
   "maxConcurrentTestRunners": 1,
   "plugins": ["@stryker-mutator/*"],
-  "testRunner": "jest",
+  "testRunner": "command",
   "timeoutMS": 30000,
   "jest": {
     "enableFindRelatedTests": false
   },
-  "transpilers": ["babel"],
   "coverageAnalysis": "off",
   "babel": {
     "optionsFile": ".babelrc"

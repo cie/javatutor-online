@@ -12,6 +12,11 @@
   let currentStudentId
 </script>
 
+<input
+  type="hidden"
+  data-harmony-id="Students"
+  value={students.map(s => s.nickname).join(', ')} />
+
 <article>
   <aside>
     {#each students as student}

@@ -39,7 +39,7 @@
 </nav>
 <p>
   <input
-    data-harmoy-id="New experiment title"
+    data-harmony-id="New experiment title"
     bind:value={newExperimentTitle}
     placeholder="New experiment's title"
     on:keypress={e => {
