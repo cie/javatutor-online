@@ -61,3 +61,25 @@
         }
       hints:
         - message: Add an argument. What do you want to output?
+- id: arrays-above-below-average
+  title: Above and below average
+  description: |
+    Write a program that reads in numbers (until a negative one is received)
+    and outputs those above the average and those below the average.
+  initialCode: |
+    import java.util.Scanner;
+
+    public class Code {
+        public static void main(String [] args) {
+            
+        }
+    }
+  input: |
+    3
+    14
+    6
+    2
+    -1
+  hints:
+    - match: //MethodDeclaration[@Name="main" and not(.//AllocationExpression[ClassOrInterfaceType[@Image="Scanner"]])]
+      message: Start with making a Scanner variable to take inputs from the user
