@@ -4,9 +4,12 @@ import fs from 'fs'
 import { promisify } from 'util'
 
 if (!java.isJvmCreated()) {
-  java.options.push('-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:8000')
+  if (process.env.DEBUG_JAVA)
+    java.options.push(
+      '-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:8000'
+    )
   java.asyncOptions = {
-    asyncSuffix: undefined, // Don't generate node-style methods taking callbacks
+    asyncSuffix: 'A', // Don't generate node-style methods taking callbacks
     syncSuffix: '',
     promiseSuffix: 'P',
     promisify
@@ -16,9 +19,11 @@ if (!java.isJvmCreated()) {
     typeof Assets !== 'undefined'
       ? Assets.absoluteFilePath('pmd')
       : `${__dirname}/../../private/pmd`
+
   java.classpath.push(...glob.sync(`${pmdDir}/lib/*.jar`))
   fs.mkdirSync(`${pmdDir}/hints/tasks`, { recursive: true })
   java.classpath.push(...glob.sync(`${pmdDir}/hints`))
+  java.classpath.push(...glob.sync(`${pmdDir}/utils`))
 
   fs.writeFileSync(
     `${pmdDir}/hints/tasks/hello-world.xml`,
@@ -35,7 +40,7 @@ if (!java.isJvmCreated()) {
     <rule name="Hint1"
           language="java"
           since="4.2"
-          class="net.sourceforge.pmd.lang.rule.XPathRule"
+          class="javatutor.DumbXPathRule"
           typeResolution="true"
           message="Hello, message!">
         <description>Hi</description>
@@ -45,7 +50,9 @@ if (!java.isJvmCreated()) {
             <property name="xpath">
                 <value>
 <![CDATA[
-  /*
+  //BlockStatement[.//Name[@Image="input.nextLine"]
+  and not(following-sibling::*)
+  and not(.//BlockStatement)]
 ]]>
                 </value>
             </property>
@@ -60,12 +67,16 @@ const File = java.import('java.io.File')
 const ArrayList = java.import('java.util.ArrayList')
 const Arrays = java.import('java.util.Arrays')
 const ByteArrayInputStream = java.import('java.io.ByteArrayInputStream')
+const SourceCodeProcessor = java.import(
+  'net.sourceforge.pmd.SourceCodeProcessor'
+)
 
 const PMD = java.import('net.sourceforge.pmd.PMD')
 const PMDConfiguration = java.import('net.sourceforge.pmd.PMDConfiguration')
 const RuleContext = java.import('net.sourceforge.pmd.RuleContext')
 const RulePriority = java.import('net.sourceforge.pmd.RulePriority')
 const XPathRule = java.import('net.sourceforge.pmd.lang.rule.XPathRule')
+const PmdRunnable = java.import('net.sourceforge.pmd.processor.PmdRunnable')
 const RulesetsFactoryUtils = java.import(
   'net.sourceforge.pmd.RulesetsFactoryUtils'
 )
@@ -75,13 +86,18 @@ const FileDataSource = java.import(
 
 export default async function getHints(code, hints) {
   // based on https://pmd.github.io/pmd-6.28.0/pmd_userdocs_tools_java_api.html
+  // and net.sourceforge.pmd.processor.AbstractPMDProcessor
   const configuration = new PMDConfiguration()
   configuration.setRuleSets('tasks/hello-world.xml')
-  const ruleSetFactory = RulesetsFactoryUtils.createFactory(configuration)
+  const factory = RulesetsFactoryUtils.createFactory(configuration)
+  const ruleSets = RulesetsFactoryUtils.getRuleSets(
+    configuration.getRuleSets(),
+    factory
+  )
 
-  const ctx = new RuleContext()
-  const files = Arrays.asList(
-    java.newProxy('net.sourceforge.pmd.util.datasource.DataSource', {
+  const dataSource = java.newProxy(
+    'net.sourceforge.pmd.util.datasource.DataSource',
+    {
       getNiceFileName(shortNames, inputFileName) {
         return 'Code.java'
       },
@@ -91,19 +107,30 @@ export default async function getHints(code, hints) {
         )
       },
       close() {}
-    })
+    }
   )
-  await PMD.processFilesP(
-    configuration,
-    ruleSetFactory,
-    files,
-    ctx,
-    new ArrayList()
+  const fileName = 'Code.java'
+  const renderers = Arrays.asList()
+  const ruleContext = new RuleContext()
+  const processor = new SourceCodeProcessor(configuration)
+
+  const runnable = new PmdRunnable(
+    dataSource,
+    fileName,
+    renderers,
+    ruleContext,
+    ruleSets,
+    processor
   )
-  const report = ctx.getReport()
+  const report = await runnable.call()
+
   for (const x of report.getProcessingErrors().toArray()) {
-    throw x
-    ű
+    throw x.getMessage()
   }
-  return ctx.getReport().getViolations().toArray()
+  return report
+    .getViolations()
+    .toArray()
+    .map(v => ({
+      message: v.getDescription()
+    }))
 }
