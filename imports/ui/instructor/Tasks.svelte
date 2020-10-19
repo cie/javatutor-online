@@ -1,5 +1,5 @@
 <script>
-  import tasks from '../../api/tasks.yml'
+  import tasks from '../../../tasks.yml'
   import { markdown } from 'markdown'
   import CodeWindow from './CodeWindow.svelte'
 </script>

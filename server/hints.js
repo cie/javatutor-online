@@ -1,5 +1,5 @@
 import mulang from 'mulang'
-import tasks from '../imports/api/tasks.yml'
+import tasks from '../imports/../tasks.yml'
 
 Meteor.methods({
   getHint(source, task_id) {

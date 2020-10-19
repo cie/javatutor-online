@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string",
+        "description": "The task assignment in markdown"
+      },
+      "initialCode": {
+        "type": "string"
+      },
+      "input": {
+        "type": "string"
+      },
+      "hints": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "The hint in markdown"
+            },
+            "when": {
+              "type": "string",
+              "description": "The Mulang EDL expression that describes when to show the hint"
+            }
+          }
+        }
+      },
+      "tests": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "hints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": ["code", "hints"]
+        }
+      }
+    },
+    "required": ["id", "title", "description", "initialCode", "input", "hints"]
+  }
+}

@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=file:///home/cie/git/javatutor/tasks.schema.json
+
+- id: hello-world
+  title: Hello, World!
+  description: |
+    Welcome and thanks for participating! 
+    This is a warm-up task so you can get familiar with the environment.
+    Whenever you are stuck, feel free to use the yellow hand button to ask for help.
+
+    **Write a program that asks for the name of the user and then greets them.**
+
+    You can run the program with the green Run button and see its output in the Output box.
+
+    The Input box below contains the user input that will be sent to your program when you press Run:
+    one line in the box is one line entered.
+  initialCode: |
+    import java.util.Scanner;
+
+    public class Code {
+        public static void main(String [] args) {
+            Scanner input = new Scanner(System.in);
+            System.out.println("Enter your name: ");
+            String name = input.nextLine();
+        }
+    }
+  input: $NAME
+  hints:
+    - match: |
+        //BlockStatement[
+          .//*[@Image="input.nextLine"] and not(.//BlockStatement)
+          and not(following-sibling::*)]
+      message: Use another System.out.println() call.
+  tests:
+    nothing entered yet:
+      code: |
+        import java.util.Scanner;
+
+        public class Code {
+            public static void main(String [] args) {
+                Scanner input = new Scanner(System.in);
+                System.out.println("Enter your name: ");
+                String name = input.nextLine();
+                
+            }
+        }
+      hints:
+        - message: Use another System.out.println() call.
+    no arg for print():
+      code: |
+        import java.util.Scanner;
+
+        public class Code {
+            public static void main(String [] args) {
+                Scanner input = new Scanner(System.in);
+                System.out.println("Enter your name: ");
+                String name = input.nextLine();
+                System.out.print();
+            }
+        }
+      hints:
+        - message: Add an argument. What do you want to output?
