@@ -1,24 +1,11 @@
 import mulang from 'mulang'
-import tasks from '../imports/../tasks.yml'
+import tasks from '../imports/../private/tasks.yml'
+import getHints from './getHints'
 
 Meteor.methods({
   getHint(source, task_id) {
     try {
-      const task = tasks.find(t => t.id === task_id)
-      let code
-      code = mulang.nativeCode('Java', source)
-      const edl = task.hints
-        .map(
-          ({ hint, spec }) =>
-            `expectation ${JSON.stringify(hint)}:\n   ${spec};\n`
-        )
-        .join('\n')
-      console.log(edl)
-      const results = code.customExpect(edl)
-      console.log(results)
-      const firstMatchingHint = results.find(([hint, matches]) => matches)
-      console.log(firstMatchingHint)
-      if (firstMatchingHint) return firstMatchingHint[0]
+      return getHints(source, task_id)[0]
     } catch (e) {
       console.error(e)
       return null

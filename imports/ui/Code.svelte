@@ -2,7 +2,7 @@
   import Editor from './Editor.svelte'
   import Button from './Button.svelte'
   import HelpButton from './HelpButton.svelte'
-  import tasks from '../../tasks.yml'
+  import tasks from '../../private/tasks.yml'
   import { markdown } from 'markdown'
   import { navigate } from 'svelte-routing'
   import trackEvent from './trackEvent'
@@ -125,7 +125,6 @@
       <HelpButton {code} {task_id} />
     </div>
 
-    <input type="hidden" data-harmony-id="Hint" bind:value={hint} />
     <input
       type="hidden"
       data-harmony-id="Hint line number"
@@ -136,7 +135,7 @@
         class="text-sm px-3 py-2 bg-yellow-300 w-64 rounded-lg absolute
         shadow-md right-0 mr-16">
         <div data-harmony-id="Bubble content">
-          {@html hint}
+          {@html hint.message}
         </div>
         <div
           class="goodHintButtons flex justify-end items-center"

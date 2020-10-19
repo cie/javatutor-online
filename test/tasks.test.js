@@ -4,7 +4,7 @@ const assert = require('assert').strict
 const Ajv = require('ajv')
 const fs = require('fs')
 const mulang = require('mulang')
-const getHints = require('../imports/api/getHints').default
+const getHints = require('../server/getHints').default
 
 const schema = JSON.parse(
   fs.readFileSync(__dirname + '/../tasks.schema.json').toString()
@@ -22,7 +22,7 @@ describe('tasks', () => {
         for (const [testName, test] of Object.entries(task.tests)) {
           it(testName, async () => {
             const { code, hints: expectedHints } = test
-            const hints = await getHints(code, task.hints)
+            const hints = await getHints(code, task.id)
             assert.deepEqual(hints, expectedHints)
           })
         }

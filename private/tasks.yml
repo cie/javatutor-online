@@ -83,3 +83,4 @@
   hints:
     - match: //MethodDeclaration[@Name="main" and not(.//AllocationExpression[ClassOrInterfaceType[@Image="Scanner"]])]
       message: Start with making a Scanner variable to take inputs from the user
+  tests: {}
