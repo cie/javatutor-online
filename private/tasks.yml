@@ -30,6 +30,8 @@
           .//*[@Image="input.nextLine"] and not(.//BlockStatement)
           and not(following-sibling::*)]
       message: Use another System.out.println() call.
+    - match: //PrimaryPrefix[Name/@Image="System.out.println"]/following-sibling::PrimarySuffix[Arguments/@Size=0]
+      message: Add an argument. What do you want to output?
   tests:
     nothing entered yet:
       code: |
@@ -54,7 +56,7 @@
                 Scanner input = new Scanner(System.in);
                 System.out.println("Enter your name: ");
                 String name = input.nextLine();
-                System.out.print();
+                System.out.println();
             }
         }
       hints:
