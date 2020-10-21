@@ -59,28 +59,23 @@
       )
       if (minHeight != newMinHeight) {
         minHeight = newMinHeight
-        tick().then(() => {
-          layoutEditor()
-        })
+        tick().then(() => window.dispatchEvent(new Event('resize')))
       }
     })
 
     disposers.push(setupLanguageClient(editor))
-
-    window.addEventListener('resize', () => {
-      layoutEditor()
-    })
-
-    function layoutEditor() {
-      // ugly hack
-      editor._domElement.style.display = 'none'
-      editor.layout()
-      editor._domElement.style.display = ''
-      editor.layout()
-    }
   }
+
+  function onResize() {
+    // ugly hack
+    editor._domElement.style.display = 'none'
+    editor.layout()
+    editor._domElement.style.display = ''
+    editor.layout()
+  }
+
   function onWheel(event) {
-    console.log(event)
+    if (!editor) return
     const horiz = event.deltaX !== 0
     const maxScrollTop =
       editor.getScrollHeight() - editor.getDomNode().offsetHeight
@@ -93,6 +88,8 @@
       event.stopPropagation()
   }
 </script>
+
+<svelte:window on:resize={onResize} />
 
 <div
   bind:this={editorEl}

@@ -15,8 +15,8 @@
     one line in the box is one line entered.
 
         Enter your name:
-        Bernát
-        Hello, Bernát!
+        $NAME
+        Hello, $NAME!
 
   initialCode: |
     import java.util.Scanner;

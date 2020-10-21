@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import trackEvent from './trackEvent'
   export let hint = null
   /** @type monaco.editor.IStandaloneCodeEditor */
@@ -9,12 +9,13 @@
   /** @type string */
   export let code
 
+  let editorWidth = NaN,
+    editorHeight = NaN
+
   $: STUDENTS = Students.find()
   $: student = $STUDENTS && $STUDENTS[0]
   $: answer = student && student.answer
   $: answerTaskId = student && student.answerTaskId
-
-  let top, left
 
   $: {
     Meteor.call('getHint', code, task_id, (err, newHint) => {
@@ -38,6 +39,11 @@
     }
   }
 
+  let top, left
+  const width = 304
+  let oversize
+  let oversizeTailHeight
+
   $: if (hint && editor) {
     top = editor.getTopForPosition(hint.line)
     const lineWidths = []
@@ -49,13 +55,30 @@
       editor.getLayoutInfo().contentLeft +
       Math.max(...lineWidths) +
       hintLeftMargin
+    oversize = left > editorWidth - width
+    if (oversize) {
+      const lastLine =
+        editor.getTopForPosition(editor.getModel().getLineCount()) +
+        hintTopMargin
+      oversizeTailHeight = lastLine - top
+      top = lastLine
+      left = Math.max(left, width)
+    }
   }
 
-  const width = 304
   const hintTimeout = (Meteor.isDevelopment ? 8 : 30) * 1000
-  const hintHideTimeout = (Meteor.isDevelopment ? 3 : 4) * 1000
 
   const hintLeftMargin = 20
+  const hintTopMargin = 30
+
+  function measure() {
+    if (!editor) return
+    editorWidth = editor.getDomNode().offsetWidth
+  }
+  let measureInterval
+  // for some reason this does not work with window on:resize...
+  onMount(() => (measureInterval = setInterval(measure, 500)))
+  onDestroy(() => clearInterval(measure))
 </script>
 
 {#if answer && answerTaskId === task_id}
@@ -63,7 +86,11 @@
     data-harmony-id="Answer bubble"
     class="bubble text-sm px-3 py-2 bg-orange-300 w-64 rounded-lg absolute
     shadow-md right-0 mr-16"
+    class:oversize
     style="top: {top}px">
+    {#if oversize}
+      <span class="oversize-tail" style="height: {oversizeTailHeight}px" />
+    {/if}
     <div data-harmony-id="Bubble content">
       {@html hint.message}
     </div>
@@ -73,7 +100,11 @@
     data-harmony-id="Hint bubble"
     class="bubble text-sm px-3 py-2 bg-yellow-300 rounded-lg absolute shadow-md
     right-0 mr-16"
+    class:oversize
     style="top: {top}px; left: {left}px; width: {width}px">
+    {#if oversize}
+      <span class="oversize-tail" style="height: {oversizeTailHeight}px" />
+    {/if}
     <div data-harmony-id="Bubble content">
       {@html hint.message}
     </div>
@@ -92,16 +123,36 @@
 {/if}
 
 <style>
-  .bubble::before {
+  .bubble::before,
+  .oversize-tail::before {
     content: '';
     position: absolute;
-    left: -20px;
-    top: 12px;
+    left: -23px;
     border: solid transparent;
     border-right-color: #faf089;
     border-right-width: 20px;
     border-top-width: 7px;
     border-bottom-width: 7px;
+  }
+  .bubble::before {
+    top: 12px;
+  }
+  .bubble.oversize {
+    transform: translate(-100%, 12px);
+  }
+  .bubble.oversize::before {
+    content: none;
+  }
+  .oversize-tail {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 10px;
+    width: 4px;
+    background: #faf089;
+    transform: translate(0, -100%);
+    border-top-right-radius: 4px;
   }
   .goodHintButtons:not(:hover) > .goodHint {
     visibility: hidden;

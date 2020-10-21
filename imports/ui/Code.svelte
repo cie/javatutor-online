@@ -76,7 +76,7 @@
         w-full lg:w-1/4 flex flex-col">
         <div class="flex-1">
           <h1>{task.title}</h1>
-          {@html markdown.toHTML(task.description)}
+          {@html markdown.toHTML(task.description.replace(/\$NAME\b/g, nickname))}
         </div>
         <div>
           <button
