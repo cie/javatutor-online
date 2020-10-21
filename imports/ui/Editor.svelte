@@ -3,7 +3,8 @@
   import setupLanguageClient from './languageClient'
   export let value
 
-  let editor, editorEl, model
+  export let editor = undefined
+  let editorEl, model
   const dispatch = createEventDispatcher()
 
   $: if (editor && model) {

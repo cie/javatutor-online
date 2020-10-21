@@ -38,6 +38,7 @@ module.exports = {
         'RUN apt-get update && apt-get install -y openjdk-8-jdk'
       ]
     },
+    deployCheckWaitTime: 300,
 
     // Show progress bar while uploading bundle to server
     // You might need to disable it on CI servers

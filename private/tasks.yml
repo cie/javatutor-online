@@ -13,6 +13,11 @@
 
     The Input box below contains the user input that will be sent to your program when you press Run:
     one line in the box is one line entered.
+
+        Enter your name:
+        Bernát
+        Hello, Bernát!
+
   initialCode: |
     import java.util.Scanner;
 

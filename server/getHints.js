@@ -126,7 +126,8 @@ async function getHints(code, task_id) {
     .getViolations()
     .toArray()
     .map(v => ({
-      message: v.getDescription()
+      message: v.getDescription(),
+      line: v.getBeginLine()
     }))
 }
 

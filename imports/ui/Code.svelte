@@ -10,7 +10,8 @@
 
   let taskIndex = 0,
     code = tasks[taskIndex].initialCode,
-    output
+    output,
+    editor
 
   $: task = tasks[taskIndex]
   $: task_id = task.id
@@ -18,7 +19,7 @@
   $: input = (task.input || '').replace('$NAME', 'Joe')
 
   let hint = null
-  let hintLineNumber = 1
+  let hintTop = 0
   const hintTimeoutSec = Meteor.isDevelopment ? 5 : 30
   const hintHideTimeoutSec = Meteor.isDevelopment ? 3 : 4
   let hintTimeout
@@ -72,6 +73,7 @@
       }
       if (!hint) {
         hint = newHint
+        hintTop = editor.getTopForPosition(newHint.line)
       } else if (newHint !== hint) {
         hint = null
         setTimeout(getHint, hintTimeoutSec * 1000)
@@ -99,6 +101,7 @@
       class="task-description text-white px-4 py-3 bg-gray-800 text-white w-full
       md:w-1/4 flex flex-col">
       <div class="flex-1">
+        <h1>{task.title}</h1>
         {@html markdown.toHTML(task.description)}
       </div>
       <div>
@@ -121,19 +124,16 @@
       class="flex-1 grid grid-rows-1 items-stretch content-stretch relative mt-2
       md:mt-0"
       style="min-height: 410px">
-      <Editor value={code} on:change={handleCodeChange} />
+      <Editor bind:editor value={code} on:change={handleCodeChange} />
       <HelpButton {code} {task_id} />
     </div>
 
-    <input
-      type="hidden"
-      data-harmony-id="Hint line number"
-      bind:value={hintLineNumber} />
     {#if hint}
       <div
         data-harmony-id="Bubble"
-        class="text-sm px-3 py-2 bg-yellow-300 w-64 rounded-lg absolute
-        shadow-md right-0 mr-16">
+        class="hintBubble text-sm px-3 py-2 bg-yellow-300 w-64 rounded-lg
+        absolute shadow-md right-0 mr-16"
+        style="top: {hintTop}px">
         <div data-harmony-id="Bubble content">
           {@html hint.message}
         </div>
@@ -185,6 +185,17 @@
 </div>
 
 <style>
+  .hintBubble::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 24px;
+    border: solid transparent;
+    border-right-color: #faf089;
+    border-right-width: 20px;
+    border-top-width: 7px;
+    border-bottom-width: 7px;
+  }
   .goodHintButtons:not(:hover) > .goodHint {
     visibility: hidden;
   }
