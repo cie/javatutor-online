@@ -15,6 +15,7 @@
     minimap: {
       enabled: false
     },
+    codelens: false,
     scrollBeyondLastLine: false
   }
   onMount(() => {

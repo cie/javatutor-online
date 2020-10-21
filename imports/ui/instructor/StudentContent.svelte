@@ -21,9 +21,23 @@
     }
   }
   $: someEvents = $events && $events.length > 0
-  let hintText
-  function sendHint() {
-    hintText = ''
+  let answer
+  function sendAnswer() {
+    Meteor.call(
+      'sendAnswer',
+      {
+        answer,
+        student_id: student._id,
+        task_id: currentTaskId
+      },
+      (err, res) => {
+        if (err) {
+          alert(err.message)
+          return
+        }
+        answer = ''
+      }
+    )
   }
 </script>
 
@@ -56,11 +70,11 @@
       {#if student.problemMessage}
         <p>{student.problemMessage}</p>
       {/if}
-      <div class="hintForm">
-        <textarea bind:value={hintText} />
+      <div class="answerForm">
+        <textarea bind:value={answer} />
         <button
           class="text-primary hover:underline"
-          on:click|preventDefault={sendHint}>
+          on:click|preventDefault={sendAnswer}>
           Send
         </button>
       </div>
@@ -96,7 +110,7 @@
   .tab.active.help {
     border-bottom: #b1820d 2px solid;
   }
-  .hintForm {
+  .answerForm {
     border: 8px solid #b1820d;
   }
 </style>

@@ -1,5 +1,3 @@
-import mulang from 'mulang'
-import tasks from '../imports/../private/tasks.yml'
 import getHints from './getHints'
 
 Meteor.methods({
@@ -10,9 +8,5 @@ Meteor.methods({
       console.error(e)
       return null
     }
-  },
-  getAST(source) {
-    const code = mulang.nativeCode('Java', source)
-    return code.ast
   }
 })

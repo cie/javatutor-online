@@ -73,7 +73,9 @@
       }
       if (!hint) {
         hint = newHint
-        hintTop = editor.getTopForPosition(newHint.line)
+        if (hint) {
+          hintTop = editor.getTopForPosition(newHint.line)
+        }
       } else if (newHint !== hint) {
         hint = null
         setTimeout(getHint, hintTimeoutSec * 1000)

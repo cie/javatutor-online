@@ -27,7 +27,7 @@
         return
       }
       const { student_id, group } = result
-      Meteor.connection.setUserId(student_id)
+      Meteor.subscribe('Students_myself', student_id)
       localStorage.setItem('student_id', student_id)
       localStorage.setItem('group', group)
       navigate('/code')
