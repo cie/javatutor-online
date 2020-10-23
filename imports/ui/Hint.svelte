@@ -1,6 +1,7 @@
 <script>
   import { onDestroy, onMount } from 'svelte'
   import trackEvent from './trackEvent'
+  import { fly, fade } from 'svelte/transition'
   export let hint = null
   /** @type monaco.editor.IStandaloneCodeEditor */
   export let editor
@@ -84,20 +85,21 @@
 {#if answer && answerTaskId === task_id}
   <div
     data-harmony-id="Answer bubble"
-    class="bubble text-sm px-3 py-2 bg-orange-300 w-64 rounded-lg absolute
+    class="bubble bubble-answer text-sm px-3 py-2 w-64 rounded-lg absolute
     shadow-md right-0 mr-16"
     class:oversize
     style="top: {top}px">
     {#if oversize}
       <span class="oversize-tail" style="height: {oversizeTailHeight}px" />
     {/if}
-    <div data-harmony-id="Bubble content">
-      {@html hint.message}
-    </div>
+    <span class="text-sm text-gray-700">Instructor says:</span>
+    <div data-harmony-id="Bubble content">{answer}</div>
   </div>
 {:else if hint && now >= hintTime}
   <div
     data-harmony-id="Hint bubble"
+    in:fly={{ x: 30, duration: 800 }}
+    out:fade={{ duration: 800 }}
     class="bubble text-sm px-3 py-2 bg-yellow-300 rounded-lg absolute shadow-md
     right-0 mr-16"
     class:oversize
@@ -137,8 +139,11 @@
   .bubble::before {
     top: 12px;
   }
+  .bubble-answer {
+    background-color: #f0bb6c;
+  }
   .bubble.oversize {
-    transform: translate(-100%, 12px);
+    transform: translate(-100%, 12px) translate(22px, 0);
   }
   .bubble.oversize::before {
     content: none;

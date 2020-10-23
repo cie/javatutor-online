@@ -22,7 +22,7 @@
     minimap: {
       enabled: false
     },
-    codelens: false,
+    codeLens: false,
     scrollBeyondLastLine: false
   }
 

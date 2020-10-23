@@ -70,15 +70,21 @@
       {#if student.problemMessage}
         <p>{student.problemMessage}</p>
       {/if}
-      <div class="answerForm">
-        <textarea bind:value={answer} />
-        <button
-          class="text-primary hover:underline"
-          on:click|preventDefault={sendAnswer}>
-          Send
-        </button>
-      </div>
     {/if}
+    <div
+      class="answerForm"
+      class:helpAsked={student.helpAsked && student.helpTaskId === currentTaskId}>
+      <textarea bind:value={answer} />
+      <button
+        class="text-primary hover:underline"
+        on:click|preventDefault={sendAnswer}>
+        Send help
+      </button>
+
+      <input type="checkbox" />
+      Put hint on line
+      <input class="lineNo" />
+    </div>
   {:else}...{/if}
 </section>
 
@@ -89,11 +95,15 @@
     margin-right: 30px;
     flex-shrink: 0.2;
   }
-  textarea {
+  textarea,
+  input.lineNo {
     background: rgba(255, 255, 255, 0.14);
     outline: none;
     padding: 0.2em 0.4em;
     vertical-align: middle;
+  }
+  input.lineNo {
+    width: 45px;
   }
   .tab {
     background: none;
@@ -110,7 +120,7 @@
   .tab.active.help {
     border-bottom: #b1820d 2px solid;
   }
-  .answerForm {
+  .answerForm.helpAsked {
     border: 8px solid #b1820d;
   }
 </style>
