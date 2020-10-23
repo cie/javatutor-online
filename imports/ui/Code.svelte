@@ -21,9 +21,8 @@
     task_id = task.id
     localStorage.setItem('task_id', task.id)
     code = task.initialCode
-    console.log(task)
     input = (task.input || '').replace('$NAME', nickname)
-    console.log(input)
+    output = ''
   }
 
   let hint = null
@@ -48,8 +47,7 @@
 
   function nextTask() {
     if (taskIndex < tasks.length - 1) {
-      ++taskIndex
-      output = ''
+      setTask(++taskIndex)
     } else {
       navigate('/questionnaire')
     }
