@@ -1,11 +1,12 @@
 import child_process from 'child_process'
 import { Random } from 'meteor/random'
-import util from 'util'
+import LSPRouter from './lspRouter'
+import { SIGINT } from 'constants'
 
-let lsp
+let lsp, router
 const pendingMessages = {}
 let incomingBuffer = ''
-let publication
+const publications = {}
 
 Meteor.startup(() => {
   lsp = child_process.spawn(
@@ -17,55 +18,56 @@ Meteor.startup(() => {
   )
   lsp.stdout.on('data', data => {
     incomingBuffer += data.toString()
-    receivedMessage()
+    while (incomingBuffer) {
+      let m = incomingBuffer.match(/Content-Length: (\d+)\r\n\r\n/)
+      if (!m) return
+      const index = m[0].length
+      const contentLength = +m[1]
+      if (incomingBuffer.length < index + contentLength) return
+      const messageStr = incomingBuffer.slice(index, index + contentLength)
+      incomingBuffer = incomingBuffer.slice(index + contentLength)
+
+      try {
+        router.receivedFromServer(JSON.parse(messageStr))
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  })
+  router = new LSPRouter({
+    sendToServer(message) {
+      const str = JSON.stringify(message)
+      const contentLength = str.length
+      lsp.stdin.write(`Content-Length: ${contentLength}\r\n\r\n${str}`)
+    },
+    sendToClient(client, message) {
+      if (!publications[client]) {
+        console.log('Cannot send to ' + client)
+        return
+      }
+      const _id = Random.id()
+      publications[client].added('LSPMessages', _id, { message })
+    }
   })
 })
 
-function sendMessage(message) {
-  const str = JSON.stringify(message)
-  const contentLength = str.length
-  lsp.stdin.write(`Content-Length: ${contentLength}\r\n\r\n${str}`)
+const close = () => {
+  if (lsp) lsp.kill()
 }
-
-function receivedMessage() {
-  while (incomingBuffer) {
-    let m = incomingBuffer.match(/Content-Length: (\d+)\r\n\r\n/)
-    if (!m) return
-    const index = m[0].length
-    const contentLength = +m[1]
-    if (incomingBuffer.length < index + contentLength) return
-    const message = incomingBuffer.slice(index, index + contentLength)
-    incomingBuffer = incomingBuffer.slice(index + contentLength)
-
-    try {
-      const object = JSON.parse(message)
-      //console.log(util.inspect(object, { showHidden: false, depth: null }))
-      const _id = Random.id()
-      if (publication) publication.added('LSPMessages', _id, { message })
-    } catch (e) {
-      console.error(e)
-      //console.log({ pendingMessages, message })
-    }
-  }
-}
+process.on('exit', close)
+process.on('SIGINT', close)
 
 Meteor.publish('LSPMessages', function () {
-  publication = this
+  router.clientConnected(this.connection.id)
+  publications[this.connection.id] = this
+  this.connection.onClose(() => {
+    router.clientDisconnected(this.connection.id)
+    delete publications[this.connection.id]
+  })
 })
 
 Meteor.methods({
   async sendLSPMessage(message) {
-    //console.log(
-    //this.userId,
-    //util.inspect(message, { showHidden: false, depth: null })
-    //)
-    let promise
-    if ('id' in message) {
-      promise = new Promise(r => (pendingMessages[message.id] = r))
-    }
-    sendMessage(message)
-    if ('id' in message) {
-      return await promise
-    }
+    router.receivedFromClient(this.connection.id, message)
   }
 })

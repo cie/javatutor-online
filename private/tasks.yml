@@ -66,11 +66,10 @@
         }
       hints:
         - message: Add an argument. What do you want to output?
-- id: arrays-above-below-average
-  title: Above and below average
+- id: Lab_08_01
+  title: Reverse a string
   description: |
-    Write a program that reads in numbers (until a negative one is received)
-    and outputs those above the average and those below the average.
+    Write a program that prompts the user to enter a string and displays the string in reverse order.
   initialCode: |
     import java.util.Scanner;
 
@@ -80,12 +79,6 @@
         }
     }
   input: |
-    3
-    14
-    6
-    2
-    -1
-  hints:
-    - match: //MethodDeclaration[@Name="main" and not(.//AllocationExpression[ClassOrInterfaceType[@Image="Scanner"]])]
-      message: Start with making a Scanner variable to take inputs from the user
+    Hello, World!
+  hints: []
   tests: {}
