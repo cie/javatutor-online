@@ -1,18 +1,27 @@
 import child_process from 'child_process'
 import { Random } from 'meteor/random'
 import LSPRouter from './lspRouter'
-import { SIGINT } from 'constants'
 
-let lsp, router
-const pendingMessages = {}
+const lspDir = Meteor.isDevelopment
+  ? '../../../../../docker/org.eclipse.jdt.ls'
+  : '/opt/org.eclipse.jdt.ls'
+
+let lsp, router, workspace
 let incomingBuffer = ''
 const publications = {}
 
 Meteor.startup(() => {
+  const tmp = require('tmp').dirSync().name
+  child_process.execSync(
+    `cp -R ${lspDir}/workspace ${tmp} && chmod -R u=rwX ${tmp}`
+  )
+  workspace = `${tmp}/workspace`
   lsp = child_process.spawn(
-    'cd ~/git/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/products/languageServer.product/linux/gtk/x86_64 && java -Declipse.applicatn=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.level=ALL -jar plugins/org.eclipse.equinox.launcher_1.5.800.v20200727-1323.jar',
+    `cd ${lspDir} &&
+     java -Declipse.applicatn=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.level=ALL -jar plugins/org.eclipse.equinox.launcher_1.5.800.v20200727-1323.jar -data ${workspace}`,
     {
       shell: true,
+      stdio: ['pipe', 'pipe', 'inherit'],
       env: { ...process.env, syntaxserver: 'false' }
     }
   )

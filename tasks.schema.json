@@ -15,10 +15,12 @@
         "description": "The task assignment in markdown"
       },
       "initialCode": {
-        "type": "string"
+        "type": "string",
+        "description": "The initial code for the student"
       },
       "input": {
-        "type": "string"
+        "type": "string",
+        "description": "The example input"
       },
       "hints": {
         "type": "array",
@@ -29,9 +31,9 @@
               "type": "string",
               "description": "The hint in markdown"
             },
-            "when": {
+            "match": {
               "type": "string",
-              "description": "The Mulang EDL expression that describes when to show the hint"
+              "description": "The PMD Xpath that matches the node where the hint must be shown"
             }
           }
         }

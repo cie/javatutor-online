@@ -1,6 +1,6 @@
 <script>
   import tasks from '../../../private/tasks.yml'
-  import { markdown } from 'markdown'
+  import marked from 'marked'
   import CodeWindow from './CodeWindow.svelte'
 </script>
 
@@ -14,7 +14,7 @@
           <tt>{id}</tt>
         </h1>
         <div class="task-description bg-gray-800 max-w-xl px-4 py-4">
-          {@html markdown.toHTML(description)}
+          {@html marked(description)}
         </div>
         <CodeWindow code={initialCode} />
         <p class="text-bold my-2">input</p>

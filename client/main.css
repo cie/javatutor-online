@@ -174,3 +174,31 @@ body.dark {
 .task-description p {
   margin: 1em 0;
 }
+.output {
+  display: block;
+  background: #1a202c;
+  padding: 0.4em 0.6em;
+  border-radius: 0.2em;
+}
+.output .user-input {
+  background-color: #2a4365;
+}
+.user-input {
+  background-color: #2a4365;
+  padding: 0.2em 0.4em;
+  border-radius: 5px;
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3) inset;
+}
+.user-input-line::after {
+  display: inline-block;
+  content: 'Enter⏎';
+  background: #a0aec0;
+  color: rgb(36, 36, 36);
+  padding: 0.1em 0.4em;
+  margin-left: 0.5em;
+  font-family: sans-serif;
+  font-size: 70%;
+  border-radius: 3px;
+  vertical-align: middle;
+  box-shadow: -1px -2px 1px rgba(0, 0, 0, 0.5) inset;
+}

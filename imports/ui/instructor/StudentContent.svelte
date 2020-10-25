@@ -4,14 +4,14 @@
   let task_ids
   let currentTaskId
   Meteor.subscribe('EventsThat', { student_id: student._id })
-  $: events = Events.find(
+  $: EVENTS = Events.find(
     { student_id: student._id },
     { sort: { createdAt: 1 } }
   )
   $: {
     const tasksSet = {}
-    if ($events) {
-      $events.forEach(e => {
+    if ($EVENTS) {
+      $EVENTS.forEach(e => {
         tasksSet[e.task_id] = true
       })
     }
@@ -20,7 +20,7 @@
       currentTaskId = task_ids[0]
     }
   }
-  $: someEvents = $events && $events.length > 0
+  $: someEvents = $EVENTS && $EVENTS.length > 0
   let answer
   function sendAnswer() {
     Meteor.call(
@@ -42,7 +42,7 @@
 </script>
 
 <section>
-  {#if $events}
+  {#if $EVENTS}
     {#if someEvents}
       <nav>
         {#each task_ids as task_id}
@@ -59,7 +59,7 @@
       </nav>
       <TaskPlayer
         {student}
-        events={$events
+        events={$EVENTS
           .filter(e => e.task_id === currentTaskId)
           .map(e => ({ ...e, sec: +new Date(e.createdAt) / 1000 }))} />
     {:else}
@@ -85,6 +85,29 @@
       Put hint on line
       <input class="lineNo" />
     </div>
+    <h1 class="mt-4 mb-2 text-lg">Events</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Time</th>
+          <th>Event type</th>
+          <th>Value</th>
+          <th>Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each $EVENTS.slice().reverse() as event}
+          <tr>
+            <td>{event.task_id}</td>
+            <td>{event.createdAt.toISOString()}</td>
+            <td>{event.type}</td>
+            <td>{event.value || ''}</td>
+            <td />
+          </tr>
+        {/each}
+      </tbody>
+    </table>
   {:else}...{/if}
 </section>
 
@@ -122,5 +145,9 @@
   }
   .answerForm.helpAsked {
     border: 8px solid #b1820d;
+  }
+  td:not(:last-child),
+  th:not(:last-child) {
+    padding-right: 0.8em;
   }
 </style>

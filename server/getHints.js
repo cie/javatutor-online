@@ -3,9 +3,10 @@ import glob from 'glob'
 import fs from 'fs'
 import { promisify } from 'util'
 import { safeLoad } from 'js-yaml'
+import asset, { assetDir } from './asset'
 
 function setup() {
-  const pmdDir = asset('tasks.yml').replace('tasks.yml', 'pmd')
+  const pmdDir = assetDir('pmd')
   const tasks = safeLoad(fs.readFileSync(asset('tasks.yml')))
   const tmpDir = require('tmp').dirSync().name
   fs.mkdirSync(`${tmpDir}/hints/tasks`, { recursive: true })
@@ -37,6 +38,7 @@ function setup() {
     xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>Hints for ${title}</description>
     
     ${hints
       .map(
@@ -75,7 +77,6 @@ setTimeout(setup, 0)
 
 async function getHints(code, task_id) {
   const Arrays = java.import('java.util.Arrays')
-  console.log('Arrays imported')
   const SourceCodeProcessor = java.import(
     'net.sourceforge.pmd.SourceCodeProcessor'
   )
@@ -136,12 +137,6 @@ function inputStreamFrom(code) {
   return new ByteArrayInputStream(
     java.newArray('byte', [...Buffer.from(code, 'utf-8')])
   )
-}
-
-function asset(name) {
-  return typeof Assets !== 'undefined'
-    ? Assets.absoluteFilePath(name)
-    : `${__dirname}/../private/${name}`
 }
 
 function escape(s) {

@@ -2,13 +2,16 @@
   import { navigate } from 'svelte-routing'
   import Button from './Button.svelte'
   import RadioGroup from './RadioGroup.svelte'
+  import trackEvent from './trackEvent'
+
+  const student_id = localStorage.getItem('student_id')
 
   function submit() {
+    trackEvent('Questionnaire', { student_id, value: JSON.stringify(answers) })
     navigate('/thanks')
   }
 
   let answers = {}
-  $: console.log(answers)
 </script>
 
 <main class="h-full w-full bg-gray-800 text-white">
@@ -39,8 +42,8 @@
       <li class="my-3">
         How useful was the instructor's help?
         <RadioGroup
-          name="instructor-help-useful"
-          bind:value={answers['instructor-help-useful']} />
+          name="instructors-help-useful"
+          bind:value={answers['instructors-help-useful']} />
       </li>
       <li class="my-3">
         How much did you enjoy the experiment?
@@ -51,6 +54,7 @@
         <textarea
           rows="3"
           class="w-full py-2 px-3 rounded my-3"
+          bind:value={answers['other']}
           style="background: rgba(255,255,255,0.12);" />
       </li>
     </ul>

@@ -3,3 +3,4 @@ vendor
 public
 packages
 tests
+docker

@@ -67,7 +67,7 @@
     }
   }
 
-  const hintTimeout = (Meteor.isDevelopment ? 8 : 30) * 1000
+  const hintTimeout = (Meteor.isDevelopment ? 4 : 18) * 1000
 
   const hintLeftMargin = 20
   const hintTopMargin = 30

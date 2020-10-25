@@ -3,7 +3,7 @@
   import Button from './Button.svelte'
   import HelpButton from './HelpButton.svelte'
   import tasks from '../../private/tasks.yml'
-  import { markdown } from 'markdown'
+  import marked from 'marked'
   import { navigate } from 'svelte-routing'
   import trackEvent from './trackEvent'
   import Hint from './Hint.svelte'
@@ -29,9 +29,12 @@
 
   function run() {
     trackEvent({ type: 'Run', value: input, code })
-    output = ''
+    output = { running: true }
     Meteor.call('run', code, input, (err, res) => {
-      if (err) return
+      if (err) {
+        output = { error: err }
+        return
+      }
       output = res
       trackEvent({ type: 'Run done', value: output, code })
     })
@@ -71,10 +74,10 @@
       style="background: #1e1e1e;">
       <aside
         class="task-description text-white px-4 py-3 bg-gray-800 text-white
-        w-full lg:w-1/4 flex flex-col">
+        w-full lg:w-4/12 lg:max-w-lg flex flex-col">
         <div class="flex-1">
-          <h1>{task.title}</h1>
-          {@html markdown.toHTML(task.description.replace(/\$NAME\b/g, nickname))}
+          <h1>{task.title.replace(/\$NAME\b/g, nickname)}</h1>
+          {@html marked(task.description.replace(/\$NAME\b/g, nickname))}
         </div>
         <div>
           <button
@@ -111,11 +114,13 @@
       style="background: #333;">
       <div class="flex-1 flex flex-col h-full p-2">
         <h2 class="font-bold mb-1">Input</h2>
-        <textarea
-          bind:value={input}
-          rows="5"
-          id="input"
-          class="bg-transparent block flex-1 font-mono outline-none" />
+        <div class="user-input">
+          <textarea
+            bind:value={input}
+            rows="4"
+            id="input"
+            class="w-full bg-transparent block flex-1 font-mono outline-none" />
+        </div>
       </div>
       <div
         class="h-full flex items-center justify-center content-center flex-col">
@@ -127,13 +132,23 @@
       </div>
       <div class="flex-1 flex flex-col h-full p-2">
         <h2 class="font-bold mb-1">Output</h2>
-        <textarea
-          rows="5"
-          id="output"
-          bind:value={output}
-          readonly
-          data-harmony-id="Output"
-          class="bg-transparent block flex-1 font-mono outline-none" />
+        {#if output.running}
+          <div class="flex-1 flex justify-center items-center">
+            <span>Running...</span>
+          </div>
+        {:else if output.error}
+          <div class="flex-1 flex justify-center items-center">
+            <span>
+              Error running :(
+              <br />
+              {output.error}
+            </span>
+          </div>
+        {:else}
+          <pre class="output flex-1" data-harmony-id="Output">
+            <code>{output}</code>
+          </pre>
+        {/if}
       </div>
     </footer>
 
@@ -146,9 +161,17 @@
           lg:hidden"
           on:click|preventDefault={done}>
           <i class="fa fa-check-circle" />
-          Done, move to the next task
+          {#if taskIndex < tasks.length - 1}
+            Done, move to the next task
+          {:else}Done{/if}
         </button>
       </div>
     </aside>
   </div>
 {/if}
+
+<style>
+  textarea {
+    resize: none;
+  }
+</style>
