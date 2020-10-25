@@ -43,7 +43,7 @@
     model = monaco.editor.createModel(
       value,
       'java',
-      'file:///home/cie/git/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/products/languageServer.product/linux/gtk/x86_64/workspace/asdf/src/Code.java'
+      `file://${Meteor.settings.public.workspace}/asdf/src/Code.java`
     )
     editor = window.editor = monaco.editor.create(editorEl, {
       ...editorOptions,

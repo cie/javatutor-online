@@ -16,6 +16,7 @@ Meteor.startup(() => {
     `cp -R ${lspDir}/workspace ${tmp} && chmod -R u=rwX ${tmp}`
   )
   workspace = `${tmp}/workspace`
+  Meteor.settings.public.workspace = workspace
   lsp = child_process.spawn(
     `cd ${lspDir} &&
      java -Declipse.applicatn=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.level=ALL -jar plugins/org.eclipse.equinox.launcher_1.5.800.v20200727-1323.jar -data ${workspace}`,

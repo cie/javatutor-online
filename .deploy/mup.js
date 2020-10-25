@@ -34,15 +34,15 @@ module.exports = {
       // abernix/meteord:node-12-base works with Meteor 1.9 - 1.10
       // If you are using a different version of Meteor,
       // refer to the docs for the correct image to use.
-      image: 'abernix/meteord:node-12-base',
+      image: 'pontosan3/javatutor-meteor',
       buildInstructions: [
-        // TODO install Java 11
+        // install Java 11
         /*`RUN echo 'deb http://deb.debian.org/debian stretch-backports main' >> /etc/apt/sources.list && 
          apt-get update &&
          apt-get install -y openjdk-11-jdk-headless &&
          apt-get clean`*/
         // install Java 8
-        'RUN apt-get update && apt-get install -y openjdk-8-jdk'
+        //'RUN apt-get update && apt-get install -y openjdk-8-jdk'
       ]
     },
     deployCheckWaitTime: 300,
