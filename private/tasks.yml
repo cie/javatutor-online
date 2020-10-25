@@ -9,7 +9,7 @@
     <img src="/hand.png" alt="hand" width=30 height=30 style="transform: rotate(15deg); opacity: 0.9; display: inline-block; vertical-align:middle">
     button to ask for help.
 
-    **Write a program that asks for the name of the user and then greets them:**
+    Write a program that asks for the name of the user and then greets them:
 
     <pre class="output">
     <code>Enter your name: <code class="user-input user-input-line">$NAME</code>

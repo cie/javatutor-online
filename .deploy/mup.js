@@ -12,7 +12,8 @@ module.exports = {
     name: 'javatutor',
     path: '../',
     volumes: {
-      '/var/run/docker.sock': '/var/run/docker.sock'
+      '/var/run/docker.sock': '/var/run/docker.sock',
+      '/opt/org.eclipse.jdt.ls': '/opt/org.eclipse.jdt.ls'
     },
 
     servers: {
@@ -34,7 +35,15 @@ module.exports = {
       // If you are using a different version of Meteor,
       // refer to the docs for the correct image to use.
       image: 'abernix/meteord:node-12-base',
-      buildInstructions: []
+      buildInstructions: [
+        // TODO install Java 11
+        /*`RUN echo 'deb http://deb.debian.org/debian stretch-backports main' >> /etc/apt/sources.list && 
+         apt-get update &&
+         apt-get install -y openjdk-11-jdk-headless &&
+         apt-get clean`*/
+        // install Java 8
+        'RUN apt-get update && apt-get install -y openjdk-8-jdk'
+      ]
     },
     deployCheckWaitTime: 300,
 

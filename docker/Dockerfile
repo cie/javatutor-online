@@ -4,4 +4,4 @@ RUN echo 'deb http://deb.debian.org/debian stretch-backports main' >> /etc/apt/s
     apt-get update && \
     apt-get install -y openjdk-11-jdk-headless && \
     apt-get clean
-COPY org.eclipse.jdt.ls /opt/org.eclipse.jdt.ls
+#COPY org.eclipse.jdt.ls /opt/org.eclipse.jdt.ls

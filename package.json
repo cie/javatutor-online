@@ -10,7 +10,7 @@
     "test:tasks:watch": "mocha --watch",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
-    "deploy": "(cd docker && ./build.sh) && mup setup --config .deploy/mup.js && mup deploy --config .deploy/mup.js --settings .deploy/settings.json"
+    "deploy": ".deploy/upload_ls.sh && mup setup --config .deploy/mup.js && mup deploy --config .deploy/mup.js --settings .deploy/settings.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",

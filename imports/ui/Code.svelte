@@ -133,7 +133,9 @@
       <div class="flex-1 flex flex-col h-full p-2">
         <h2 class="font-bold mb-1">Output</h2>
         {#if output.running}
-          <div class="flex-1 flex justify-center items-center">
+          <div
+            class="output bg-blue-900 bg-opacity-75 flex-1 flex justify-center
+            items-center sans-serif">
             <span>Running...</span>
           </div>
         {:else if output.error}
