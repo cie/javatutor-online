@@ -25,7 +25,7 @@
         return
       }
       hint = newHint
-      trackEvent({ type: 'Automatic hint', code, value: newHint })
+      trackEvent({ type: 'Automatic hint', code, value: JSON.stringify(newHint) })
     })
   }
 

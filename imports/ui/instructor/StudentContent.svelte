@@ -81,8 +81,10 @@
         Send help
       </button>
 
-      <input type="checkbox" />
-      Put hint on line
+      <label>
+        <input type="checkbox" />
+        Put hint on line
+      </label>
       <input class="lineNo" />
     </div>
     <h1 class="mt-4 mb-2 text-lg">Events</h1>
@@ -97,13 +99,15 @@
         </tr>
       </thead>
       <tbody>
-        {#each $EVENTS.slice().reverse() as event}
+        {#each $EVENTS.slice().reverse() as event, i}
           <tr>
             <td>{event.task_id}</td>
             <td>{event.createdAt.toISOString()}</td>
             <td>{event.type}</td>
             <td>{event.value || ''}</td>
-            <td />
+            <td>{#if event.code != null}
+              <button on:click|preventDefault={() => ($EVENTS.length - 1 - i)}>see</button>
+              {/if}</td>
           </tr>
         {/each}
       </tbody>
