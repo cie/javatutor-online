@@ -109,6 +109,18 @@ async function getHints(code, task_id) {
   const renderers = Arrays.asList()
   const ruleContext = new RuleContext()
   const processor = new SourceCodeProcessor(configuration)
+  Meteor.pmd = {
+    configuration,
+    ruleSets,
+    factory,
+    processor,
+    task_id,
+    ruleContext,
+    PmdRunnable,
+    renderers,
+    fileName,
+    args: [dataSource, fileName, renderers, ruleContext, ruleSets, processor]
+  }
 
   const runnable = new PmdRunnable(
     dataSource,
@@ -118,10 +130,11 @@ async function getHints(code, task_id) {
     ruleSets,
     processor
   )
+  await PmdRunnable.resetP() // clear thread-local cache
   const report = await runnable.callP()
 
   for (const x of report.getProcessingErrors().toArray()) {
-    throw x.getMessage()
+    throw x.getMsg()
   }
   return report
     .getViolations()

@@ -15,7 +15,7 @@ class MessageReader extends AbstractMessageReader {
     this.callback = callback
     LSPMessages.find().observe({
       added: ({ _id, message }) => {
-        this.callback(message)
+        this.callback(JSON.parse(message))
       }
     })
   }

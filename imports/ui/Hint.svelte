@@ -25,7 +25,11 @@
         return
       }
       hint = newHint
-      trackEvent({ type: 'Automatic hint', code, value: JSON.stringify(newHint) })
+      trackEvent({
+        type: 'Automatic hint',
+        code,
+        value: JSON.stringify(newHint)
+      })
     })
   }
 
@@ -69,7 +73,7 @@
 
   const hintTimeout = (Meteor.isDevelopment ? 4 : 18) * 1000
 
-  const hintLeftMargin = 20
+  const hintLeftMargin = 35
   const hintTopMargin = 30
 
   function measure() {

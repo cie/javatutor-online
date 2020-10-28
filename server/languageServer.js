@@ -56,7 +56,9 @@ Meteor.startup(() => {
         return
       }
       const _id = Random.id()
-      publications[client].added('LSPMessages', _id, { message })
+      publications[client].added('LSPMessages', _id, {
+        message: JSON.stringify(message)
+      })
     }
   })
 })
