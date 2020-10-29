@@ -105,9 +105,11 @@
             <td>{event.createdAt.toISOString()}</td>
             <td>{event.type}</td>
             <td>{event.value || ''}</td>
-            <td>{#if event.code != null}
-              <button on:click|preventDefault={() => ($EVENTS.length - 1 - i)}>see</button>
-              {/if}</td>
+            <td>
+              {#if event.code != null}
+                <button on:click|preventDefault={alert(event.code)}>see</button>
+              {/if}
+            </td>
           </tr>
         {/each}
       </tbody>

@@ -1,171 +1,42 @@
-import java from 'java'
-import glob from 'glob'
-import fs from 'fs'
-import { promisify } from 'util'
-import { safeLoad } from 'js-yaml'
-import asset, { assetDir } from './asset'
+import tasks from '../imports/tasks.yml'
+import { DOMParserImpl as DOMParser } from 'xmldom-ts'
+import * as xpath from 'xpath-ts'
+import { execSync } from 'child_process'
 
-function setup() {
-  const pmdDir = assetDir('pmd')
-  const tasks = safeLoad(fs.readFileSync(asset('tasks.yml')))
-  const tmpDir = require('tmp').dirSync().name
-  fs.mkdirSync(`${tmpDir}/hints/tasks`, { recursive: true })
-
-  if (!java.isJvmCreated()) {
-    if (process.env.DEBUG_JAVA)
-      java.options.push(
-        '-agentlib:jdwp=transport=dt_socket,address=127.0.0.1:8000'
-      )
-    java.asyncOptions = {
-      asyncSuffix: undefined, // Don't generate node-style methods taking callbacks
-      syncSuffix: '',
-      promiseSuffix: 'P',
-      promisify
-    }
-
-    java.classpath.push(...glob.sync(`${pmdDir}/lib/*.jar`))
-    fs.mkdirSync(`${pmdDir}/hints/tasks`, { recursive: true })
-    java.classpath.push(...glob.sync(`${tmpDir}/hints`))
-    java.classpath.push(...glob.sync(`${pmdDir}/utils`))
-  }
-
-  console.log(`writing tasks to ${tmpDir}`)
-  tasks.forEach(({ id, title, hints }) => {
-    fs.writeFileSync(
-      `${tmpDir}/hints/tasks/${id}.xml`,
-      `<?xml version="1.0"?>
-<ruleset name="Hints for ${title}"
-    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
-    <description>Hints for ${title}</description>
-    
-    ${hints
-      .map(
-        ({ message, match }, i) => `
-    <rule name="Hint${i + 1}"
-          language="java"
-          since="4.2"
-          class="javatutor.DumbXPathRule"
-          typeResolution="true"
-          message="${escape(message)}">
-        <priority>1</priority>
-        <properties>
-            <property name="version" value="2.0"/>
-            <property name="xpath">
-                <value>
-                <![CDATA[
-                  ${match}
-                ]]>
-                </value>
-            </property>
-        </properties>
-    </rule> 
-    `
-      )
-      .join('\n')}
-</ruleset>
-`
-    )
+export async function getSrcML(code) {
+  return execSync('srcml --position --language=Java', {
+    input: code
   })
-  console.log('written tasks')
-  java.ensureJvm()
-  console.log('jvm started')
+    .toString()
+    .replace('xmlns="http://www.srcML.org/srcML/src"', '')
 }
-// https://github.com/joeferner/node-java/issues/38
-setTimeout(setup, 0)
 
-async function getHints(code, task_id) {
-  const Arrays = java.import('java.util.Arrays')
-  const SourceCodeProcessor = java.import(
-    'net.sourceforge.pmd.SourceCodeProcessor'
-  )
-
-  const PMDConfiguration = java.import('net.sourceforge.pmd.PMDConfiguration')
-  const RuleContext = java.import('net.sourceforge.pmd.RuleContext')
-  const PmdRunnable = java.import('net.sourceforge.pmd.processor.PmdRunnable')
-  const RulesetsFactoryUtils = java.import(
-    'net.sourceforge.pmd.RulesetsFactoryUtils'
-  )
-  // based on https://pmd.github.io/pmd-6.28.0/pmd_userdocs_tools_java_api.html
-  // and net.sourceforge.pmd.processor.AbstractPMDProcessor
-  const configuration = new PMDConfiguration()
-  configuration.setRuleSets(`tasks/${task_id}.xml`)
-  const factory = RulesetsFactoryUtils.createFactory(configuration)
-  const ruleSets = RulesetsFactoryUtils.getRuleSets(
-    configuration.getRuleSets(),
-    factory
-  )
-
-  const dataSource = java.newProxy(
-    'net.sourceforge.pmd.util.datasource.DataSource',
-    {
-      getNiceFileName: (shortNames, inputFileName) => 'Code.java',
-      getInputStream: () => inputStreamFrom(code),
-      close: () => {}
+export default async function getHints(code, task_id) {
+  try {
+    const srcml = await getSrcML(code)
+    const doc = new DOMParser().parseFromString(srcml, 'application/srcml+xml')
+    const task = tasks.find(t => t.id === task_id)
+    if (!task) {
+      console.error(`Unknown id: ${task_id}`)
+      return []
     }
-  )
-  const fileName = 'Code.java'
-  const renderers = Arrays.asList()
-  const ruleContext = new RuleContext()
-  const processor = new SourceCodeProcessor(configuration)
-  Meteor.pmd = {
-    configuration,
-    ruleSets,
-    factory,
-    processor,
-    task_id,
-    ruleContext,
-    PmdRunnable,
-    renderers,
-    fileName,
-    args: [dataSource, fileName, renderers, ruleContext, ruleSets, processor]
+    return task.hints
+      .map(hint => {
+        const n = xpath.select(hint.match, doc, true)
+        if (!n) return null
+        const start = n.getAttributeNS(
+          'http://www.srcML.org/srcML/position',
+          'start'
+        )
+        const line = start ? +start.split(':')[0] : 1
+        return {
+          ...hint,
+          line
+        }
+      })
+      .filter(Boolean)
+  } catch (e) {
+    console.error(e.stack)
+    return []
   }
-
-  const runnable = new PmdRunnable(
-    dataSource,
-    fileName,
-    renderers,
-    ruleContext,
-    ruleSets,
-    processor
-  )
-  await PmdRunnable.resetP() // clear thread-local cache
-  const report = await runnable.callP()
-
-  for (const x of report.getProcessingErrors().toArray()) {
-    throw x.getMsg()
-  }
-  return report
-    .getViolations()
-    .toArray()
-    .map(v => ({
-      message: v.getDescription(),
-      line: v.getBeginLine()
-    }))
 }
-
-function inputStreamFrom(code) {
-  const ByteArrayInputStream = java.import('java.io.ByteArrayInputStream')
-  return new ByteArrayInputStream(
-    java.newArray('byte', [...Buffer.from(code, 'utf-8')])
-  )
-}
-
-function escape(s) {
-  return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
-}
-
-// https://github.com/joeferner/node-java/issues/38
-// break out from Meteor Fibers system
-const breakout = fn => (...args) =>
-  Meteor.wrapAsync(function (cb) {
-    setTimeout(() => {
-      fn(...args).then(
-        result => cb(null, result),
-        err => cb(err)
-      )
-    }, 0)
-  })()
-
-export default breakout(getHints)

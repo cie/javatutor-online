@@ -24,12 +24,14 @@
         trackEvent({ type: 'Internal error', code, value: err })
         return
       }
-      hint = newHint
-      trackEvent({
-        type: 'Automatic hint',
-        code,
-        value: JSON.stringify(newHint)
-      })
+      if (JSON.stringify(newHint) != JSON.stringify(newHint)) {
+        hint = newHint
+        trackEvent({
+          type: 'Automatic hint',
+          code,
+          value: JSON.stringify(newHint)
+        })
+      }
     })
   }
 
@@ -39,7 +41,9 @@
   $: if (hint) {
     if (lastHintMessage !== hint.message) {
       lastHintMessage = hint.message
-      hintTime = Date.now() + hintTimeout
+      const hintTimeout =
+        (hint.delay || 20) * 1000 * (Meteor.isDevelopment ? 0.5 : 1)
+      hintTime = Date.now() + hintTimeout - 18 // just in case
       setTimeout(() => (now = Date.now()), hintTimeout)
     }
   }
@@ -71,9 +75,7 @@
     }
   }
 
-  const hintTimeout = (Meteor.isDevelopment ? 4 : 18) * 1000
-
-  const hintLeftMargin = 35
+  const hintLeftMargin = 50
   const hintTopMargin = 30
 
   function measure() {

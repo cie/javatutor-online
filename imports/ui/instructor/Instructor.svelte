@@ -4,6 +4,7 @@
   import Experiment from './Experiment.svelte'
   import ExperimentList from './ExperimentList.svelte'
   import Gateways from './Gateways.svelte'
+  import HintEditor from './hint-editor/HintEditor.svelte'
   import InstructorLogin from './InstructorLogin.svelte'
   $: LOGGED_IN = useTracker(() => !!Meteor.connection.userId())
 </script>
@@ -17,6 +18,7 @@
     {:else}
       <Route path="/experiments/:experiment_id/*" component={Experiment} />
       <Route path="/" component={ExperimentList} />
+      <Route path="/hint-editor" component={HintEditor} />
     {/if}
   </Router>
 </div>

@@ -2,25 +2,38 @@
   import Editor from './Editor.svelte'
   import Button from './Button.svelte'
   import HelpButton from './HelpButton.svelte'
-  import tasks from '../../private/tasks.yml'
+  import tasks from '../../imports/tasks.yml'
   import marked from 'marked'
   import { navigate } from 'svelte-routing'
   import trackEvent from './trackEvent'
   import Hint from './Hint.svelte'
   import { onMount } from 'svelte'
 
-  let taskIndex, code, output, editor, task, task_id, input
+  let taskIndex, code, output, editor, task, input, task_id
+  onMount(() => {
+    task_id = localStorage.getItem('task_id')
+    const i = task_id ? tasks.findIndex(t => t.id == task_id) : -1
+    setTask(~i ? i : 0)
+  })
 
   const nickname = localStorage.getItem('nickname')
-
-  onMount(() => setTask(0))
 
   function setTask(i) {
     taskIndex = i
     task = tasks[taskIndex]
     task_id = task.id
-    localStorage.setItem('task_id', task.id)
-    code = task.initialCode
+    if (localStorage.getItem('task_id') === task.id) {
+      const c = localStorage.getItem('code')
+      if (c !== undefined) {
+        code = c
+      } else {
+        code = task.initialCode
+      }
+    } else {
+      localStorage.setItem('task_id', task.id)
+      code = task.initialCode
+      localStorage.setItem('code', code)
+    }
     input = (task.input || '').replace('$NAME', nickname)
     output = ''
   }
@@ -58,6 +71,10 @@
   function done() {
     trackEvent({ type: 'Done task', code })
     nextTask()
+  }
+  function change(e) {
+    code = e.detail.value
+    localStorage.setItem('code', code)
   }
 </script>
 
@@ -100,10 +117,7 @@
         class="flex-1 grid grid-rows-1 items-stretch content-stretch relative
         py-2 md:mt-0"
         style="min-height: 410px">
-        <Editor
-          bind:editor
-          value={code}
-          on:change={e => (code = e.detail.value)} />
+        <Editor bind:editor value={code} on:change={change} />
         <Hint {hint} {editor} {task_id} {code} />
         <HelpButton {code} {task_id} />
       </div>
@@ -130,7 +144,9 @@
         </Button>
         <small class="text-gray-500">(Ctrl+Enter)</small>
       </div>
-      <div class="flex-1 flex flex-col h-full p-2">
+      <div
+        class="flex-1 flex flex-col h-full p-2 overflow-hidden"
+        style="contain: size">
         <h2 class="font-bold mb-1">Output</h2>
         {#if output.running}
           <div

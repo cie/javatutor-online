@@ -27,6 +27,9 @@
   }
 
   onMount(() => {
+    window.require.config({
+      baseUrl: '/'
+    })
     window.require(['vs/editor/editor.main'], () => {
       setupEditor()
     })

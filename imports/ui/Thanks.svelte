@@ -1,5 +1,10 @@
 <script>
+  import { onMount } from 'svelte'
+
   let x = 'mar@ya'
+  onMount(() => {
+    localStorage.clear()
+  })
 </script>
 
 <main

@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=file:///home/cie/git/javatutor/tasks.schema.json
+
+- id: hello-world
+  title: Hello, $NAME!
+  description: |
+    Welcome and thanks for participating! 
+    This is a warm-up task so you can get familiar with the environment.
+    Whenever you are stuck, feel free to use the
+    <img src="/hand.png" alt="hand" width=30 height=30 style="transform: rotate(15deg); opacity: 0.9; display: inline-block; vertical-align:middle">
+    button to ask for help.
+
+    Write a program that asks for the name of the user and then greets them:
+
+    <pre class="output">
+    <code>Enter your name: <code class="user-input user-input-line">$NAME</code>
+    Hello, $NAME!</code>
+    </pre>
+
+    The **Input** box below contains the user input that will be sent to your program when you press Run:
+    one line in the box is one line entered.
+
+    You can run the program with the
+    <span class="bg-green-600 text-white rounded px-2 py-1 text-sm" style="box-shadow: 1px 2px 6px -2px inset rgba(255, 255, 255, 0.6), -1px -2px 5px -2px inset rgba(0, 0, 0, 0.4), 1px 3px 5px -1px rgba(0, 0, 0, 0.2);">Run</span>
+    button and see its output in the **Output** box.
+
+  initialCode: |
+    import java.util.Scanner;
+
+    public class Code {
+        public static void main(String [] args) {
+            Scanner input = new Scanner(System.in);
+            System.out.println("Enter your name: ");
+            String name = input.nextLine();
+        }
+    }
+  input: $NAME
+  hints:
+    - match: //block_content/*[.//name[.="nextLine"]][not(following-sibling::*[contains(., "print")])]
+      message: Use another System.out.println() call.
+      delay: 20
+    - match: //name[.="print" or .="println"]/../../argument_list[not(*)]
+      message: Add an argument. What do you want to output?
+      delay: 15
+    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list[not(.//operator)]
+      message: Include the user's name in the output.
+      delay: 9
+    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list/argument[expr/*[last()]="name"]
+      message: You are missing the exclamation mark at the end.
+      delay: 7
+    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list/argument/expr/*[1][.='"Hello "']
+      message: |
+        Aren't you missing a comma? Think about "Let's eat, Grandma!" and "Let's eat Grandma!" <br><small>(credit: Kevlin Henney)</small>"
+      delay: 9
+  tests:
+    nothing entered yet:
+      code: |
+        import java.util.Scanner;
+
+        public class Code {
+            public static void main(String [] args) {
+                Scanner input = new Scanner(System.in);
+                System.out.println("Enter your name: ");
+                String name = input.nextLine();
+                
+            }
+        }
+      hints:
+        - message: Use another System.out.println() call.
+    no arg for print():
+      code: |
+        import java.util.Scanner;
+
+        public class Code {
+            public static void main(String [] args) {
+                Scanner input = new Scanner(System.in);
+                System.out.println("Enter your name: ");
+                String name = input.nextLine();
+                System.out.println();
+            }
+        }
+      hints:
+        - message: Add an argument. What do you want to output?
+- id: Lab_08_01
+  title: Display four patterns using loops
+  description: |
+
+  initialCode: |
+    public class Lab_08_01 {
+        public static void main(String[] args) {
+
+            System.out.println("Pattern A");
+            for (int i = 1; i <= 6; i++) {
+              for (int j = 1; j <= i ; j++) {
+                System.out.print(j + " ");
+              }
+              System.out.println();
+            }
+
+            System.out.println("Pattern B");
+
+            System.out.println("Pattern C");
+
+            System.out.println("Pattern D");
+        }
+    }
+
+  input: ''
+  hints:
+    - message: Start with making a Scanner variable to take input from the user
+      match: //MethodDeclaration[@Name="main"]/Block[count(.//*[@Image="Scanner"])=0]

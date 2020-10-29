@@ -21,7 +21,9 @@ Meteor.methods({
     fs.writeFileSync('input.txt', input)
     let result
     try {
-      result = (await exec(`java ${className} < input.txt`)).toString()
+      result = (
+        await exec(`java ${className} < input.txt`, { timeout: 3000 })
+      ).toString()
     } catch (e) {
       return e.message
     }

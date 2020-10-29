@@ -9,7 +9,7 @@ const getHints = require('../server/getHints').default
 const schema = JSON.parse(
   fs.readFileSync(__dirname + '/../tasks.schema.json').toString()
 )
-const tasks = safeLoad(fs.readFileSync(__dirname + '/../private/tasks.yml'))
+const tasks = safeLoad(fs.readFileSync(__dirname + '/../imports/tasks.yml'))
 
 describe('tasks', () => {
   it('tasks file is valid', () => {

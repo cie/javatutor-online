@@ -7,7 +7,7 @@
   const student_id = localStorage.getItem('student_id')
 
   function submit() {
-    trackEvent('Questionnaire', { student_id, value: JSON.stringify(answers) })
+    trackEvent({ type: 'Questionnaire', value: JSON.stringify(answers) })
     navigate('/thanks')
   }
 
