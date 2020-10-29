@@ -3,7 +3,7 @@
   import { navigate } from 'svelte-routing'
 
   onMount(() => {
-    localStorage.removeItem('student_id')
+    localStorage.clear()
     Meteor.logout(() => {
       navigate('/')
     })

@@ -9,7 +9,14 @@
   import Hint from './Hint.svelte'
   import { onMount } from 'svelte'
 
-  let taskIndex, code, output, editor, task, input, task_id
+  let taskIndex,
+    code,
+    output,
+    editor,
+    task,
+    input,
+    task_id,
+    running = false
   onMount(() => {
     task_id = localStorage.getItem('task_id')
     const i = task_id ? tasks.findIndex(t => t.id == task_id) : -1
@@ -42,8 +49,9 @@
 
   function run() {
     trackEvent({ type: 'Run', value: input, code })
-    output = { running: true }
+    running = true
     Meteor.call('run', code, input, (err, res) => {
+      running = false
       if (err) {
         output = { error: err }
         return
@@ -125,36 +133,29 @@
     </div>
     <footer
       class="flex flex-col md:flex-row text-white"
-      style="background: #333;">
+      style="background: #333">
       <div class="flex-1 flex flex-col h-full p-2">
         <h2 class="font-bold mb-1">Input</h2>
-        <div class="user-input">
+        <div class="user-input flex-1">
           <textarea
             bind:value={input}
             rows="4"
             id="input"
-            class="w-full bg-transparent block flex-1 font-mono outline-none" />
+            class="w-full h-full bg-transparent block flex-1 font-mono
+            outline-none" />
         </div>
       </div>
       <div
-        class="h-full flex items-center justify-center content-center flex-col">
+        class="flex items-center justify-center content-center flex-col md:h-40">
         <Button on:click={run} data-harmony-id="Run">
           Run
           <span class="ml-2 font-mono">▶</span>
         </Button>
         <small class="text-gray-500">(Ctrl+Enter)</small>
       </div>
-      <div
-        class="flex-1 flex flex-col h-full p-2 overflow-hidden"
-        style="contain: size">
+      <div class="flex-1 flex flex-col h-full p-2">
         <h2 class="font-bold mb-1">Output</h2>
-        {#if output.running}
-          <div
-            class="output bg-blue-900 bg-opacity-75 flex-1 flex justify-center
-            items-center sans-serif">
-            <span>Running...</span>
-          </div>
-        {:else if output.error}
+        {#if output.error}
           <div class="flex-1 flex justify-center items-center">
             <span>
               Error running :(
@@ -163,8 +164,15 @@
             </span>
           </div>
         {:else}
-          <pre class="output flex-1" data-harmony-id="Output">
+          <pre class="output flex-1 relative" data-harmony-id="Output">
             <code>{output}</code>
+            {#if running}
+              <div
+                class="absolute inset-0 output bg-gray-500 bg-opacity-25 flex-1
+                flex justify-center items-center sans-serif">
+                <span>Running...</span>
+              </div>
+            {/if}
           </pre>
         {/if}
       </div>

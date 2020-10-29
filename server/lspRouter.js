@@ -55,13 +55,13 @@ export default class LSPRouter {
   callToServer(client, message) {
     const sid = this.clientToServerCalls.push({ client, id: message.id }) - 1
     this.sendToServer({ ...message, id: sid })
-    console.log('sendToServer', { ...message, id: sid })
+    //console.log('sendToServer', { ...message, id: sid })
     return sid
   }
   returnFromServer(message) {
     const { client, id } = this.clientToServerCalls[message.id]
     this.sendToClient(client, { ...message, id })
-    console.log('sendToClient', client, { ...message, id })
+    //console.log('sendToClient', client, { ...message, id })
     return client
   }
   callToClient(client, message) {

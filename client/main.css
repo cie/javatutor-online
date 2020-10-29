@@ -179,6 +179,8 @@ body.dark {
   background: #1a202c;
   padding: 0.4em 0.6em;
   border-radius: 0.2em;
+  font-family: 'Droid Sans Mono', monospace, monospace, 'Droid Sans Fallback';
+  font-size: 14px;
 }
 .output .user-input {
   background-color: #2a4365;
@@ -188,6 +190,8 @@ body.dark {
   padding: 0.2em 0.4em;
   border-radius: 5px;
   box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3) inset;
+  font-family: 'Droid Sans Mono', monospace, monospace, 'Droid Sans Fallback';
+  font-size: 14px;
 }
 .user-input-line::after {
   display: inline-block;

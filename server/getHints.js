@@ -22,8 +22,10 @@ export default async function getHints(code, task_id) {
     }
     return task.hints
       .map(hint => {
+        console.log(hint.match)
         const n = xpath.select(hint.match, doc, true)
         if (!n) return null
+        console.log(n.toString())
         const start = n.getAttributeNS(
           'http://www.srcML.org/srcML/position',
           'start'

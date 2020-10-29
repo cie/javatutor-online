@@ -2,6 +2,7 @@
   import { onDestroy, onMount } from 'svelte'
   import trackEvent from './trackEvent'
   import { fly, fade } from 'svelte/transition'
+  import marked from 'marked'
   export let hint = null
   /** @type monaco.editor.IStandaloneCodeEditor */
   export let editor
@@ -24,7 +25,7 @@
         trackEvent({ type: 'Internal error', code, value: err })
         return
       }
-      if (JSON.stringify(newHint) != JSON.stringify(newHint)) {
+      if (JSON.stringify(hint) !== JSON.stringify(newHint)) {
         hint = newHint
         trackEvent({
           type: 'Automatic hint',
@@ -114,7 +115,7 @@
       <span class="oversize-tail" style="height: {oversizeTailHeight}px" />
     {/if}
     <div data-harmony-id="Bubble content">
-      {@html hint.message}
+      {@html marked(hint.message)}
     </div>
     <div
       class="goodHintButtons flex justify-end items-center"

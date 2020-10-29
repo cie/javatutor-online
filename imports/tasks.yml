@@ -83,28 +83,91 @@
 - id: Lab_08_01
   title: Display four patterns using loops
   description: |
+    Use nested loops that display the following patterns:
 
+    <pre class="output">
+    Pattern A
+    1 
+    1 2 
+    1 2 3 
+    1 2 3 4 
+    1 2 3 4 5 
+    1 2 3 4 5 6 
+
+    Pattern B
+    1 2 3 4 5 6 
+    1 2 3 4 5 
+    1 2 3 4 
+    1 2 3 
+    1 2 
+    1 
+
+    Pattern C
+              1 
+            2 1 
+          3 2 1 
+        4 3 2 1 
+      5 4 3 2 1 
+    6 5 4 3 2 1 
+
+    Pattern D
+    1 2 3 4 5 6 
+      1 2 3 4 5 
+        1 2 3 4 
+          1 2 3 
+            1 2 
+              1  
+    </pre>
   initialCode: |
     public class Lab_08_01 {
         public static void main(String[] args) {
-
             System.out.println("Pattern A");
             for (int i = 1; i <= 6; i++) {
-              for (int j = 1; j <= i ; j++) {
-                System.out.print(j + " ");
-              }
-              System.out.println();
+                for (int j = 1; j <= i ; j++) {
+                    System.out.print(j + " ");
+                }
+                System.out.println();
             }
 
+            System.out.println();
             System.out.println("Pattern B");
 
+            System.out.println();
             System.out.println("Pattern C");
 
+            System.out.println();
             System.out.println("Pattern D");
         }
     }
 
   input: ''
   hints:
-    - message: Start with making a Scanner variable to take input from the user
-      match: //MethodDeclaration[@Name="main"]/Block[count(.//*[@Image="Scanner"])=0]
+    - match: //literal[contains(., "Pattern B")][not(following::for)]
+      message: Check out the code for pattern A and try to understand how we used nested loops.
+    - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//for)]
+      message: Create two nested for loops just as in Pattern A.
+    - match: //literal[contains(., "Pattern B")]/following::for[1]//for[not(.//name[.="print"])]
+      message: Output the number in the inner loop.
+    - match: //literal[contains(., "Pattern B")]/following::for[1]//for//name[.="println"]
+      message: Don't use `println` in the inner loop, that would output a newline.
+    - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//name[.="println"])]
+      message: Output a newline in the outer loop in each iteration.
+    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/init//expr[.="1"]
+      message: In the outer loop, `i` should start from 6 and end at 1.
+    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/condition//literal[.="6"]
+      message: In the outer loop, `i` should start from 6 and end at 1.
+    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/incr//operator[.="++"]
+      message: In the outer loop, `i` should be decremented.
+    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/condition//operator[.="<="][following::literal="1"]
+      message: '`i` will not be `<= 1` even at the beginning.'
+    - match: //literal[contains(., "Pattern C")][not(following::decl_stmt)]
+      message: First, define an integer variable with the number of lines (6)
+    - match: |
+        //literal[contains(., "Pattern C")]/following::for[1][
+          block/block_content/child::*[1][name()="for"] and
+          .//for[1]//call[.//name[.="print"]]//name[.="j"]]
+      message: The row should start with empty space first and then the numbers
+    - match: |
+        //literal[contains(., "Pattern C")]/following::for/
+          block/block_content/child::*[1][name()!="for"]
+      message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
