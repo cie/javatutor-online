@@ -11,18 +11,13 @@ let incomingBuffer = ''
 const publications = {}
 
 Meteor.startup(() => {
-  const tmp = require('tmp').dirSync().name
-  child_process.execSync(
-    `cp -R ${lspDir}/workspace ${tmp} && chmod -R u=rwX ${tmp}`
-  )
-  workspace = `${tmp}/workspace`
   Meteor.settings.public.workspace = workspace
   lsp = child_process.spawn(
     `cd ${lspDir} &&
-     java -Declipse.applicatn=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.level=ALL -jar plugins/org.eclipse.equinox.launcher_1.5.800.v20200727-1323.jar -data ${workspace}`,
+     java -Declipse.applicatn=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.level=ALL -jar plugins/org.eclipse.equinox.launcher_1.5.800.v20200727-1323.jar`,
     {
       shell: true,
-      stdio: ['pipe', 'pipe', 'inherit'],
+      stdio: ['pipe', 'pipe', 'pipe'],
       env: { ...process.env, syntaxserver: 'false' }
     }
   )
@@ -44,6 +39,9 @@ Meteor.startup(() => {
       }
     }
   })
+  lsp.stderr.on('data', data => {
+    console.error(data.toString())
+  })
   router = new LSPRouter({
     sendToServer(message) {
       const str = JSON.stringify(message)
@@ -59,7 +57,15 @@ Meteor.startup(() => {
       publications[client].added('LSPMessages', _id, {
         message: JSON.stringify(message)
       })
-    }
+    },
+    getWorkspaceFolder(client) {
+      const tmp = require('tmp').dirSync().name
+      child_process.execSync(
+        `cp -R ${lspDir}/workspace/asdf ${tmp} && chmod -R u=rwX ${tmp}`
+      )
+      return `file://${tmp}/asdf/src/`
+    },
+    workspaceFolderRegExp: /^file:\/\/.*\/asdf\/src\//
   })
 })
 

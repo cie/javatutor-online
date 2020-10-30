@@ -160,7 +160,7 @@
     background-color: #f0bb6c;
   }
   .bubble.oversize {
-    transform: translate(-100%, 10px) translate(24px, 0);
+    transform: translate(-100%, 15px) translate(24px, 0);
   }
   .bubble.oversize::before {
     content: none;

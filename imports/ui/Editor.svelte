@@ -43,11 +43,7 @@
       return
     }
     monaco.editor.setTheme('vs-dark')
-    model = monaco.editor.createModel(
-      value,
-      'java',
-      `file://${Meteor.settings.public.workspace}/asdf/src/Code.java`
-    )
+    model = monaco.editor.createModel(value, 'java', `workspace:Code.java`)
     editor = window.editor = monaco.editor.create(editorEl, {
       ...editorOptions,
       model
