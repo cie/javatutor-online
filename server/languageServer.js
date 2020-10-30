@@ -11,10 +11,14 @@ let incomingBuffer = ''
 const publications = {}
 
 Meteor.startup(() => {
-  Meteor.settings.public.workspace = workspace
+  const tmp = require('tmp').dirSync().name
+  child_process.execSync(
+    `cp -R ${lspDir}/workspace ${tmp} && chmod -R u=rwX ${tmp}`
+  )
+  workspace = `${tmp}/workspace`
   lsp = child_process.spawn(
     `cd ${lspDir} &&
-     java -Declipse.applicatn=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.level=ALL -jar plugins/org.eclipse.equinox.launcher_1.5.800.v20200727-1323.jar`,
+     java -Declipse.applicatn=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.level=ALL -jar plugins/org.eclipse.equinox.launcher_1.5.800.v20200727-1323.jar -data ${workspace}`,
     {
       shell: true,
       stdio: ['pipe', 'pipe', 'pipe'],
@@ -59,11 +63,7 @@ Meteor.startup(() => {
       })
     },
     getWorkspaceFolder(client) {
-      const tmp = require('tmp').dirSync().name
-      child_process.execSync(
-        `cp -R ${lspDir}/workspace/asdf ${tmp} && chmod -R u=rwX ${tmp}`
-      )
-      return `file://${tmp}/asdf/src/`
+      return `file://${workspace}/asdf/src/`
     },
     workspaceFolderRegExp: /^file:\/\/.*\/asdf\/src\//
   })

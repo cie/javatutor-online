@@ -23,6 +23,7 @@
     setTask(~i ? i : 0)
   })
 
+  const student_id = localStorage.getItem('student_id')
   const nickname = localStorage.getItem('nickname')
 
   function setTask(i) {
@@ -127,7 +128,11 @@
         class="flex-1 grid grid-rows-1 items-stretch content-stretch relative
         py-2 md:mt-0"
         style="min-height: 410px">
-        <Editor bind:editor value={code} on:change={change} />
+        <Editor
+          bind:editor
+          value={code}
+          on:change={change}
+          uri={`workspace:${student_id}/${task_id}/Code.java`} />
         <Hint {hint} {editor} {task_id} {code} />
         <HelpButton {code} {task_id} />
       </div>

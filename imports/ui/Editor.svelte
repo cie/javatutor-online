@@ -3,6 +3,7 @@
   import setupLanguageClient from './languageClient'
   import trackEvent from './trackEvent'
   export let value
+  export let uri
 
   /** @type monaco.editor.IStandaloneCodeEditor */
   export let editor = undefined
@@ -43,7 +44,7 @@
       return
     }
     monaco.editor.setTheme('vs-dark')
-    model = monaco.editor.createModel(value, 'java', `workspace:Code.java`)
+    model = monaco.editor.createModel(value, 'java', uri)
     editor = window.editor = monaco.editor.create(editorEl, {
       ...editorOptions,
       model

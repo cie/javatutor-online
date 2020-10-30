@@ -69,7 +69,11 @@
 <div class="text-left">
   <h2>Code</h2>
   <div style="width:95%">
-    <Editor bind:editor value={code} on:change={updateSrcML} />
+    <Editor
+      bind:editor
+      value={code}
+      on:change={updateSrcML}
+      uri={'workspace:instructor/hint-editor/Code.java'} />
   </div>
 
   <h2>XPath</h2>
