@@ -14,7 +14,7 @@ Meteor.startup(() => {
 
 let group = 2
 
-console.log(11)
+console.log(13)
 Meteor.methods({
   reauthenticate({ student_id }) {
     if (student_id === 'instructor') throw new Meteor.Error(403)

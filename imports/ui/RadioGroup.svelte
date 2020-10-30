@@ -1,9 +1,10 @@
 <script>
-  export let name
+  export let name, from, to
   export let value = null
 </script>
 
 <div class="flex justify-center my-3">
+  <span class="w-40 text-right">{from}</span>
   {#each [1, 2, 3, 4, 5] as i}
     <label class="flex flex-col items-center cursor-pointer">
       <input
@@ -16,6 +17,7 @@
       <span>{i}</span>
     </label>
   {/each}
+  <span class="w-40">{to}</span>
 </div>
 
 <style>

@@ -110,7 +110,9 @@
             hidden lg:inline"
             on:click|preventDefault={done}>
             <i class="fa fa-check-circle" />
-            Done, move to the next task
+            {#if taskIndex < tasks.length - 1}
+              Done, move to the next task
+            {:else}Done{/if}
           </button>
         </div>
 

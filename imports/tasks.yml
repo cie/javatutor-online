@@ -142,11 +142,14 @@
 
   input: ''
   hints:
-    - match: //literal[contains(., "Pattern B")][not(following::for)]
-      message: Check out the code for pattern A and try to understand how we used nested loops.
+    - match: //literal[contains(., "Pattern A")]/following::for[following::*//literal[contains(., "Pattern B")][not(following::for)]]
+      message: |
+        Check out the code for pattern A and try to understand how we used nested loops.
+        * In the outer loop we make a new line each iteration.
+        * In the inner loop we print the row of numbers.
     - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//for)]
       message: Create two nested for loops just as in Pattern A.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]//for[not(.//name[.="print"])]
+    - match: //literal[contains(., "Pattern B")]/following::for[1]//for[not(control/following-sibling::*//name[.="j"])]
       message: Output the number in the inner loop.
     - match: //literal[contains(., "Pattern B")]/following::for[1]//for//name[.="println"]
       message: Don't use `println` in the inner loop, that would output a newline.

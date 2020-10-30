@@ -22,7 +22,10 @@ Meteor.methods({
     let result
     try {
       result = (
-        await exec(`java ${className} < input.txt`, { timeout: 3000 })
+        await exec(`java ${className} < input.txt`, {
+          timeout: 3000,
+          maxBuffer: 2 * 1024
+        })
       ).toString()
     } catch (e) {
       return e.message

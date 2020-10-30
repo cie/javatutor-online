@@ -11,6 +11,8 @@
   /** @type string */
   export let code
 
+  let hintClosed = false
+
   let editorWidth = NaN,
     editorHeight = NaN
 
@@ -27,6 +29,7 @@
       }
       if (JSON.stringify(hint) !== JSON.stringify(newHint)) {
         hint = newHint
+        hintClosed = false
         trackEvent({
           type: 'Automatic hint',
           code,
@@ -102,7 +105,7 @@
     <span class="text-sm text-gray-700">Instructor says:</span>
     <div data-harmony-id="Bubble content">{answer}</div>
   </div>
-{:else if hint && now >= hintTime}
+{:else if hint && now >= hintTime && !hintClosed}
   <div
     data-harmony-id="Hint bubble"
     in:fly={{ x: 30, duration: 800 }}
@@ -114,7 +117,14 @@
     {#if oversize}
       <span class="oversize-tail" style="height: {oversizeTailHeight}px" />
     {/if}
-    <div data-harmony-id="Bubble content">
+    <div
+      class="absolute text-black top-0 right-0 mr-1 opacity-50 hover:opacity-75
+      cursor-pointer"
+      style="margin-top: -1px;"
+      on:click={() => (hintClosed = true)}>
+      <i class="fa fa-times text-sm" />
+    </div>
+    <div class="hint-content" data-harmony-id="Bubble content">
       {@html marked(hint.message)}
     </div>
     <div
@@ -150,7 +160,7 @@
     background-color: #f0bb6c;
   }
   .bubble.oversize {
-    transform: translate(-100%, 12px) translate(22px, 0);
+    transform: translate(-100%, 10px) translate(24px, 0);
   }
   .bubble.oversize::before {
     content: none;
@@ -161,12 +171,22 @@
     display: block;
     top: 0;
     right: 10px;
-    width: 4px;
-    background: #faf089;
+    width: 19px;
+    border-right: #faf089 solid 6px;
+    border-top: #faf089 solid 6px;
     transform: translate(0, -100%);
-    border-top-right-radius: 4px;
+    border-top-right-radius: 20px;
+  }
+  .oversize-tail::before {
+    top: -12px;
+    border-top-width: 9px;
+    border-bottom-width: 9px;
   }
   .goodHintButtons:not(:hover) > .goodHint {
     visibility: hidden;
+  }
+  .hint-content :global(ul) {
+    list-style: disc;
+    padding-left: 1em;
   }
 </style>

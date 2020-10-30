@@ -24,33 +24,51 @@
     </p>
     <ul>
       <li class="my-3">
-        How easy was it to understand the task descriptions?
+        <span class="question">
+          How easy was it to understand the task descriptions?
+        </span>
         <RadioGroup
+          from="Very difficult"
+          to="Very easy"
           name="easy-to-understand"
           bind:value={answers['easy-to-understand']} />
       </li>
       <li class="my-3">
-        How easy was it to solve the tasks?
+        <span class="question">How easy was it to solve the tasks?</span>
         <RadioGroup
+          from="Very difficult"
+          to="Very easy"
           name="easy-to-solve"
           bind:value={answers['easy-to-solve']} />
       </li>
       <li class="my-3">
-        How useful were the automated hints?
-        <RadioGroup name="hints-useful" bind:value={answers['hints-useful']} />
+        <span class="question">How useful were the automated hints?</span>
+        <RadioGroup
+          from="Rather confusing"
+          to="Very useful"
+          name="hints-useful"
+          bind:value={answers['hints-useful']} />
       </li>
       <li class="my-3">
-        How useful was the instructor's help?
+        <span class="question">
+          How useful was the instructor's help (if any)?
+        </span>
         <RadioGroup
+          from="Rather confusing"
+          to="Very useful"
           name="instructors-help-useful"
           bind:value={answers['instructors-help-useful']} />
       </li>
       <li class="my-3">
-        How much did you enjoy the experiment?
-        <RadioGroup name="enjoyed" bind:value={answers['enjoyed']} />
+        <span class="question">How much did you enjoy the experiment?</span>
+        <RadioGroup
+          from="Didn't enjoy"
+          to="Very much"
+          name="enjoyed"
+          bind:value={answers['enjoyed']} />
       </li>
       <li class="my-3">
-        Anything else you would tell us?
+        <span class="question">Anything else you would tell us?</span>
         <textarea
           rows="3"
           class="w-full py-2 px-3 rounded my-3"
@@ -63,3 +81,9 @@
     </center>
   </section>
 </main>
+
+<style>
+  .question {
+    color: #eaad12;
+  }
+</style>
