@@ -53,6 +53,18 @@ Meteor.startup(() => {
       lsp.stdin.write(`Content-Length: ${contentLength}\r\n\r\n${str}`)
     },
     sendToClient(client, message) {
+      if (message.method === 'textDocument/publishDiagnostics') {
+        message.params.diagnostics = message.params.diagnostics.filter(d => {
+          if (
+            d.message.match(
+              /The declared package .* does not match the expected package/
+            )
+          )
+            return false
+          return true
+        })
+        console.log('diagnostics', ...message.params.diagnostics)
+      }
       if (!publications[client]) {
         console.log('Cannot send to ' + client)
         return

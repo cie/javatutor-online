@@ -5,7 +5,8 @@ export default class LSPRouter {
     sendToServer,
     sendToClient,
     getWorkspaceFolder,
-    workspaceFolderRegExp
+    workspaceFolderRegExp,
+    _bypass
   }) {
     this.sendToServer = sendToServer
     this.sendToClient = sendToClient
@@ -20,6 +21,29 @@ export default class LSPRouter {
     this.initializedId = null
     this.initializeResponse = null
     this.initializedResponse = null
+    if (_bypass) {
+      this.receivedFromServer = message => {
+        message = convertURIs(message, uri =>
+          uri.replace(this.workspaceFolderRegExp, folder => {
+            return 'workspace:'
+          })
+        )
+        Object.keys(this.clients).forEach(client => {
+          console.log('sendToClient', message)
+          sendToClient(client, message)
+        })
+      }
+      this.receivedFromClient = (client, message) => {
+        message = convertURIs(message, uri =>
+          uri.replace(/^workspace:/, this.findWorkspaceFolder(client))
+        )
+        console.log('sendToServer', message)
+        sendToServer(message)
+      }
+      this.clientConnected = client => {
+        this.clients[client] = {}
+      }
+    }
   }
   receivedFromServer(message) {
     let client
@@ -109,6 +133,11 @@ export default class LSPRouter {
     return client
   }
   callToClient(client, message) {
+    if (!message.hasOwnProperty('id')) {
+      this.sendToClient(client, message)
+      console.log('sendToClient', client, message)
+      return
+    }
     if (!this.serverToClientCalls[client]) this.serverToClientCalls[client] = []
     const id = this.serverToClientCalls[client].push(message.id) - 1
     this.sendToClient(client, { ...message, id })

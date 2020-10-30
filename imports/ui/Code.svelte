@@ -132,7 +132,7 @@
           bind:editor
           value={code}
           on:change={change}
-          uri={`workspace:${student_id}/${task_id}/Code.java`} />
+          uri={`workspace:${student_id}/${task_id}.java`} />
         <Hint {hint} {editor} {task_id} {code} />
         <HelpButton {code} {task_id} />
       </div>

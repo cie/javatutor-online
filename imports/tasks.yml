@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=file:///home/cie/git/javatutor/tasks.schema.json
 
-- id: hello-world
+- id: HelloWorld
   title: Hello, $NAME!
   description: |
     Welcome and thanks for participating! 
@@ -26,7 +26,7 @@
   initialCode: |
     import java.util.Scanner;
 
-    public class Code {
+    public class HelloWorld {
         public static void main(String [] args) {
             Scanner input = new Scanner(System.in);
             System.out.println("Enter your name: ");
