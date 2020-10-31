@@ -2,6 +2,7 @@
   import TaskPlayer from './TaskPlayer.svelte'
   export let student
   let task_ids
+  let line = ''
   let currentTaskId
   Meteor.subscribe('EventsThat', { student_id: student._id })
   $: EVENTS = Events.find(
@@ -27,6 +28,7 @@
       'sendAnswer',
       {
         answer,
+        line,
         student_id: student._id,
         task_id: currentTaskId
       },
@@ -76,7 +78,7 @@
       class:helpAsked={student.helpAsked && student.helpTaskId === currentTaskId}>
       <textarea bind:value={answer} />
       <button
-        class="text-primary hover:underline"
+        class="text-primary bg-gray-800 rounded"
         on:click|preventDefault={sendAnswer}>
         Send help
       </button>
@@ -85,7 +87,7 @@
         <input type="checkbox" />
         Put hint on line
       </label>
-      <input class="lineNo" />
+      <input class="lineNo" bind:value={line} />
     </div>
     <h1 class="mt-4 mb-2 text-lg">Events</h1>
     <table>
