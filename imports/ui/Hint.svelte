@@ -30,11 +30,6 @@
       if (JSON.stringify(hint) !== JSON.stringify(newHint)) {
         hint = newHint
         hintClosed = false
-        trackEvent({
-          type: 'Automatic hint',
-          code,
-          value: JSON.stringify(newHint)
-        })
       }
     })
   }
@@ -90,6 +85,24 @@
   // for some reason this does not work with window on:resize...
   onMount(() => (measureInterval = setInterval(measure, 500)))
   onDestroy(() => clearInterval(measure))
+
+  function goodHint() {
+    trackEvent({ type: 'Good hint', code })
+  }
+  function badHint() {
+    trackEvent({ type: 'Bad hint', code })
+  }
+  function closeHint() {
+    hintClosed = true
+    trackEvent({ type: 'Close hint', code })
+  }
+  function hintShown() {
+    trackEvent({
+      type: 'Automatic hint',
+      code,
+      value: `${hint.line}: ${hint.message}`
+    })
+  }
 </script>
 
 {#if answer && answerTaskId === task_id}
@@ -110,6 +123,7 @@
     data-harmony-id="Hint bubble"
     in:fly={{ x: 30, duration: 800 }}
     out:fade={{ duration: 800 }}
+    on:introstart={hintShown}
     class="bubble text-sm px-3 py-2 bg-yellow-300 rounded-lg absolute shadow-md
     right-0 mr-16"
     class:oversize
@@ -121,7 +135,7 @@
       class="absolute text-black top-0 right-0 mr-1 opacity-50 hover:opacity-75
       cursor-pointer"
       style="margin-top: -1px;"
-      on:click={() => (hintClosed = true)}>
+      on:click={closeHint}>
       <i class="fa fa-times text-sm" />
     </div>
     <div class="hint-content" data-harmony-id="Bubble content">
@@ -131,10 +145,10 @@
       class="goodHintButtons flex justify-end items-center"
       style="opacity: 0.5; margin-bottom: -8px; margin-right: -8px">
       <small class="goodHint text-xs mr-1">Good hint?</small>
-      <button class="p-1 focus:outline-none">
+      <button class="p-1 focus:outline-none" on:click={goodHint}>
         <i class="fa fa-smile-o" />
       </button>
-      <button class="p-1 focus:outline-none">
+      <button class="p-1 focus:outline-none" on:click={badHint}>
         <i class="fa fa-frown-o" />
       </button>
     </div>

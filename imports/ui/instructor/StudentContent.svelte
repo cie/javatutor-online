@@ -106,7 +106,7 @@
             <td>{event.task_id}</td>
             <td>{event.createdAt.toISOString()}</td>
             <td>{event.type}</td>
-            <td>{event.value || ''}</td>
+            <td class="whitespace-pre-wrap">{event.value || ''}</td>
             <td>
               {#if event.code != null}
                 <button on:click|preventDefault={alert(event.code)}>see</button>

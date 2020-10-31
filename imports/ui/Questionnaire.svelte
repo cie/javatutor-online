@@ -1,4 +1,6 @@
 <script>
+  import { onMount } from 'svelte'
+
   import { navigate } from 'svelte-routing'
   import Button from './Button.svelte'
   import RadioGroup from './RadioGroup.svelte'
@@ -12,6 +14,10 @@
   }
 
   let answers = {}
+
+  onMount(() => {
+    document.querySelector('main').scrollTop = 0
+  })
 </script>
 
 <main class="h-full w-full bg-gray-800 text-white">
