@@ -57,7 +57,7 @@ Meteor.startup(() => {
         message.params.diagnostics = message.params.diagnostics.filter(d => {
           if (
             d.message.match(
-              /The declared package .* does not match the expected package/
+              /The declared package .* does not match the expected package|The public type .* must be defined in its own file/
             )
           )
             return false

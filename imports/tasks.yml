@@ -7,7 +7,7 @@
     This is a warm-up task so you can get familiar with the environment.
     Whenever you are stuck, feel free to use the
     <img src="/hand.png" alt="hand" width=30 height=30 style="transform: rotate(15deg); opacity: 0.9; display: inline-block; vertical-align:middle">
-    button to ask for help.
+    button to ask for help from the instructor.
 
     Write a program that asks for the name of the user and then greets them:
 
@@ -16,8 +16,8 @@
     Hello, $NAME!</code>
     </pre>
 
-    The **Input** box below contains the user input that will be sent to your program when you press Run:
-    one line in the box is one line entered.
+    The **Input** box below contains the user input that will be sent to your program when you press Run.
+    One line in the box is one line entered.
 
     You can run the program with the
     <span class="bg-green-600 text-white rounded px-2 py-1 text-sm" style="box-shadow: 1px 2px 6px -2px inset rgba(255, 255, 255, 0.6), -1px -2px 5px -2px inset rgba(0, 0, 0, 0.4), 1px 3px 5px -1px rgba(0, 0, 0, 0.2);">Run</span>
@@ -49,7 +49,7 @@
       delay: 7
     - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list/argument/expr/*[1][.='"Hello "']
       message: |
-        Aren't you missing a comma? Think about "Let's eat, Grandma!" and "Let's eat Grandma!" <br><small>(credit: Kevlin Henney)</small>"
+        Aren't you missing a comma? Think about "Let's eat, Grandma!" and "Let's eat Grandma!" <small>(credit: Kevlin Henney)</small>
       delay: 9
   tests:
     nothing entered yet:
@@ -145,8 +145,14 @@
     - match: //literal[contains(., "Pattern A")]/following::for[following::*//literal[contains(., "Pattern B")][not(following::for)]]
       message: |
         Check out the code for pattern A and try to understand how we used nested loops.
-        * In the outer loop we make a new line each iteration.
-        * In the inner loop we print the row of numbers.
+        * In the outer loop, we make a new line each iteration.
+        * In the inner loop, we print the row of numbers.
+
+      # hints for mistakes
+    - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
+      message: This might be an infinite loop
+
+    # hints for the solution
     - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//for)]
       message: Create two nested for loops just as in Pattern A.
     - match: //literal[contains(., "Pattern B")]/following::for[1]//for[not(control/following-sibling::*//name[.="j"])]
@@ -172,5 +178,12 @@
       message: The row should start with empty space first and then the numbers
     - match: |
         //literal[contains(., "Pattern C")]/following::for/
-          block/block_content/child::*[1][name()!="for"]
+          block/block_content/child::*[1][name()!="for" and count(following-sibling::for) != 2]
       message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
+    - match: |
+        //literal[contains(., "Pattern C")]/following::for[1]/control[
+          not(
+            init//literal =1
+            and condition//operator[.="<="]/following-sibling::*[.="6" or self::name]
+            and incr//operator="++")]
+      message: In the outer loop, `i` should start from 1 and end at the number of lines in the pattern.
