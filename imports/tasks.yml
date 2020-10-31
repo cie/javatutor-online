@@ -263,39 +263,4 @@
       # hints for mistakes
     - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
       message: This might be an infinite loop
-
     # hints for the solution
-    - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//for)]
-      message: Create two nested for loops just as in Pattern A.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]//for[not(control/following-sibling::*//name[.="j"])]
-      message: Output the number in the inner loop.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]//for//name[.="println"]
-      message: Don't use `println` in the inner loop, that would output a newline.
-    - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//name[.="println"])]
-      message: Output a newline in the outer loop in each iteration.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/init//expr[.="1"]
-      message: In the outer loop, `i` should start from 6 and end at 1.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/condition//literal[.="6"]
-      message: In the outer loop, `i` should start from 6 and end at 1.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/incr//operator[.="++"]
-      message: In the outer loop, `i` should be decremented.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/condition//operator[.="<="][following::literal="1"]
-      message: '`i` will not be `<= 1` even at the beginning.'
-    - match: //literal[contains(., "Pattern C")][not(following::decl_stmt)]
-      message: First, define an integer variable with the number of lines (6)
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for[1][
-          block/block_content/child::*[1][name()="for"] and
-          .//for[1]//call[.//name[.="print"]]//name[.="j"]]
-      message: The row should start with empty space first and then the numbers
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for/
-          block/block_content/child::*[1][name()!="for" and count(following-sibling::for) != 2]
-      message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for[1]/control[
-          not(
-            init//literal =1
-            and condition//operator[.="<="]/following-sibling::*[.="6" or self::name]
-            and incr//operator="++")]
-      message: In the outer loop, `i` should start from 1 and end at the number of lines in the pattern.

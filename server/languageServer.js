@@ -10,12 +10,7 @@ let lsp, router, workspace
 let incomingBuffer = ''
 const publications = {}
 
-Meteor.startup(() => {
-  const tmp = require('tmp').dirSync().name
-  child_process.execSync(
-    `cp -R ${lspDir}/workspace ${tmp} && chmod -R u=rwX ${tmp}`
-  )
-  workspace = `${tmp}/workspace`
+function start() {
   lsp = child_process.spawn(
     `cd ${lspDir} &&
      java -Declipse.applicatn=org.eclipse.jdt.ls.core.id1 -Dosgi.bundles.defaultStartLevel=4 -Declipse.product=org.eclipse.jdt.ls.core.product -Dlog.level=ALL -jar plugins/org.eclipse.equinox.launcher_1.5.800.v20200727-1323.jar -data ${workspace}`,
@@ -25,6 +20,9 @@ Meteor.startup(() => {
       env: { ...process.env, syntaxserver: 'false' }
     }
   )
+  lsp.on('exit', () => {
+    start()
+  })
   lsp.stdout.on('data', data => {
     incomingBuffer += data.toString()
     while (incomingBuffer) {
@@ -50,7 +48,11 @@ Meteor.startup(() => {
     sendToServer(message) {
       const str = JSON.stringify(message)
       const contentLength = str.length
-      lsp.stdin.write(`Content-Length: ${contentLength}\r\n\r\n${str}`)
+      try {
+        lsp.stdin.write(`Content-Length: ${contentLength}\r\n\r\n${str}`)
+      } catch (e) {
+        console.error(e.message)
+      }
     },
     sendToClient(client, message) {
       if (message.method === 'textDocument/publishDiagnostics') {
@@ -79,6 +81,15 @@ Meteor.startup(() => {
     },
     workspaceFolderRegExp: /^file:\/\/.*\/asdf\/src\//
   })
+}
+
+Meteor.startup(() => {
+  const tmp = require('tmp').dirSync().name
+  child_process.execSync(
+    `cp -R ${lspDir}/workspace ${tmp} && chmod -R u=rwX ${tmp}`
+  )
+  workspace = `${tmp}/workspace`
+  start()
 })
 
 const close = () => {
