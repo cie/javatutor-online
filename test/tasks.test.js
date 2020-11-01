@@ -1,4 +1,6 @@
 require('@babel/register')
+require('array-flat-polyfill')
+global.globalThis = global
 const { safeLoad } = require('js-yaml')
 const assert = require('assert').strict
 const Ajv = require('ajv')
@@ -19,11 +21,14 @@ describe('tasks', () => {
   describe('gives good hints', () => {
     for (const task of tasks) {
       describe(task.title, () => {
-        for (const [testName, test] of Object.entries(task.tests)) {
+        for (const [testName, test] of Object.entries(task.tests || {})) {
           it(testName, async () => {
             const { code, hints: expectedHints } = test
             const hints = await getHints(code, task.id)
-            assert.deepEqual(hints, expectedHints)
+            assert.deepEqual(
+              hints.map(({ message }) => ({ message })).slice(0, 1),
+              expectedHints
+            )
           })
         }
       })

@@ -1,4 +1,5 @@
-import tasks from '../imports/tasks.yml'
+import tasks from './tasks'
+
 import { DOMParserImpl as DOMParser } from 'xmldom-ts'
 import * as xpath from 'xpath-ts'
 import { execSync } from 'child_process'
@@ -22,10 +23,8 @@ export default async function getHints(code, task_id) {
     }
     return task.hints
       .map(hint => {
-        console.log(hint.match)
         const n = xpath.select(hint.match, doc, true)
         if (!n) return null
-        console.log(n.toString())
         const start = n.getAttributeNS(
           'http://www.srcML.org/srcML/position',
           'start'

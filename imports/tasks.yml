@@ -197,8 +197,6 @@
       message: Don't use `println` in the inner loop, that would output a newline.
 
     # hints for the solution
-    - match: //literal[contains(., "Pattern C")][not(following::decl_stmt)]
-      message: First, define an integer variable with the number of lines (6)
     - match: //literal[contains(., "Pattern C")]/following::for[1][not(.//for)]
       message: Create two nested for loops just as in Pattern A.
     - match: //literal[contains(., "Pattern C")]/following::for[1][not(.//name[.="println"])]
@@ -209,8 +207,7 @@
           .//for[1]//call[.//name[.="print"]]//name[.="j"]]
       message: The row should start with empty space first and then the numbers
     - match: |
-        //literal[contains(., "Pattern C")]/following::for/
-          block/block_content/child::*[1][name()!="for" and count(following-sibling::for) != 2]
+        //literal[contains(., "Pattern C")]/following::for[count(.//for)!=2]
       message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
     - match: |
         //literal[contains(., "Pattern C")]/following::for[1]/control[
@@ -219,9 +216,6 @@
             and condition//operator[.="<="]/following-sibling::*[.="6" or self::name]
             and incr//operator="++")]
       message: In the outer loop, `i` should start from 1 and end at the number of lines in the pattern.
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for//for/*[2]//literal[.='" "']
-      message: Maybe you need to output two spaces per interation.
     - match: |
         //literal[contains(., "Pattern C")]/following::for[1]//for[./*[2]//name[.='j']]/control[
           not(
@@ -277,8 +271,6 @@
       message: Don't use `println` in the inner loop, that would output a newline.
 
     # hints for the solution
-    - match: //literal[contains(., "Pattern D")][not(following::decl_stmt)]
-      message: First, define an integer variable with the number of lines (6)
     - match: //literal[contains(., "Pattern D")]/following::for[1][not(.//for)]
       message: Create two nested for loops just as in Pattern A.
     - match: //literal[contains(., "Pattern D")]/following::for[1][not(.//name[.="println"])]
@@ -297,9 +289,5 @@
           .//for[1]//call[.//name[.="print"]]//name[.="j"]]
       message: The row should start with empty space first and then the numbers
     - match: |
-        //literal[contains(., "Pattern D")]/following::for/
-          block/block_content/child::*[1][name()!="for" and count(following-sibling::for) != 2]
+        //literal[contains(., "Pattern D")]/following::for[count(.//for)!=2]
       message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
-    - match: |
-        //literal[contains(., "Pattern D")]/following::for//for/*[2]//literal[.='" "']
-      message: Maybe you need to output two spaces per interation.
