@@ -52,6 +52,7 @@
           <button
             class="tab mx-2 my-1 outline-none"
             class:active={currentTaskId === task_id}
+            class:studentCurrent={studentCurrentTaskId === task_id}
             class:help={student.helpAsked && student.helpTaskId === task_id}
             on:click={() => {
               currentTaskId = task_id
@@ -145,6 +146,10 @@
     border: none;
     border-bottom: transparent 2px solid;
     outline: none;
+    color: #777;
+  }
+  .tab.studentCurrent {
+    color: white;
   }
   .tab.active {
     border-bottom: royalblue 2px solid;

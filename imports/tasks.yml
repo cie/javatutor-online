@@ -193,6 +193,8 @@
     # hints for mistakes
     - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
       message: This might be an infinite loop
+    - match: //for/control[init//expr[.='i'] and //operator[.="<="]/following-sibling::literal='1' and incr//operator[.="--"]]
+      message: This will be an infinite loop when `i` is 1. Check the relational operator.
     - match: //literal[contains(., "Pattern C")]/following::for[1]//for//name[.="println"]
       message: Don't use `println` in the inner loop, that would output a newline.
 
@@ -201,11 +203,6 @@
       message: Create two nested for loops just as in Pattern A.
     - match: //literal[contains(., "Pattern C")]/following::for[1][not(.//name[.="println"])]
       message: Output a newline in the outer loop in each iteration.
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for[1][
-          block/block_content/child::*[1][name()="for"] and
-          .//for[1]//call[.//name[.="print"]]//name[.="j"]]
-      message: The row should start with empty space first and then the numbers
     - match: |
         //literal[contains(., "Pattern C")]/following::for[count(.//for)!=2]
       message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
@@ -222,7 +219,14 @@
             init//name[2] ="i"
             and condition//operator[.=">="]/following-sibling::*[.="1"]
             and incr//operator="--")]
-      message: When outputting the numbers, `j` should start from `i` and end at 1.
+      message: When outputting the numbers, `j` should start from `i` and decrease down to 1.
+    - match: |
+        //literal[contains(., "Pattern C")]/following::for[1]//for[./*[2]//name[.='k']]/control[
+          not(
+            init//name[2] ="i"
+            and condition//operator[.=">="]/following-sibling::*[.="1"]
+            and incr//operator="--")]
+      message: When outputting the numbers, `k` should start from `i` and decrease down to 1.
   tests:
     initial:
       code: |
@@ -303,11 +307,6 @@
       message: In the outer loop, `i` should be decremented.
     - match: //literal[contains(., "Pattern D")]/following::for[1]/control/condition//operator[.="<="][following::literal="1"]
       message: '`i` will not be `<= 1` even at the beginning.'
-    - match: |
-        //literal[contains(., "Pattern D")]/following::for[1][
-          block/block_content/child::*[1][name()="for"] and
-          .//for[1]//call[.//name[.="print"]]//name[.="j"]]
-      message: The row should start with empty space first and then the numbers
     - match: |
         //literal[contains(., "Pattern D")]/following::for[count(.//for)!=2]
       message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
