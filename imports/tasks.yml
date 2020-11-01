@@ -130,14 +130,14 @@
       # hints for mistakes
     - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
       message: This might be an infinite loop
+    - match: //literal[contains(., "Pattern B")]/following::for[1]//for//name[.="println"]
+      message: Don't use `println` in the inner loop, that would output a newline.
 
     # hints for the solution
     - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//for)]
       message: Create two nested for loops just as in Pattern A.
     - match: //literal[contains(., "Pattern B")]/following::for[1]//for[not(control/following-sibling::*//name[.="j"])]
       message: Output the number in the inner loop.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]//for//name[.="println"]
-      message: Don't use `println` in the inner loop, that would output a newline.
     - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//name[.="println"])]
       message: Output a newline in the outer loop in each iteration.
     - match: //literal[contains(., "Pattern B")]/following::for[1]/control/init//expr[.="1"]
@@ -193,10 +193,16 @@
     # hints for mistakes
     - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
       message: This might be an infinite loop
+    - match: //literal[contains(., "Pattern C")]/following::for[1]//for//name[.="println"]
+      message: Don't use `println` in the inner loop, that would output a newline.
 
     # hints for the solution
     - match: //literal[contains(., "Pattern C")][not(following::decl_stmt)]
       message: First, define an integer variable with the number of lines (6)
+    - match: //literal[contains(., "Pattern C")]/following::for[1][not(.//for)]
+      message: Create two nested for loops just as in Pattern A.
+    - match: //literal[contains(., "Pattern C")]/following::for[1][not(.//name[.="println"])]
+      message: Output a newline in the outer loop in each iteration.
     - match: |
         //literal[contains(., "Pattern C")]/following::for[1][
           block/block_content/child::*[1][name()="for"] and
@@ -213,6 +219,16 @@
             and condition//operator[.="<="]/following-sibling::*[.="6" or self::name]
             and incr//operator="++")]
       message: In the outer loop, `i` should start from 1 and end at the number of lines in the pattern.
+    - match: |
+        //literal[contains(., "Pattern C")]/following::for//for/*[2]//literal[.='" "']
+      message: Maybe you need to output two spaces per interation.
+    - match: |
+        //literal[contains(., "Pattern C")]/following::for[1]//for[./*[2]//name[.='j']]/control[
+          not(
+            init//name[2] ="i"
+            and condition//operator[.=">="]/following-sibling::*[.="1"]
+            and incr//operator="--")]
+      message: When outputting the numbers, `j` should start from `i` and end at 1.
 
 - id: Patterns3
   title: Display patterns using loops (3/3)
@@ -254,13 +270,36 @@
 
   input: ''
   hints:
-    - match: //literal[contains(., "Pattern A")]/following::for[following::*//literal[contains(., "Pattern B")][not(following::for)]]
-      message: |
-        Check out the code for pattern A and try to understand how we used nested loops.
-        * In the outer loop, we make a new line each iteration.
-        * In the inner loop, we print the row of numbers.
-
-      # hints for mistakes
+    # hints for mistakes
     - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
       message: This might be an infinite loop
+    - match: //literal[contains(., "Pattern C")]/following::for[1]//for//name[.="println"]
+      message: Don't use `println` in the inner loop, that would output a newline.
+
     # hints for the solution
+    - match: //literal[contains(., "Pattern D")][not(following::decl_stmt)]
+      message: First, define an integer variable with the number of lines (6)
+    - match: //literal[contains(., "Pattern D")]/following::for[1][not(.//for)]
+      message: Create two nested for loops just as in Pattern A.
+    - match: //literal[contains(., "Pattern D")]/following::for[1][not(.//name[.="println"])]
+      message: Output a newline in the outer loop in each iteration.
+    - match: //literal[contains(., "Pattern D")]/following::for[1]/control/init//expr[.="1"]
+      message: In the outer loop, `i` should start from 6 and end at 1.
+    - match: //literal[contains(., "Pattern D")]/following::for[1]/control/condition//literal[.="6"]
+      message: In the outer loop, `i` should start from 6 and end at 1.
+    - match: //literal[contains(., "Pattern D")]/following::for[1]/control/incr//operator[.="++"]
+      message: In the outer loop, `i` should be decremented.
+    - match: //literal[contains(., "Pattern D")]/following::for[1]/control/condition//operator[.="<="][following::literal="1"]
+      message: '`i` will not be `<= 1` even at the beginning.'
+    - match: |
+        //literal[contains(., "Pattern D")]/following::for[1][
+          block/block_content/child::*[1][name()="for"] and
+          .//for[1]//call[.//name[.="print"]]//name[.="j"]]
+      message: The row should start with empty space first and then the numbers
+    - match: |
+        //literal[contains(., "Pattern D")]/following::for/
+          block/block_content/child::*[1][name()!="for" and count(following-sibling::for) != 2]
+      message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
+    - match: |
+        //literal[contains(., "Pattern D")]/following::for//for/*[2]//literal[.='" "']
+      message: Maybe you need to output two spaces per interation.

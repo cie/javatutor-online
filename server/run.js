@@ -16,20 +16,21 @@ Meteor.methods({
     try {
       await exec(`javac ${className}.java`)
     } catch (e) {
-      return e.message
+      return e.stdout + '\n' + e.message
     }
     fs.writeFileSync('input.txt', input)
-    let result
-    try {
-      result = (
-        await exec(`java ${className} < input.txt`, {
+    const result = await new Promise(r =>
+      child_process.exec(
+        `java ${className} < input.txt`,
+        {
           timeout: 3000,
           maxBuffer: 2 * 1024
-        })
-      ).toString()
-    } catch (e) {
-      return e.message
-    }
+        },
+        (err, stdout, stderr) => {
+          r(stdout.toString() + (err ? '\n' + err.message : ''))
+        }
+      )
+    )
     console.log(result)
     return result
   }
