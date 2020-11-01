@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte'
 
-  let x = 'mar@ya'
+  let x = '1'
   onMount(() => {
     localStorage.clear()
   })
@@ -15,8 +15,8 @@
       We are done. Thank you for your participation!
     </p>
     <p class="my-3 mx-auto" style="max-width: 32em;">
-      If you have any questions or requests, don't hesitate to contact
-      mahrous.sa{x}hoo.com
+      If you have any questions or requests, don't hesitate to contact Samar
+      Mahrous at smahrous000{1}@stu.kau.edu.sa
     </p>
   </section>
 </main>

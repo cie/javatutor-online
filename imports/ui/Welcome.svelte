@@ -72,12 +72,13 @@ By clicking on the "agree" button below indicates that:
 * you voluntarily agree to participate		
       `)}
     </section>
-    <Button
-      on:click={() => (confirmed = true)}
-      data-harmony-id="Confirm button">
-      I agree to participate in the study
-    </Button>
-    <div class="mb-8" />
+    <div class="mb-8">
+      <Button
+        on:click={() => (confirmed = true)}
+        data-harmony-id="Confirm button">
+        I agree to participate in the study
+      </Button>
+    </div>
   {:else}
     <section
       class="text-left mx-auto my-4 message"
@@ -116,5 +117,9 @@ By clicking on the "agree" button below indicates that:
     text-align: center;
     margin-bottom: 0.8em;
     font-size: 1.6em;
+  }
+  .message :global(ul) {
+    list-style: disc;
+    padding-left: 2em;
   }
 </style>
