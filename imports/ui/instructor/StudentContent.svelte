@@ -21,6 +21,7 @@
       currentTaskId = task_ids[0]
     }
   }
+  $: studentCurrentTaskId = task_ids && task_ids[task_ids.length - 1]
   $: someEvents = $EVENTS && $EVENTS.length > 0
   let answer
   function sendAnswer() {
@@ -51,7 +52,7 @@
           <button
             class="tab mx-2 my-1 outline-none"
             class:active={currentTaskId === task_id}
-            class:help={student.helpTaskId === task_id}
+            class:help={student.helpAsked && student.helpTaskId === task_id}
             on:click={() => {
               currentTaskId = task_id
             }}>
@@ -73,22 +74,25 @@
         <p>{student.problemMessage}</p>
       {/if}
     {/if}
-    <div
-      class="answerForm"
-      class:helpAsked={student.helpAsked && student.helpTaskId === currentTaskId}>
-      <textarea bind:value={answer} />
-      <button
-        class="text-primary bg-gray-800 rounded"
-        on:click|preventDefault={sendAnswer}>
-        Send help
-      </button>
+    {#if currentTaskId === studentCurrentTaskId}
+      <div
+        class="answerForm"
+        class:helpAsked={student.helpAsked && student.helpTaskId === currentTaskId}>
+        <textarea bind:value={answer} cols="40" />
+        <button
+          class="text-primary bg-gray-800 rounded"
+          on:click|preventDefault={sendAnswer}>
+          Send help
+        </button>
 
+        <!--
       <label>
         <input type="checkbox" />
         Put hint on line
       </label>
-      <input class="lineNo" bind:value={line} />
-    </div>
+      <input class="lineNo" bind:value={line} />-->
+      </div>
+    {/if}
     <h1 class="mt-4 mb-2 text-lg">Events</h1>
     <table>
       <thead>

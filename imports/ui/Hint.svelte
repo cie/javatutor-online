@@ -103,13 +103,16 @@
       value: `${hint.line}: ${hint.message}`
     })
   }
-  function answerShown() {
+  let lastAnswer
+  $: if (lastAnswer != answer && answerTaskId === task_id) {
+    lastAnswer = answer
     trackEvent({
       type: 'Hint from instructor',
       code,
-      value: `${hint.message}`
+      value: `${answer}`
     })
   }
+
   function hintDisappeared() {
     if (!hintClosed)
       trackEvent({
@@ -126,7 +129,6 @@
     shadow-md right-0 mr-16"
     in:fly={{ x: 30, duration: 800 }}
     out:fade={{ duration: 800 }}
-    on:introstart={answerShown}
     class:oversize
     style="top: {top}px">
     {#if oversize}
