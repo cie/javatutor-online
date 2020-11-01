@@ -284,9 +284,9 @@
     - match: //literal[contains(., "Pattern D")]/following::for[1][not(.//name[.="println"])]
       message: Output a newline in the outer loop in each iteration.
     - match: //literal[contains(., "Pattern D")]/following::for[1]/control/init//expr[.="1"]
-      message: In the outer loop, `i` should start from 6 and end at 1.
+      message: In the outer loop, `i` should start from the number of lines and end at 1.
     - match: //literal[contains(., "Pattern D")]/following::for[1]/control/condition//literal[.="6"]
-      message: In the outer loop, `i` should start from 6 and end at 1.
+      message: In the outer loop, `i` should start from the number of lines and end at 1.
     - match: //literal[contains(., "Pattern D")]/following::for[1]/control/incr//operator[.="++"]
       message: In the outer loop, `i` should be decremented.
     - match: //literal[contains(., "Pattern D")]/following::for[1]/control/condition//operator[.="<="][following::literal="1"]

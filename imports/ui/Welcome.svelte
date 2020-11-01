@@ -44,7 +44,7 @@
   <Logo />
   {#if !confirmed}
     <section
-      class="text-left mx-auto my-4"
+      class="text-left mx-auto my-4 message"
       style="max-width: 32em; font-size: 19px;"
       data-harmony-id="Message">
       {@html marked(`
@@ -77,7 +77,13 @@ By clicking on the "agree" button below indicates that:
       data-harmony-id="Confirm button">
       I agree to participate in the study
     </Button>
+    <div class="mb-8" />
   {:else}
+    <section
+      class="text-left mx-auto my-4 message"
+      style="max-width: 32em; font-size: 19px;">
+      Please choose a nickname. This doesn't have to be your real name.
+    </section>
     <p class="my-2">
       <input
         class="text-black p-2 rounded-sm"
@@ -101,3 +107,14 @@ By clicking on the "agree" button below indicates that:
     </a>
   </div>
 </main>
+
+<style>
+  .message :global(p) {
+    margin-bottom: 1em;
+  }
+  .message :global(h1) {
+    text-align: center;
+    margin-bottom: 0.8em;
+    font-size: 1.6em;
+  }
+</style>
