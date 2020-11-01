@@ -39,10 +39,6 @@
 
   <span class="actionButtons">
     <small>
-      {#if $events && lastTask}working on {lastTask.title}{/if}
-    </small>
-    <br />
-    <small>
       {#if $events}{taskIds.length} task{taskIds.length != 1 ? 's' : ''}{/if}
     </small>
     <button on:click={deleteAllData}>

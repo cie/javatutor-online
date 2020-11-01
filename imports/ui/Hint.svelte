@@ -103,6 +103,20 @@
       value: `${hint.line}: ${hint.message}`
     })
   }
+  function answerShown() {
+    trackEvent({
+      type: 'Hint from instructor',
+      code,
+      value: `${hint.message}`
+    })
+  }
+  function hintDisappeared() {
+    if (!hintClosed)
+      trackEvent({
+        type: 'Hint disappeared',
+        code
+      })
+  }
 </script>
 
 {#if answer && answerTaskId === task_id}
@@ -110,6 +124,9 @@
     data-harmony-id="Answer bubble"
     class="bubble bubble-answer text-sm px-3 py-2 w-64 rounded-lg absolute
     shadow-md right-0 mr-16"
+    in:fly={{ x: 30, duration: 800 }}
+    out:fade={{ duration: 800 }}
+    on:introstart={answerShown}
     class:oversize
     style="top: {top}px">
     {#if oversize}
@@ -124,6 +141,7 @@
     in:fly={{ x: 30, duration: 800 }}
     out:fade={{ duration: 800 }}
     on:introstart={hintShown}
+    on:outrostart={hintDisappeared}
     class="bubble text-sm px-3 py-2 bg-yellow-300 rounded-lg absolute shadow-md
     right-0 mr-16"
     class:oversize
