@@ -41,6 +41,8 @@
       localStorage.setItem('task_id', task.id)
       code = task.initialCode
       localStorage.setItem('code', code)
+      trackEvent({ type: 'Start task', value: task_id })
+      Meteor.call('editCode', { student_id, code })
     }
     input = (task.input || '').replace('$NAME', nickname)
     output = ''
@@ -84,6 +86,8 @@
   function change(e) {
     code = e.detail.value
     localStorage.setItem('code', code)
+    trackEvent({ type: 'Edit code', code })
+    Meteor.call('editCode', { student_id, code })
   }
 </script>
 

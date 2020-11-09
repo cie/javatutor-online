@@ -194,6 +194,10 @@ body.dark {
   font-size: 16px;
 }
 .user-input-line::after {
+  content: 'Enter⏎';
+}
+.user-input-line::after,
+.keystroke {
   display: inline-block;
   content: 'Enter⏎';
   background: #a0aec0;

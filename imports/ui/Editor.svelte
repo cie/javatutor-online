@@ -52,7 +52,6 @@
     model.onDidChangeContent(() => {
       const value = model.getValue()
       dispatch('change', { value })
-      trackEvent({ type: 'Edit code', code: value })
       const newMinHeight = Math.max(
         minMinHeight,
         editor.getTopForLineNumber(model.getLineCount() + 1) + margin

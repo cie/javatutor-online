@@ -16,3 +16,9 @@ if (Meteor.isServer) {
 } else {
   Meteor.subscribe('Students')
 }
+
+Meteor.methods({
+  editCode({ student_id, code }) {
+    Students.update(student_id, { $set: { code } })
+  }
+})

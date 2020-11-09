@@ -72,8 +72,9 @@
 
 <style>
   main {
-    min-width: 76vw;
-    min-height: 90vh;
+    min-width: 100%;
+    min-height: 100vh;
+    padding: 2px 5px;
   }
   ion-toggle {
     width: 40px;

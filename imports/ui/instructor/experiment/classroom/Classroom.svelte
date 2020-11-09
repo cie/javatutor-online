@@ -18,12 +18,13 @@
 
 <article>
   <aside>
-    {#each students as student}
+    {#each students as student, i}
       <ClassroomStudentHeader
         {student}
         {tasks}
         active={student._id === currentStudentId}
-        on:select={() => (currentStudentId = student._id)} />
+        on:select={() => (currentStudentId = student._id)}
+        hotkey={i + 1 < 10 ? i + 1 : null} />
     {:else}No students.{/each}
   </aside>
   <main>

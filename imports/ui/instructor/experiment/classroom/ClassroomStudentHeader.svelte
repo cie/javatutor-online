@@ -1,33 +1,15 @@
 <script>
   import { createEventDispatcher } from 'svelte'
   export let student
-  export let tasks
   export let active
+  export let hotkey = null
   const dispatch = createEventDispatcher()
-  async function deleteAllData() {
-    if (!confirm('Delete ALL DATA of this student? This cannot be undone.'))
-      return
-    await Students.remove(student._id)
+  function bodyKeypress(e) {
+    if (e.key == hotkey) dispatch('select')
   }
-  Meteor.subscribe('EventsThat', { student_id: student._id })
-  $: events = Events.find(
-    { student_id: student._id },
-    { sort: { createdAt: 1 } }
-  )
-  let taskIds, lastTask
-  $: {
-    const tasksSet = {}
-    if ($events) {
-      $events.forEach(e => {
-        tasksSet[e.task_id] = true
-      })
-      const lastEvent = $events[$events.length - 1]
-      lastTask = lastEvent && tasks.find(t => (t.id = lastEvent.taskId))
-    }
-    taskIds = Object.keys(tasksSet)
-  }
-  $: someEvents = $events && $events.length > 0
 </script>
+
+<svelte:body on:keypress={bodyKeypress} />
 
 <main
   class="hover:bg-{student.helpAsked ? 'primary-800' : 'gray-800'}"
@@ -37,13 +19,10 @@
   on:click={() => dispatch('select')}>
   <h1>{student.nickname}</h1>
 
-  <span class="actionButtons">
-    <small>
-      {#if $events}{taskIds.length} task{taskIds.length != 1 ? 's' : ''}{/if}
-    </small>
-    <button on:click={deleteAllData}>
-      <i class="fa fa-trash" />
-    </button>
+  <span class="hotkey">
+    {#if hotkey != null}
+      <span class="keystroke">{hotkey}</span>
+    {/if}
   </span>
 </main>
 
@@ -57,11 +36,11 @@
   h1 {
     display: inline;
   }
-  .actionButtons {
+  .hotkey {
     display: block;
     font-size: 1rem;
     position: absolute;
-    right: 10px;
-    bottom: 0;
+    top: 0;
+    right: 0;
   }
 </style>
