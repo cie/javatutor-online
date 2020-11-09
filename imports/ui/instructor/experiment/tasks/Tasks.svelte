@@ -1,7 +1,7 @@
 <script>
-  import tasks from '../../../imports/tasks.yml'
+  import tasks from '../../../../tasks.yml'
   import marked from 'marked'
-  import CodeWindow from './CodeWindow.svelte'
+  import CodeWindow from '../CodeWindow.svelte'
 </script>
 
 <main class="flex justify-stretch items-stretch">

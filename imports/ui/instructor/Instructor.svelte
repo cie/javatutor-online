@@ -1,7 +1,7 @@
 <script>
   import { useTracker } from 'meteor/rdb:svelte-meteor-data'
   import { Route, Router } from 'svelte-routing'
-  import Experiment from './Experiment.svelte'
+  import Experiment from './experiment/Experiment.svelte'
   import ExperimentList from './ExperimentList.svelte'
   import Gateways from './Gateways.svelte'
   import HintEditor from './hint-editor/HintEditor.svelte'

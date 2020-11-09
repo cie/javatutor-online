@@ -1,11 +1,12 @@
 <script>
   import { useTracker } from 'meteor/rdb:svelte-meteor-data'
   import { Route, Router } from 'svelte-routing'
-  import Redirect from '../Redirect.svelte'
-  import Gateways from './Gateways.svelte'
-  import Students from './Students.svelte'
+  import Redirect from '../../Redirect.svelte'
+  import Gateways from '../Gateways.svelte'
+  import Classroom from './classroom/Classroom.svelte'
+  import Results from './results/Results.svelte'
   import Tab from './Tab.svelte'
-  import Tasks from './Tasks.svelte'
+  import Tasks from './tasks/Tasks.svelte'
   export let experiment_id
   $: EXPERIMENT = useTracker(() => Experiments.findOne(experiment_id))
   function toggleActive(active) {
@@ -38,8 +39,13 @@
             {experiment_id}
             currentTab={p.currentTab} />
           <Tab
-            id="students"
-            title="Students"
+            id="classroom"
+            title="Classroom"
+            {experiment_id}
+            currentTab={p.currentTab} />
+          <Tab
+            id="results"
+            title="Results"
             {experiment_id}
             currentTab={p.currentTab} />
         </Route>
@@ -54,7 +60,8 @@
     </nav>
     <Router>
       <Route path="tasks" component={Tasks} {experiment_id} />
-      <Route path="students" component={Students} {experiment_id} />
+      <Route path="classroom" component={Classroom} {experiment_id} />
+      <Route path="results" component={Results} {experiment_id} />
       <Route>
         <Redirect to="/instructor/experiments/{experiment_id}/tasks" />
       </Route>

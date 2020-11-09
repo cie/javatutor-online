@@ -1,5 +1,5 @@
 <script>
-  import CodeWindow from './CodeWindow.svelte'
+  import CodeWindow from '../CodeWindow.svelte'
   export let events
   $: someEvents = events.length > 0
   $: maxSec = someEvents && events[events.length - 1].sec - events[0].sec

@@ -2,7 +2,7 @@
   import Editor from './Editor.svelte'
   import Button from './Button.svelte'
   import HelpButton from './HelpButton.svelte'
-  import tasks from '../../imports/tasks.yml'
+  import tasks from '../tasks.yml'
   import marked from 'marked'
   import { navigate } from 'svelte-routing'
   import trackEvent from './trackEvent'

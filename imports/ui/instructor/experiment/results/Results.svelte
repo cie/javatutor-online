@@ -1,6 +1,5 @@
 <script>
-  import Tab from './Tab.svelte'
-  import tasks from '../../../imports/tasks.yml'
+  import tasks from '../../../../tasks.yml'
 
   export let experiment_id
   $: STUDENTS = Students.find({ experiment_id })
