@@ -107,7 +107,7 @@
 <svelte:window on:resize={onResize} />
 
 <div
+  class="dark:bg-silver-900"
   bind:this={editorEl}
   on:wheel|capture={onWheel}
-  style="background: #1e1e1e; {growHeight ? `min-height: ${minHeight}px;` : ''}
-  flex: 1;" />
+  style="{growHeight ? `min-height: ${minHeight}px;` : ''} flex: 1;" />

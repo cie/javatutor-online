@@ -15,7 +15,7 @@
 
 <nav
   class="absolute top-0 right-0 px-2 mr-8 dark:text-white z-30 dark:bg-gray-800
-  opacity-25 hover:opacity-75 rounded-full">
+  bg-gray-200 opacity-25 hover:opacity-75 rounded-full">
   <ion-icon name="sunny" class="align-middle" />
   <ion-toggle
     class="align-middle"

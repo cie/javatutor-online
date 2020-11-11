@@ -13,7 +13,9 @@
           {i + 1}
           <tt>{id}</tt>
         </h1>
-        <div class="task-description dark:bg-gray-800 max-w-xl px-4 py-4">
+        <div
+          class="task-description dark:bg-gray-800 bg-gray-200 max-w-xl px-4
+          py-4">
           {@html marked(description)}
         </div>
         <CodeWindow code={initialCode} />

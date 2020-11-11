@@ -243,6 +243,15 @@ body.dark {
 .dark .dark\:bg-gray-900 {
   background-color: #1a202c;
 }
+.bg-silver-100 {
+  background-color: #eee;
+}
+.bg-silver-200 {
+  background-color: #ddd;
+}
+.bg-silver-300 {
+  background-color: #ccc;
+}
 .dark .dark\:bg-silver-700 {
   background-color: #333;
 }

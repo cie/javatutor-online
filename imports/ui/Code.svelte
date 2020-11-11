@@ -93,17 +93,18 @@
 
 {#if task}
   <div class="h-full flex flex-col" on:keydown|capture={keydown}>
-    <div class="flex-none flex dark:bg-silver-800">
+    <div class="flex-none flex dark:bg-silver-800 bg-gray-300">
       {#each tasks as task, i (i)}
         <div
           class="bg-{i === taskIndex ? 'primary-600' : 'gray-600'} h-3 w-12 mx-1" />
       {/each}
     </div>
     <div
-      class="flex-1 flex flex-col lg:flex-row relative py-2 dark:bg-silver-900">
+      class="flex-1 flex flex-col lg:flex-row relative py-2 dark:bg-silver-900
+      bg-white">
       <aside
         class="task-description dark:text-white px-4 py-3 dark:bg-gray-800
-        dark:text-white w-full lg:w-4/12 lg:max-w-lg flex flex-col">
+        bg-gray-200 dark:text-white w-full lg:w-4/12 lg:max-w-lg flex flex-col">
         <div class="flex-1">
           <h1>{task.title.replace(/\$NAME\b/g, nickname)}</h1>
           {@html marked(task.description.replace(/\$NAME\b/g, nickname))}
@@ -111,7 +112,7 @@
         <div>
           <button
             class="rounded-md w-full mt-4 mb-2 text-center px-1 py-3
-            dark:bg-gray-700 hidden lg:inline"
+            dark:bg-gray-700 bg-gray-400 hidden lg:inline"
             on:click|preventDefault={done}>
             <i class="fa fa-check-circle" />
             {#if taskIndex < tasks.length - 1}
@@ -142,7 +143,8 @@
 
     </div>
     <footer
-      class="flex flex-col md:flex-row dark:text-white dark:bg-silver-700">
+      class="flex flex-col md:flex-row dark:text-white dark:bg-silver-700
+      bg-gray-200">
       <div class="flex-1 flex flex-col h-full p-2">
         <h2 class="font-bold mb-1">Input</h2>
         <div class="user-input flex-1">
@@ -177,8 +179,8 @@
             <code>{output}</code>
             {#if running}
               <div
-                class="absolute inset-0 output dark:bg-gray-500 bg-opacity-25
-                flex-1 flex justify-center items-center sans-serif">
+                class="absolute inset-0 output dark:bg-gray-500 bg-gray-500
+                bg-opacity-25 flex-1 flex justify-center items-center sans-serif">
                 <span>Running...</span>
               </div>
             {/if}
@@ -193,7 +195,7 @@
       <div>
         <button
           class="rounded-md w-full mt-4 mb-2 text-center px-1 py-3
-          dark:bg-gray-700 lg:hidden"
+          dark:bg-gray-700 bg-gray-300 lg:hidden"
           on:click|preventDefault={done}>
           <i class="fa fa-check-circle" />
           {#if taskIndex < tasks.length - 1}

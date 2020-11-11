@@ -10,7 +10,7 @@
 </script>
 
 <div
-  class="min-h-full flex flex-col dark:bg-gray-900 dark:text-white
+  class="min-h-full flex flex-col dark:bg-gray-900 bg-gray-100 dark:text-white
   justify-center items-center">
   <Router>
     {#if !$LOGGED_IN}

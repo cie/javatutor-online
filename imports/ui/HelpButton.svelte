@@ -107,7 +107,7 @@
     border-radius: 35px;
     cursor: pointer;
     border: none;
-    background: #3e3e3e url('/hand.png') no-repeat 50% 50%;
+    background: #7e8593 url('/hand.png') no-repeat 50% 50%;
     background-size: 70% 70%;
     position: relative;
     transform: rotate(15deg);
@@ -116,6 +116,9 @@
     transition-property: transform, background-position, background-color;
     outline: none;
     opacity: 0.7;
+  }
+  :global(.dark) .hand {
+    background-color: #3e3e3e;
   }
   .helpButtonContainer:not(:hover) > .hand {
     opacity: 0.7;
