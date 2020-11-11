@@ -9,6 +9,7 @@
   import Tasks from './tasks/Tasks.svelte'
   export let experiment_id
   $: EXPERIMENT = useTracker(() => Experiments.findOne(experiment_id))
+  $: experiment = $EXPERIMENT
   function toggleActive(active) {
     if (
       !confirm(
@@ -20,7 +21,7 @@
   }
 </script>
 
-{#if $EXPERIMENT}
+{#if experiment}
   <main>
     <nav class="flex">
       <a
@@ -30,7 +31,7 @@
         Experiments
       </a>
       <span class="py-1 px-2 my-2">‣</span>
-      <span class="py-1 px-2 my-2 mr-8">{$EXPERIMENT.title}</span>
+      <span class="py-1 px-2 my-2 mr-8">{experiment.title}</span>
       <Router>
         <Route path="/:currentTab" let:params={p}>
           <Tab
@@ -54,7 +55,7 @@
         class="ml-8 my-2"
         size="large"
         color="success"
-        checked={!!$EXPERIMENT.active}
+        checked={!!experiment.active}
         on:ionChange={event => toggleActive(event.detail.checked)} />
       <span class="my-2 py-1">Active</span>
     </nav>
@@ -75,6 +76,8 @@
     min-width: 100%;
     min-height: 100vh;
     padding: 2px 5px;
+    display: flex;
+    flex-direction: column;
   }
   ion-toggle {
     width: 40px;

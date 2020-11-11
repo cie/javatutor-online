@@ -93,7 +93,7 @@
 
 {#if task}
   <div class="h-full flex flex-col" on:keydown|capture={keydown}>
-    <div class="flex" style="background: #2e2e2e;">
+    <div class="flex-none flex" style="background: #2e2e2e;">
       {#each tasks as task, i (i)}
         <div
           class="bg-{i === taskIndex ? 'primary-600' : 'gray-600'} h-3 w-12 mx-1" />

@@ -7,8 +7,12 @@ import {
 } from 'monaco-languageclient'
 import { lspOverMeteorMessageConnection } from './lspOverMeteor'
 
+let installed = false
+
 export default function setupLanguageClient(editor) {
   if (!Meteor.isClient) return
+  if (installed) return
+  installed = true
 
   MonacoServices.install(editor)
 

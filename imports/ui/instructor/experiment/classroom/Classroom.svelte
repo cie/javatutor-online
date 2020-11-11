@@ -9,6 +9,7 @@
   import ClassroomStudentHeader from './ClassroomStudentHeader.svelte'
 
   let currentStudentId
+  $: currentStudent = students.find(s => s._id === currentStudentId)
 </script>
 
 <input
@@ -16,8 +17,8 @@
   data-harmony-id="Students"
   value={students.map(s => s.nickname).join(', ')} />
 
-<article>
-  <aside>
+<article class="flex-1 flex">
+  <aside style="width: 210px;">
     {#each students as student, i}
       <ClassroomStudentHeader
         {student}
@@ -27,19 +28,9 @@
         hotkey={i + 1 < 10 ? i + 1 : null} />
     {:else}No students.{/each}
   </aside>
-  <main>
-    {#if currentStudentId}
-      <ClassroomStudentContent
-        student={students.find(s => s._id === currentStudentId)} />
+  <main class="flex-1 flex flex-column">
+    {#if currentStudent}
+      <ClassroomStudentContent student={currentStudent} />
     {/if}
   </main>
 </article>
-
-<style>
-  article {
-    display: flex;
-  }
-  aside {
-    width: 210px;
-  }
-</style>

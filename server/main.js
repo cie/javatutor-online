@@ -12,7 +12,8 @@ Meteor.startup(() => {
   )
 })
 
-let group = 2
+const groups = ['experimental', 'control']
+let group
 
 console.log(17)
 Meteor.methods({
@@ -21,12 +22,13 @@ Meteor.methods({
     this.setUserId(student_id)
   },
   startSession({ nickname, experiment_id }) {
+    group = groups[groups.indexOf(group) + 1] || groups[0]
     const student_id = Students.insert({
       nickname,
-      experiment_id
+      experiment_id,
+      group
     })
     this.setUserId(student_id)
-    group = group === 1 ? 2 : 1
     return { student_id, group }
   }
 })

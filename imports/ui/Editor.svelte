@@ -1,12 +1,14 @@
 <script>
   import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte'
   import setupLanguageClient from './languageClient'
-  import trackEvent from './trackEvent'
   export let value
   export let uri
+  export let readOnly = false
 
   /** @type monaco.editor.IStandaloneCodeEditor */
   export let editor = undefined
+
+  export let growHeight = true
 
   let editorEl, model
   const minMinHeight = 250
@@ -36,7 +38,7 @@
     })
   })
   const disposers = []
-  onDestroy(() => disposers.forEach(x => x()))
+  //onDestroy(() => disposers.forEach(x => x.dispose()))
 
   function setupEditor() {
     if (typeof monaco === 'undefined') {
@@ -44,25 +46,32 @@
       return
     }
     monaco.editor.setTheme('vs-dark')
-    model = monaco.editor.createModel(value, 'java', uri)
-    editor = window.editor = monaco.editor.create(editorEl, {
-      ...editorOptions,
-      model
-    })
-    model.onDidChangeContent(() => {
-      const value = model.getValue()
-      dispatch('change', { value })
-      const newMinHeight = Math.max(
-        minMinHeight,
-        editor.getTopForLineNumber(model.getLineCount() + 1) + margin
-      )
-      if (minHeight != newMinHeight) {
-        minHeight = newMinHeight
-        tick().then(() => window.dispatchEvent(new Event('resize')))
-      }
-    })
-
-    disposers.push(setupLanguageClient(editor))
+    model = monaco.editor.getModel(uri)
+    if (!model) {
+      model = monaco.editor.createModel(value, 'java', uri)
+      model.onDidChangeContent(() => {
+        const value = model.getValue()
+        dispatch('change', { value })
+        if (growHeight) {
+          const newMinHeight = Math.max(
+            minMinHeight,
+            editor.getTopForLineNumber(model.getLineCount() + 1) + margin
+          )
+          if (minHeight != newMinHeight) {
+            minHeight = newMinHeight
+            tick().then(() => window.dispatchEvent(new Event('resize')))
+          }
+        }
+      })
+    }
+    if (!editor) {
+      editor = window.editor = monaco.editor.create(editorEl, {
+        ...editorOptions,
+        model,
+        readOnly
+      })
+      disposers.push(setupLanguageClient(editor))
+    }
   }
 
   function onResize() {
@@ -75,6 +84,7 @@
 
   function onWheel(event) {
     if (!editor) return
+    if (!growHeight) return
     const horiz = event.deltaX !== 0
     const maxScrollTop =
       editor.getScrollHeight() - editor.getDomNode().offsetHeight
@@ -93,4 +103,5 @@
 <div
   bind:this={editorEl}
   on:wheel|capture={onWheel}
-  style="background: #1e1e1e; min-height: {minHeight}px" />
+  style="background: #1e1e1e; {growHeight ? `min-height: ${minHeight}px;` : ''}
+  flex: 1;" />

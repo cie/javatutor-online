@@ -9,29 +9,51 @@
   }
 
   $: EXPERIMENTS = Experiments.find()
+  $: experiments = $EXPERIMENTS
 
   let newExperimentTitle
   function newExperiment() {
     const title = newExperimentTitle
     if (!title || !title.trim()) return
-    Experiments.insert({ title, active: true }, (err, _id) => {
+    Experiments.insert({ title, active: false }, (err, _id) => {
       if (err) {
         return
       }
       navigate(`/instructor/experiments/${_id}`)
     })
   }
+  function confirmSetActive(experiment, event) {
+    const active = !experiment.active
+    if (
+      !confirm(
+        `Are you sure you want to ${active ? 'start' : 'stop'} experiment ${
+          experiment.title
+        }?`
+      )
+    )
+      event.stopImmediatePropagation()
+  }
+  function toggleActive(experiment, active) {
+    Experiments.update(experiment._id, { $set: { active } })
+  }
 </script>
 
 <nav data-harmony-id="Experiments" class="pb-4">
-  {#each $EXPERIMENTS as { title, _id }}
+  {#each experiments as experiment}
     <p>
       <a
         class="hover:underline text-primary"
-        href="/instructor/experiments/{_id}"
-        data-harmony-id={title}>
-        {title}
+        href="/instructor/experiments/{experiment._id}"
+        data-harmony-id="Experiment {experiment.title}">
+        {experiment.title}
       </a>
+      <ion-toggle
+        class="align-middle"
+        size="large"
+        color="success"
+        checked={experiment.active}
+        on:click|capture={event => confirmSetActive(experiment, event)}
+        on:ionChange={event => toggleActive(experiment, event.detail.checked)} />
     </p>
   {:else}
     <p>No experiments</p>

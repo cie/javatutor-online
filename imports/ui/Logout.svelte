@@ -5,7 +5,7 @@
   onMount(() => {
     localStorage.clear()
     Meteor.logout(() => {
-      navigate('/')
+      navigate('/', { replace: true })
     })
   })
 </script>

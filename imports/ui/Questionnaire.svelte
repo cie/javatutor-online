@@ -24,6 +24,7 @@
   <section
     class="text-left mx-auto my-12"
     style="max-width: 32em; font-size: 19px;">
+    <h1 class="text-2xl mb-2">Well done!</h1>
     <p>
       You have gone through all tasks. Please now answer these questions about
       your experience.

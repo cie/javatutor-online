@@ -18,8 +18,8 @@ if (Meteor.isServer) {
     else return Experiments.find({ active: true })
   })
   Meteor.methods({
-    getActiveExperiment() {
-      return Experiments.findOne({ active: true })
+    getActiveExperiments() {
+      return Experiments.find({ active: true }).fetch()
     }
   })
 } else {

@@ -5,10 +5,11 @@
   $: STUDENTS = Students.find({ experiment_id })
   $: students = $STUDENTS
 
-  import StudentContent from './StudentContent.svelte'
-  import StudentHeader from './StudentHeader.svelte'
+  import StudentContent from './ResultsStudentContent.svelte'
+  import StudentHeader from './ResultsStudentHeader.svelte'
 
   let currentStudentId
+  $: currentStudent = students.find(s => s._id === currentStudentId)
 </script>
 
 <input
@@ -27,9 +28,8 @@
     {:else}No students.{/each}
   </aside>
   <main>
-    {#if currentStudentId}
-      <StudentContent
-        student={students.find(s => s._id === currentStudentId)} />
+    {#if currentStudent}
+      <StudentContent student={currentStudent} />
     {/if}
   </main>
 </article>
