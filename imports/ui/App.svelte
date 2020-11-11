@@ -11,6 +11,7 @@
   import Redirect from './Redirect.svelte'
   import Consent from './Consent.svelte'
   import ExperimentChooser from './ExperimentChooser.svelte'
+  import DarkSwitch, { DARK } from './DarkSwitch.svelte'
 
   const student_id = localStorage.getItem('student_id')
   if (student_id) {
@@ -35,9 +36,10 @@
 </script>
 
 <main
-  class="h-screen bg-gray-800 overflow-auto "
+  class="h-screen dark:bg-gray-800 overflow-auto relative"
   on:click|capture={handleLinks}
   data-harmony-id="Page">
+  <DarkSwitch />
   {#if experiments}
     <Router>
       {#if experiments.length === 0}

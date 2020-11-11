@@ -22,7 +22,7 @@
   })
 </script>
 
-<main class="h-full w-full bg-gray-800 text-white">
+<main class="h-full w-full dark:text-white">
   <section
     class="text-left mx-auto my-12"
     style="max-width: 32em; font-size: 19px;">

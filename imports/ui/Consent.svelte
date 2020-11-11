@@ -1,6 +1,7 @@
 <script>
   import marked from 'marked'
   import Button from './Button.svelte'
+  import InstructorLoginLink from './InstructorLoginLink.svelte'
   import Logo from './Logo.svelte'
   import Redirect from './Redirect.svelte'
   let x = 1
@@ -15,7 +16,7 @@
   <Redirect to="/experiment" />
 {/if}
 
-<main class="h-full w-full bg-gray-800 text-white text-center">
+<main class="h-full w-full dark:text-white text-center">
   <Logo />
   <section
     class="text-left mx-auto my-4 message"
@@ -57,11 +58,7 @@ By clicking on the "agree" button below indicates that:
       I agree to participate in the study
     </Button>
   </div>
-  <div class="absolute bottom-0 text-sm" style="right: 30px">
-    <a href="/instructor" data-harmony-id="Instructor login">
-      Instructor login
-    </a>
-  </div>
+  <InstructorLoginLink />
 </main>
 
 <style>

@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte'
+  import { DARK } from './DarkSwitch.svelte'
   import setupLanguageClient from './languageClient'
   export let value
   export let uri
@@ -45,7 +46,6 @@
       setTimeout(setupEditor, 10)
       return
     }
-    monaco.editor.setTheme('vs-dark')
     model = monaco.editor.getModel(uri)
     if (!model) {
       model = monaco.editor.createModel(value, 'java', uri)
@@ -72,6 +72,12 @@
       })
       disposers.push(setupLanguageClient(editor))
     }
+  }
+
+  $: console.log($DARK)
+  $: if (editor) {
+    console.log($DARK ? 'vs-dark' : 'vs-light')
+    monaco.editor.setTheme($DARK ? 'vs-dark' : 'vs-light')
   }
 
   function onResize() {

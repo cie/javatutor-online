@@ -10,8 +10,8 @@
 </script>
 
 <div
-  class="min-h-full flex flex-col bg-gray-900 text-white justify-center
-  items-center">
+  class="min-h-full flex flex-col dark:bg-gray-900 dark:text-white
+  justify-center items-center">
   <Router>
     {#if !$LOGGED_IN}
       <InstructorLogin />

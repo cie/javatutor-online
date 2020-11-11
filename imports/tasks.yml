@@ -20,7 +20,7 @@
     One line in the box is one line entered.
 
     You can run the program with the
-    <span class="bg-green-600 text-white rounded px-2 py-1 text-sm" style="box-shadow: 1px 2px 6px -2px inset rgba(255, 255, 255, 0.6), -1px -2px 5px -2px inset rgba(0, 0, 0, 0.4), 1px 3px 5px -1px rgba(0, 0, 0, 0.2);">Run</span>
+    <span class="bg-green-600 dark:text-white rounded px-2 py-1 text-sm" style="color: white; box-shadow: 1px 2px 6px -2px inset rgba(255, 255, 255, 0.6), -1px -2px 5px -2px inset rgba(0, 0, 0, 0.4), 1px 3px 5px -1px rgba(0, 0, 0, 0.2);">Run</span>
     button and see its output in the **Output** box.
 
   initialCode: |

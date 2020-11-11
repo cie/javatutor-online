@@ -8,8 +8,7 @@
 </script>
 
 <main
-  class="h-full w-full bg-gray-800 text-white flex flex-col justify-center
-  items-center">
+  class="h-full w-full dark:text-white flex flex-col justify-center items-center">
   <section class="text-center mx-auto my-4">
     <p style="font-size: 32px; max-width: 32em;">
       We are done. Thank you for your participation!

@@ -18,7 +18,7 @@
   }
 </script>
 
-<div class="pt-8 pb-12 px-12 text-black bg-gray-500">
+<div class="pt-8 pb-12 px-12 text-black dark:bg-gray-500">
   <h2 class="mt-0 text-lg font-bold">Instructor login</h2>
   Password
   <br />

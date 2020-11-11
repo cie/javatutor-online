@@ -3,7 +3,7 @@
 </script>
 
 <a
-  class="py-1 px-2 m-2 {currentTab === id ? 'bg-gray-300 text-black' : 'text-white '}
+  class="py-1 px-2 m-2 {currentTab === id ? 'bg-gray-300 text-black' : 'dark:text-white '}
   hover:bg-gray-500 hover:text-black"
   draggable="false"
   data-harmony-id="{title} tab"

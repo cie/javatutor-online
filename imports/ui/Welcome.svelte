@@ -3,6 +3,7 @@
 
   import { navigate } from 'svelte-routing'
   import Button from './Button.svelte'
+  import InstructorLoginLink from './InstructorLoginLink.svelte'
   import Logo from './Logo.svelte'
 
   export let experiment_id
@@ -36,7 +37,7 @@
   }
 </script>
 
-<main class="h-full w-full bg-gray-800 text-white text-center">
+<main class="h-full w-full dark:text-white text-center">
   <Logo />
   <section
     class="text-left mx-auto my-4 message"
@@ -57,9 +58,5 @@
     <p data-harmony-id="Error message" class="text-red-800">{errorMessage}</p>
   {/if}
   <Button on:click={start} data-harmony-id="Start button">Let's start!</Button>
-  <div class="absolute bottom-0 text-sm" style="right: 30px">
-    <a href="/instructor" data-harmony-id="Instructor login">
-      Instructor login
-    </a>
-  </div>
+  <InstructorLoginLink />
 </main>

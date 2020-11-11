@@ -5,6 +5,7 @@
 
   import { navigate } from 'svelte-routing'
   import Button from './Button.svelte'
+  import InstructorLoginLink from './InstructorLoginLink.svelte'
   import Logo from './Logo.svelte'
 
   onMount(() => {
@@ -13,7 +14,7 @@
   let x = 1
 </script>
 
-<main class="h-full w-full bg-gray-800 text-white text-center">
+<main class="h-full w-full dark:text-white text-center">
   <Logo />
   <section
     class="text-left mx-auto my-4 message"
@@ -25,11 +26,7 @@ Hello and Welcome to the Java Tutor, a research project for programming lab sess
 If you have any questions about the research study, please contact the researcher, Samar Mahrous, at smahrous000${x}@stu.kau.edu.sa
       `)}
   </section>
-  <div class="absolute right-0 bottom-0 text-sm">
-    <a href="/instructor" data-harmony-id="Instructor login">
-      Instructor login
-    </a>
-  </div>
+  <InstructorLoginLink />
 </main>
 
 <style>

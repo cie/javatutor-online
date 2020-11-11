@@ -8,7 +8,7 @@
   export let experiments
 </script>
 
-<main class="h-full w-full bg-gray-800 text-white text-center">
+<main class="h-full w-full dark:text-white text-center">
   <Logo />
   <section
     class="text-left mx-auto my-4 message"
