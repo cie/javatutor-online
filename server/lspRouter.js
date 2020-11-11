@@ -37,9 +37,9 @@ export default class LSPRouter {
       if (
         message.method === 'window/logMessage' ||
         message.method === 'language/status'
-      )
+      ) {
         console.log(message.params.message)
-      else if (message.method === 'client/registerCapability')
+      } else if (message.method === 'client/registerCapability')
         this.broadcast(message)
       else if (message.method === 'textDocument/publishDiagnostics' && client)
         this.callToClient(client, message)
@@ -71,7 +71,7 @@ export default class LSPRouter {
     delete this.clients[client]
   }
   initialize(client, message) {
-    console.log('initialize', client, message)
+    //console.log('initialize', client, message)
     if (this.initializeId === null) {
       this.initializeId = this.callToServer(client, message)
     } else {
@@ -93,36 +93,37 @@ export default class LSPRouter {
     }
   }
   initializedDone(message) {
+    console.log('initializedDone', message)
     this.initializedResponse = message
     const client = this.returnFromServer(message)
   }
   callToServer(client, message) {
     const sid = this.clientToServerCalls.push({ client, id: message.id }) - 1
     this.sendToServer({ ...message, id: sid })
-    console.log('sendToServer', { ...message, id: sid })
+    //console.log('sendToServer', { ...message, id: sid })
     return sid
   }
   returnFromServer(message) {
     const { client, id } = this.clientToServerCalls[message.id]
     this.sendToClient(client, { ...message, id })
-    console.log('sendToClient', client, { ...message, id })
+    //console.log('sendToClient', client, { ...message, id })
     return client
   }
   callToClient(client, message) {
     if (!message.hasOwnProperty('id')) {
       this.sendToClient(client, message)
-      console.log('sendToClient', client, message)
+      //console.log('sendToClient', client, message)
       return
     }
     if (!this.serverToClientCalls[client]) this.serverToClientCalls[client] = []
     const id = this.serverToClientCalls[client].push(message.id) - 1
     this.sendToClient(client, { ...message, id })
-    console.log('sendToClient', client, { ...message, id })
+    //console.log('sendToClient', client, { ...message, id })
   }
   returnFromClient(client, message) {
     const sid = this.serverToClientCalls[client][message.id]
     this.sendToServer({ ...message, id: sid })
-    console.log('sendToServer', { ...message, id: sid })
+    //console.log('sendToServer', { ...message, id: sid })
   }
   broadcast(message) {
     for (const client of Object.keys(this.clients))

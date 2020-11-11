@@ -21,7 +21,7 @@
   $: answer = student && student.answer
   $: answerTaskId = student && student.answerTaskId
 
-  $: {
+  $: if (student && student.group != 'control') {
     Meteor.call('getHint', code, task_id, (err, newHint) => {
       if (err) {
         trackEvent({ type: 'Internal error', code, value: err })

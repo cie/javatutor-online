@@ -107,7 +107,7 @@
     border-radius: 35px;
     cursor: pointer;
     border: none;
-    background: #3e3e3e url('./hand.png') no-repeat 50% 50%;
+    background: #3e3e3e url('/hand.png') no-repeat 50% 50%;
     background-size: 70% 70%;
     position: relative;
     transform: rotate(15deg);
