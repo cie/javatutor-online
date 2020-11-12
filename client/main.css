@@ -283,3 +283,7 @@ body.dark {
 .dark .dark\:bg-orange-600 {
   background-color: #dd6b20;
 }
+.text-silver-800,
+.dark .dark\:text-silver-800 {
+  color: #2e2e2e;
+}

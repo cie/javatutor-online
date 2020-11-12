@@ -36,7 +36,8 @@
 </script>
 
 <main
-  class="h-screen dark:bg-gray-800 overflow-auto relative"
+  class="h-screen dark:bg-gray-800 overflow-auto relative text-silver-800
+  dark:text-white"
   on:click|capture={handleLinks}
   data-harmony-id="Page">
   <DarkSwitch />

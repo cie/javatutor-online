@@ -1,101 +1,22 @@
 <script>
   import { tick } from 'svelte'
+
   import { CHAT } from './instructor/ChatBox.svelte'
-  import trackEvent from './trackEvent'
-  export let code, task_id
-  let active = false
-  let textarea
-  let problemMessage = ''
-  let sent
   const student_id = localStorage.getItem('student_id')
   function toggleChat() {
     $CHAT = !$CHAT
-  }
-  async function askForHelp() {
-    if (active) return
-    active = true
-    sent = false
-    problemMessage = ''
-    await tick()
-    textarea.focus()
-    trackEvent({ type: 'Ask for help', code })
-    Meteor.call('askForHelp', { student_id, task_id })
-  }
-  function cancelHelp() {
-    active = false
-    trackEvent({ type: 'Cancel help', code })
-    Meteor.call('cancelHelp', { student_id })
-  }
-  async function edit() {
-    sent = false
-    await tick()
-    textarea.focus()
-  }
-  function handleKeydown(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      sendProblemMessage()
-    }
-  }
-  async function sendProblemMessage() {
-    sent = true
-    trackEvent({ type: 'Send problem message', value: problemMessage, code })
-    Meteor.call('sendProblemMessage', { student_id, problemMessage, task_id })
+    tick().then(() => document.querySelector('#chatMessage').focus())
   }
 </script>
 
-<div class="helpButtonContainer" class:active>
-
-  <div class="tooltip rounded-sm">
-    {#if !active}
-      Ask for help
-    {:else}
-      Explain your problem:
-      <div>
-        <textarea
-          bind:value={problemMessage}
-          bind:this={textarea}
-          on:keydown={handleKeydown}
-          readonly={sent}
-          class:sent
-          rows="2"
-          cols="38" />
-      </div>
-      <div class="text-right">
-        {#if !sent}
-          <button
-            class="text-primary hover:underline mr-2"
-            on:click|preventDefault={sendProblemMessage}>
-            Send
-          </button>
-        {:else}
-          <button
-            class="text-primary hover:underline mr-2"
-            on:click|preventDefault={edit}>
-            Edit
-          </button>
-        {/if}
-        <button
-          class="text-primary hover:underline"
-          on:click|preventDefault={cancelHelp}>
-          Cancel
-        </button>
-      </div>
-    {/if}
+{#if !$CHAT}
+  <div class="helpButtonContainer">
+    <div class="tooltip">Chat with instructor</div>
+    <button class="hand" on:click|preventDefault={toggleChat} />
   </div>
-  <button class="hand" on:click|preventDefault={toggleChat} class:active />
-</div>
+{/if}
 
 <style>
-  textarea {
-    background: rgba(255, 255, 255, 0.14);
-    outline: none;
-    padding: 0.2em 0.4em;
-    vertical-align: middle;
-  }
-  textarea.sent {
-    background: transparent;
-  }
   .helpButtonContainer * {
     box-sizing: border-box;
   }
@@ -129,16 +50,15 @@
   }
   .hand:hover,
   .hand:active,
-  .hand:focus,
-  .hand.active {
+  .hand:focus {
     transform: rotate(8deg);
     background-position: 55% 30%;
     opacity: 0.7;
   }
   .tooltip {
     white-space: nowrap;
-    background-color: #2b2b2b;
-    color: #ddd;
+    background-color: #e2e8f0;
+    color: #2e2e2e;
     display: inline-block;
     font-size: 0.9em;
     position: absolute;
@@ -148,12 +68,16 @@
     padding: 0.8em 1em;
     transition: opacity 0.3s;
   }
-  .helpButtonContainer:not(:hover):not(.active) .tooltip {
+  :global(.dark) .tooltip {
+    background-color: #2b2b2b;
+    color: #ddd;
+  }
+  .helpButtonContainer:not(:hover) .tooltip {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0s;
   }
-  .helpButtonContainer:not(.active) .tooltip {
+  .helpButtonContainer .tooltip {
     pointer-events: none;
   }
 </style>

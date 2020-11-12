@@ -18,8 +18,6 @@
 
   $: STUDENTS = Students.find()
   $: student = $STUDENTS && $STUDENTS[0]
-  $: answer = student && student.answer
-  $: answerTaskId = student && student.answerTaskId
 
   $: if (student && student.group != 'control') {
     Meteor.call('getHint', code, task_id, (err, newHint) => {
@@ -103,15 +101,6 @@
       value: `${hint.line}: ${hint.message}`
     })
   }
-  let lastAnswer
-  $: if (lastAnswer != answer && answerTaskId === task_id) {
-    lastAnswer = answer
-    trackEvent({
-      type: 'Hint from instructor',
-      code,
-      value: `${answer}`
-    })
-  }
 
   function hintDisappeared() {
     if (!hintClosed)
@@ -122,30 +111,15 @@
   }
 </script>
 
-{#if answer && answerTaskId === task_id}
-  <div
-    data-harmony-id="Answer bubble"
-    class="bubble bubble-answer text-sm px-3 py-2 w-64 rounded-lg absolute
-    shadow-sm dark:shadow-md right-0 mr-16"
-    in:fly={{ x: 30, duration: 800 }}
-    out:fade={{ duration: 800 }}
-    class:oversize
-    style="top: {top}px">
-    {#if oversize}
-      <span class="oversize-tail" style="height: {oversizeTailHeight}px" />
-    {/if}
-    <span class="text-sm text-gray-700">Instructor says:</span>
-    <div data-harmony-id="Bubble content">{answer}</div>
-  </div>
-{:else if hint && now >= hintTime && !hintClosed}
+{#if hint && now >= hintTime && !hintClosed}
   <div
     data-harmony-id="Hint bubble"
     in:fly={{ x: 30, duration: 800 }}
     out:fade={{ duration: 800 }}
     on:introstart={hintShown}
     on:outrostart={hintDisappeared}
-    class="bubble text-sm px-3 py-2 bg-yellow-200 dark:bg-yellow-300 rounded-lg
-    absolute shadow-md right-0 mr-16"
+    class="bubble text-silver-800 text-sm px-3 py-2 rounded-lg absolute
+    shadow-md right-0 mr-16"
     class:oversize
     style="top: {top}px; left: {left}px; width: {width}px">
     {#if oversize}
@@ -176,6 +150,12 @@
 {/if}
 
 <style>
+  .bubble {
+    background-color: #fcf9a5;
+  }
+  :global(.dark) .bubble {
+    background-color: #faf089;
+  }
   .bubble::before,
   .oversize-tail::before {
     content: '';
@@ -189,9 +169,6 @@
   }
   .bubble::before {
     top: 12px;
-  }
-  .bubble-answer {
-    background-color: #f0bb6c;
   }
   .bubble.oversize {
     transform: translate(-100%, 15px) translate(24px, 0);

@@ -13,7 +13,9 @@
       growHeight={false}
       uri={`workspace:instructor/${student._id}/Code.java`} />
     <div class="h-full" style="flex: 0.45;">
-      <ChatBox />
+      {#key student._id}
+        <ChatBox student_id={student._id} />
+      {/key}
     </div>
   {/if}
 </section>

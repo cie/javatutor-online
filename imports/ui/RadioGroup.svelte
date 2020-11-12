@@ -25,7 +25,7 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    border: 3px solid white;
+    border: 3px solid currentColor;
     transition: border-width 300ms, border-color 300ms;
   }
   input:checked + b {

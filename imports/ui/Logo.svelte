@@ -11,5 +11,8 @@
     color: #eaad12;
 
     text-shadow: 3px 4px 0px #000000, 3px 4px 13px #000000;
+
+    color: #eeb00f;
+    text-shadow: 3px 4px 0px #413f3f, 3px 4px 6px #000000b3;
   }
 </style>

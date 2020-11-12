@@ -81,6 +81,7 @@
   }
 
   function onResize() {
+    if (!editor) return
     // ugly hack
     editor._domElement.style.display = 'none'
     editor.layout()

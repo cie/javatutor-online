@@ -7,8 +7,8 @@
   import { navigate } from 'svelte-routing'
   import trackEvent from './trackEvent'
   import Hint from './Hint.svelte'
-  import { onMount } from 'svelte'
-  import ChatBox from './instructor/ChatBox.svelte'
+  import { onMount, tick } from 'svelte'
+  import ChatBox, { CHAT } from './instructor/ChatBox.svelte'
 
   let taskIndex,
     code,
@@ -90,15 +90,22 @@
     trackEvent({ type: 'Edit code', code })
     Meteor.call('editCode', { student_id, code })
   }
+  $: $CHAT, tick().then(() => window.dispatchEvent(new Event('resize')))
 </script>
 
 {#if task}
   <div class="h-full flex flex-col" on:keydown|capture={keydown}>
-    <div class="flex-none flex dark:bg-silver-800 bg-gray-300">
-      {#each tasks as task, i (i)}
-        <div
-          class="bg-{i === taskIndex ? 'primary-600' : 'gray-600'} h-3 w-12 mx-1" />
-      {/each}
+    <div class="flex-none flex dark:bg-silver-800 bg-gray-300 items-center">
+      <span class="text-gray-700 dark:text-gray-300 ml-4 mr-3">
+        Task {taskIndex + 1}/{tasks.length}
+      </span>
+      <div class="flex rounded-full overflow-hidden h-4 opacity-75">
+        {#each tasks as task, i (i)}
+          <div
+            class="bg-{i <= taskIndex ? 'orange-400' : 'gray-500'} h-4 w-8" />
+          <div class="bg-{i < taskIndex ? 'orange-400' : 'gray-500'} h-4 w-8" />
+        {/each}
+      </div>
     </div>
     <div
       class="flex-1 flex flex-col lg:flex-row relative py-2 dark:bg-silver-900
@@ -141,7 +148,11 @@
         <Hint {hint} {editor} {task_id} {code} />
         <HelpButton {code} {task_id} />
       </div>
-      <ChatBox />
+      {#if $CHAT}
+        <div class="h-full" style="flex: 0.45;">
+          <ChatBox {student_id} />
+        </div>
+      {/if}
 
     </div>
     <footer
