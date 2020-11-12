@@ -1,5 +1,6 @@
 <script>
   import { tick } from 'svelte'
+  import { CHAT } from './instructor/ChatBox.svelte'
   import trackEvent from './trackEvent'
   export let code, task_id
   let active = false
@@ -7,6 +8,9 @@
   let problemMessage = ''
   let sent
   const student_id = localStorage.getItem('student_id')
+  function toggleChat() {
+    $CHAT = !$CHAT
+  }
   async function askForHelp() {
     if (active) return
     active = true
@@ -79,7 +83,7 @@
       </div>
     {/if}
   </div>
-  <button class="hand" on:click|preventDefault={askForHelp} class:active />
+  <button class="hand" on:click|preventDefault={toggleChat} class:active />
 </div>
 
 <style>

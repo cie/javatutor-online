@@ -8,6 +8,7 @@
   import trackEvent from './trackEvent'
   import Hint from './Hint.svelte'
   import { onMount } from 'svelte'
+  import ChatBox from './instructor/ChatBox.svelte'
 
   let taskIndex,
     code,
@@ -140,6 +141,7 @@
         <Hint {hint} {editor} {task_id} {code} />
         <HelpButton {code} {task_id} />
       </div>
+      <ChatBox />
 
     </div>
     <footer

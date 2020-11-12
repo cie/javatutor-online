@@ -252,6 +252,12 @@ body.dark {
 .bg-silver-300 {
   background-color: #ccc;
 }
+.dark .dark\:placeholder-silver-400::placeholder {
+  color: #888;
+}
+.dark .dark\:bg-silver-600 {
+  background-color: #3e3e3e;
+}
 .dark .dark\:bg-silver-700 {
   background-color: #333;
 }
@@ -270,4 +276,10 @@ body.dark {
 }
 .dark .dark\:bg-yellow-300 {
   background-color: #faf089;
+}
+.dark .dark\:bg-orange-500 {
+  background-color: #ed8936;
+}
+.dark .dark\:bg-orange-600 {
+  background-color: #dd6b20;
 }
