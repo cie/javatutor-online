@@ -126,7 +126,7 @@
   <div
     data-harmony-id="Answer bubble"
     class="bubble bubble-answer text-sm px-3 py-2 w-64 rounded-lg absolute
-    shadow-md right-0 mr-16"
+    shadow-sm dark:shadow-md right-0 mr-16"
     in:fly={{ x: 30, duration: 800 }}
     out:fade={{ duration: 800 }}
     class:oversize
@@ -144,8 +144,8 @@
     out:fade={{ duration: 800 }}
     on:introstart={hintShown}
     on:outrostart={hintDisappeared}
-    class="bubble text-sm px-3 py-2 bg-yellow-300 rounded-lg absolute shadow-md
-    right-0 mr-16"
+    class="bubble text-sm px-3 py-2 bg-yellow-200 dark:bg-yellow-300 rounded-lg
+    absolute shadow-md right-0 mr-16"
     class:oversize
     style="top: {top}px; left: {left}px; width: {width}px">
     {#if oversize}
@@ -182,7 +182,7 @@
     position: absolute;
     left: -23px;
     border: solid transparent;
-    border-right-color: #faf089;
+    border-right-color: #fcf9a5;
     border-right-width: 20px;
     border-top-width: 7px;
     border-bottom-width: 7px;
@@ -206,10 +206,18 @@
     top: 0;
     right: 10px;
     width: 19px;
-    border-right: #faf089 solid 6px;
-    border-top: #faf089 solid 6px;
+    border-right: #fcf9a5 solid 6px;
+    border-top: #fcf9a5 solid 6px;
     transform: translate(0, -100%);
     border-top-right-radius: 20px;
+  }
+  :global(.dark) .oversize-tail,
+  :global(.dark) .oversize-tail::before,
+  :global(.dark) .bubble::before {
+    border-right-color: #faf089;
+  }
+  :global(.dark) .oversize-tail {
+    border-top-color: #faf089;
   }
   .oversize-tail::before {
     top: -12px;

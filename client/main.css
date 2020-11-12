@@ -261,3 +261,13 @@ body.dark {
 .dark .dark\:bg-silver-900 {
   background-color: #1e1e1e;
 }
+.dark .dark\:bg-transparent {
+  background-color: transparent;
+}
+.dark .dark\:shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.dark .dark\:bg-yellow-300 {
+  background-color: #faf089;
+}

@@ -37,7 +37,9 @@
   }
 </script>
 
-<main class="h-full w-full dark:text-white text-center">
+<main
+  class="h-full w-full dark:text-white text-center dark:bg-transparent
+  bg-gray-200">
   <Logo />
   <section
     class="text-left mx-auto my-4 message"
