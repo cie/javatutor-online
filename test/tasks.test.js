@@ -79,6 +79,7 @@ describe('tasks', () => {
               fail('Hint did not disappear after change')
 
             if (hint.solution.next) {
+              if (!hintsAfter[0]) fail(`After solving, no hint was shown`)
               const which = hints.findIndex(
                 h => h.message === hintsAfter[0].message
               )

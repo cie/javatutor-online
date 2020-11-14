@@ -87,6 +87,14 @@
     The user has to enter a negative number to signify the end of the input.
 
     Assume that the maximum number of scores is 100.
+
+    <pre class="output">
+    <code>Enter scores: (enter a negative number to signify the end): <code class="user-input user-input-line">23 76 54 -1</code>
+    Average of scores: 51
+    Number of scores above or equal the average: 2
+    Number of scores below average: 1</code>
+    </pre>
+
   initialCode: |
     import java.util.Scanner;
 
@@ -95,12 +103,7 @@
 
         }
     }
-  input: |
-    3
-    10
-    2
-    7
-    -1
+  input: 23 76 54 -1
   hints:
     - match: //function[name='main']/block[not(//decl/type//name[.='Scanner'])]
       message: Start by making a Scanner variable to take inputs from the user
@@ -123,24 +126,41 @@
         after: |
           System.out.println("Enter scores: (enter a negative number to signify the end): ");
         add: String[] arr;
-    - match: //function[name='main']//decl[type//index or name//index]/type[.!='int']
+        next: +1
+    - match: //function[name='main']/block
+        //decl[type//index or name//index][type/name/name!='int']
       message: Make sure you use an `int` array
       solution:
         turn: String[] arr;
         into: int[] arr;
-    - match: //function[name='main']//block_content[not(
-        .//decl[type//index or name//index])]/*[last()]
+        next: +1
+    - match: //function[name='main']/block
+        //decl[type//index or name//index][not(init)]
       message: Initialize the array
       solution:
         turn: int[] arr;
         into: int[] arr = new int[10];
-    - match: //function[name='main']//block_content[not(
-        .//decl[type//index or name//index])]/*[last()]
-      message: Create an array to store the scores in it.
+        next: +1
+    - match: //function[name='main']/block
+        //decl[type//index or name//index][normalize-space(init//index/expr) != '100']
+      message: The size of the array should be 100
       solution:
-        after: |
-          System.out.println("Enter scores: (enter a negative number to signify the end): ");
-        add: int[] arr = new int[10];
+        turn: int[] arr = new int[10];
+        into: int[] arr = new int[100];
+        next: +1
+    - match:
+        //function[name='main']/block//decl[type//index or name//index][normalize-space(init//index/expr) = '100']
+        [not(following::*/descendant-or-self::decl)]
+      solution:
+        after: int[] arr = new int[100];
+        add: String sth;
+        next: +1
+      message: Think what varaibles you need right now and to initialize them.
+    - match:
+        //function[name='main']/block//decl[type//index or name//index][normalize-space(init//index/expr) = '100']
+        /following::*/descendant-or-self::decl[not(//name[.=''])]
+      message: |
+        Decare three `int` variables: `average` for
 
 #--------------------------------------------------------------------------
 - id: Lab12_E2

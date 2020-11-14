@@ -14,6 +14,7 @@
 <main
   class="hover:bg-{student.helpAsked ? 'primary-800' : 'gray-800'}"
   class:bg-gray-800={active && !student.helpAsked}
+  class:dark:bg-gray-600={active && !student.helpAsked}
   class:bg-primary-800={active && student.helpAsked}
   class:bg-primary-600={student.helpAsked && !active}
   on:click={() => dispatch('select')}>

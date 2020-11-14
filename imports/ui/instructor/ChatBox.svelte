@@ -61,8 +61,10 @@
     <textarea
       id="chatMessage"
       class="text-sm bg-white dark:text-white dark:bg-silver-600
-      dark:placeholder-silver-400 rounded message-local message-student"
-      placeholder="Message to instructor"
+      dark:placeholder-silver-400 rounded message-local"
+      class:message-student={me === 'student'}
+      class:message-instructor={me === 'instructor'}
+      placeholder="Message to {me === 'instructor' ? 'student' : 'instructor'}"
       bind:value={newMessage}
       on:keypress={handleKeydown}
       rows="3" />

@@ -101,10 +101,10 @@
         Task {taskIndex + 1}/{tasks.length}
       </span>
       <div class="flex rounded-full overflow-hidden h-4 opacity-75">
+        <div class="bg-orange-400 h-4 w-4" />
         {#each tasks as task, i (i)}
           <div
-            class="bg-{i <= taskIndex ? 'orange-400' : 'gray-500'} h-4 w-8" />
-          <div class="bg-{i < taskIndex ? 'orange-400' : 'gray-500'} h-4 w-8" />
+            class="bg-{i < taskIndex ? 'orange-400' : 'gray-500'} h-4 w-16" />
         {/each}
       </div>
     </div>
