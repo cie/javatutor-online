@@ -22,6 +22,10 @@
         "type": "string",
         "description": "The example input"
       },
+      "expectedOutput": {
+        "type": "string",
+        "description": "The output for the example input"
+      },
       "hints": {
         "type": "array",
         "items": {
@@ -60,6 +64,28 @@
           },
           "required": ["code", "hints"]
         }
+      },
+      "solution": {
+        "type": "object",
+        "properties": {
+          "turn": {
+            "type": "string",
+            "description": "The code to change"
+          },
+          "into": {
+            "type": "string",
+            "description": "The code to enter instead of `turn`"
+          },
+          "next": {
+            "type": "integer",
+            "description": "If given, specifies the number of steps in `hint` which must be the next hint after solving this."
+          },
+          "done": {
+            "type": "boolean",
+            "description": "If true, the task is solved after solving this."
+          }
+        },
+        "required": ["turn", "into"]
       }
     },
     "required": ["id", "title", "description", "initialCode", "input", "hints"]
