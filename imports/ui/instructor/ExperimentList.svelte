@@ -42,7 +42,7 @@
   {#each experiments as experiment}
     <p>
       <a
-        class="hover:underline text-primary"
+        class="hover:underline text-primary dark:text-"
         href="/instructor/experiments/{experiment._id}"
         data-harmony-id="Experiment {experiment.title}">
         {experiment.title}
@@ -67,7 +67,7 @@
     on:keypress={e => {
       if (e.key == 'Enter') newExperiment()
     }}
-    class="text-black p-2 rounded-sm" />
+    class="text-black p-2 rounded border-solid border border-gray-700" />
   <Button data-harmony-id="Create experiment" on:click={newExperiment}>
     Create experiment
   </Button>

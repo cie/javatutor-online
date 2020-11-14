@@ -43,6 +43,7 @@
       code = task.initialCode
       localStorage.setItem('code', code)
       trackEvent({ type: 'Start task', value: task_id })
+      Meteor.call('setTask', { student_id, task_id })
       Meteor.call('editCode', { student_id, code })
     }
     input = (task.input || '').replace('$NAME', nickname)
@@ -54,7 +55,7 @@
   function run() {
     trackEvent({ type: 'Run', value: input, code })
     running = true
-    Meteor.call('run', code, input, (err, res) => {
+    Meteor.call('run', { code, input, student_id }, (err, res) => {
       running = false
       if (err) {
         output = { error: err }

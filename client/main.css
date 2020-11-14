@@ -287,3 +287,10 @@ body.dark {
 .dark .dark\:text-silver-800 {
   color: #2e2e2e;
 }
+
+.text-primary {
+  color: #a56800;
+}
+.dark .text-primary {
+  color: #eaad12;
+}

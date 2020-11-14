@@ -80,233 +80,65 @@
         }
       hints:
         - message: Add an argument. What do you want to output?
-- id: Patterns1
-  title: Display patterns using loops (1/3)
-  description: |
-    Use nested loops to display Pattern B. Use the provided code for Pattern A.
+- id: Lab12_E1
+  title: Analyze scores
+  description: Write a program that reads an unspecified number of scores and
+    determines how many scores are above or equal to the average and how many
+    scores are below the average.
 
-    <pre class="output">
-    Pattern A
-    1 
-    1 2 
-    1 2 3 
-    1 2 3 4 
-    1 2 3 4 5 
-    1 2 3 4 5 6 
+    Enter a negative number to signify the end of the input.
 
-    Pattern B
-    1 2 3 4 5 6 
-    1 2 3 4 5 
-    1 2 3 4 
-    1 2 3 
-    1 2 
-    1 
-    </pre>
+    Assume that the maximum number of scores is 100.
   initialCode: |
-    public class Patterns1 {
-        public static void main(String[] args) {
-            System.out.println("Pattern A");
-            for (int i = 1; i <= 6; i++) {
-                for (int j = 1; j <= i ; j++) {
-                    System.out.print(j + " ");
-                }
-                System.out.println();
-            }
+    import java.util.Scanner;
 
-            System.out.println();
-            System.out.println("Pattern B");
+    public class Lab12_E1 {
+        public static void main(String[] args) {
 
         }
     }
-
-  input: ''
-  hints:
-    - match: //literal[contains(., "Pattern A")]/following::for[following::*//literal[contains(., "Pattern B")][not(following::for)]]
-      message: |
-        Check out the code for pattern A and try to understand how we used nested loops.
-        * In the outer loop, we make a new line each iteration.
-        * In the inner loop, we print the row of numbers.
-
-      # hints for mistakes
-    - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
-      message: This might be an infinite loop
-    - match: //literal[contains(., "Pattern B")]/following::for[1]//for//name[.="println"]
-      message: Don't use `println` in the inner loop, that would output a newline.
-
-    # hints for the solution
-    - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//for)]
-      message: Create two nested for loops just as in Pattern A.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]//for[not(control/following-sibling::*//name[.="j"])]
-      message: Output the number in the inner loop.
-    - match: //literal[contains(., "Pattern B")]/following::for[1][not(.//name[.="println"])]
-      message: Output a newline in the outer loop in each iteration.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/init//expr[.="1"]
-      message: In the outer loop, `i` should start from 6 and end at 1.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/condition//literal[.="6"]
-      message: In the outer loop, `i` should start from 6 and end at 1.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/incr//operator[.="++"]
-      message: In the outer loop, `i` should be decremented.
-    - match: //literal[contains(., "Pattern B")]/following::for[1]/control/condition//operator[.="<="][following::literal="1"]
-      message: '`i` will not be `<= 1` even at the beginning.'
-
-- id: Patterns2
-  title: Display patterns using loops (2/3)
+  input: |
+    3
+    10
+    2
+    7
+    5
+    -1
+  hints: []
+- id: Lab12_E2
+  title: Count single digits
   description: |
-    This is another variation of Pattern A.
+    Write a program that generates 100 random integers between  
+    0 and 9 and displays the count for each number. 
 
-    <pre class="output">
-    Pattern A
-    1 
-    1 2 
-    1 2 3 
-    1 2 3 4 
-    1 2 3 4 5 
-    1 2 3 4 5 6 
-
-    Pattern C
-              1 
-            2 1 
-          3 2 1 
-        4 3 2 1 
-      5 4 3 2 1 
-    6 5 4 3 2 1 
-    </pre>
+    (Hint: Use an array of ten integers, say counts, to store the counts for the number of 0s, 1s, . . . , 9s.)
   initialCode: |
-    public class Patterns2 {
+    public class Lab12_E2 {
         public static void main(String[] args) {
-            System.out.println("Pattern A");
-            for (int i = 1; i <= 6; i++) {
-                for (int j = 1; j <= i ; j++) {
-                    System.out.print(j + " ");
-                }
-                System.out.println();
-            }
-
-            System.out.println();
-            System.out.println("Pattern C");
 
         }
     }
-
   input: ''
-  hints:
-    # hints for mistakes
-    - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
-      message: This might be an infinite loop
-    - match: //for/control[init//expr[.='i'] and //operator[.="<="]/following-sibling::literal='1' and incr//operator[.="--"]]
-      message: This will be an infinite loop when `i` is 1. Check the relational operator.
-    - match: //literal[contains(., "Pattern C")]/following::for[1]//for//name[.="println"]
-      message: Don't use `println` in the inner loop, that would output a newline.
-
-    # hints for the solution
-    - match: //literal[contains(., "Pattern C")]/following::for[1][not(.//for)]
-      message: Create two nested for loops just as in Pattern A.
-    - match: //literal[contains(., "Pattern C")]/following::for[1][not(.//name[.="println"])]
-      message: Output a newline in the outer loop in each iteration.
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for[count(.//for)!=2]
-      message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for[1]/control[
-          not(
-            init//literal =1
-            and condition//operator[.="<="]/following-sibling::*[.="6" or self::name]
-            and incr//operator="++")]
-      message: In the outer loop, `i` should start from 1 and end at the number of lines in the pattern.
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for[1]//for[./*[2]//name[.='j']]/control[
-          not(
-            init//name[2] ="i"
-            and condition//operator[.=">="]/following-sibling::*[.="1"]
-            and incr//operator="--")]
-      message: When outputting the numbers, `j` should start from `i` and decrease down to 1.
-    - match: |
-        //literal[contains(., "Pattern C")]/following::for[1]//for[./*[2]//name[.='k']]/control[
-          not(
-            init//name[2] ="i"
-            and condition//operator[.=">="]/following-sibling::*[.="1"]
-            and incr//operator="--")]
-      message: When outputting the numbers, `k` should start from `i` and decrease down to 1.
-  tests:
-    initial:
-      code: |
-        public class Patterns2 {
-            public static void main(String[] args) {
-                System.out.println("Pattern A");
-                for (int i = 1; i <= 6; i++) {
-                    for (int j = 1; j <= i ; j++) {
-                        System.out.print(j + " ");
-                    }
-                    System.out.println();
-                }
-
-                System.out.println();
-                System.out.println("Pattern C");
-
-            }
-        }
-      hints:
-        - message: Use another System.out.println() call.
-
-- id: Patterns3
-  title: Display patterns using loops (3/3)
+  hints: []
+- id: Lab12_E3
+  title: Assign grades
   description: |
-    And finally the third variation.
+    Write a program that reads student scores, gets the best score,
+    and then assigns grades based on the following scheme:
+        
+    *  Grade is A if score is >= best - 10;
+    *  Grade is B if score is >= best - 20;
+    *  Grade is C if score is >= best - 30;
+    *  Grade is D if score is >= best - 40;
+    *  Grade is F otherwise.
 
-    <pre class="output">
-    Pattern A
-    1 
-    1 2 
-    1 2 3 
-    1 2 3 4 
-    1 2 3 4 5 
-    1 2 3 4 5 6 
-
-    Pattern D
-    1 2 3 4 5 6 
-      1 2 3 4 5 
-        1 2 3 4 
-          1 2 3 
-            1 2 
-              1  
-    </pre>
+    The program prompts the user to enter the total number of students, then prompts
+    the user to enter all of the scores, and concludes by displaying the grades.
   initialCode: |
-    public class Patterns3 {
+    public class Lab12_E2 {
         public static void main(String[] args) {
-            System.out.println("Pattern A");
-            for (int i = 1; i <= 6; i++) {
-                for (int j = 1; j <= i ; j++) {
-                    System.out.print(j + " ");
-                }
-                System.out.println();
-            }
 
-            System.out.println();
-            System.out.println("Pattern D");
         }
     }
-
   input: ''
-  hints:
-    # hints for mistakes
-    - match: //for/control[init//literal <= condition//operator[.="<="]/following-sibling::literal and incr//operator[.="--"]]
-      message: This might be an infinite loop
-    - match: //literal[contains(., "Pattern C")]/following::for[1]//for//name[.="println"]
-      message: Don't use `println` in the inner loop, that would output a newline.
-
-    # hints for the solution
-    - match: //literal[contains(., "Pattern D")]/following::for[1][not(.//for)]
-      message: Create two nested for loops just as in Pattern A.
-    - match: //literal[contains(., "Pattern D")]/following::for[1][not(.//name[.="println"])]
-      message: Output a newline in the outer loop in each iteration.
-    - match: //literal[contains(., "Pattern D")]/following::for[1]/control/init//expr[.="1"]
-      message: In the outer loop, `i` should start from the number of lines and end at 1.
-    - match: //literal[contains(., "Pattern D")]/following::for[1]/control/condition//literal[.="6"]
-      message: In the outer loop, `i` should start from the number of lines and end at 1.
-    - match: //literal[contains(., "Pattern D")]/following::for[1]/control/incr//operator[.="++"]
-      message: In the outer loop, `i` should be decremented.
-    - match: //literal[contains(., "Pattern D")]/following::for[1]/control/condition//operator[.="<="][following::literal="1"]
-      message: '`i` will not be `<= 1` even at the beginning.'
-    - match: |
-        //literal[contains(., "Pattern D")]/following::for[count(.//for)!=2]
-      message: 'We need two inner loops: one to print empty spaces, and the second to print the numbers.'
+  hints: []

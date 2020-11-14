@@ -48,7 +48,7 @@
   </section>
   <p class="my-2">
     <input
-      class="text-black p-2 rounded-sm"
+      class="text-black p-2 rounded-sm border-solid border border-gray-700"
       bind:value={nickname}
       data-harmony-id="Nickname"
       placeholder="Nickname"
