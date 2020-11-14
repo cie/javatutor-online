@@ -8,7 +8,7 @@
     "test:tasks": "mocha",
     "pmd:designer": "./private/pmd/bin/run.sh designer",
     "test:tasks:watch": "mocha --watch",
-    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha --timeout 3000",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
     "deploy": ".deploy/upload_ls.sh && mup setup --config .deploy/mup.js && mup deploy --config .deploy/mup.js --settings .deploy/settings.json"
   },
