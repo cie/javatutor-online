@@ -26,6 +26,8 @@
 
   const student_id = localStorage.getItem('student_id')
   const nickname = localStorage.getItem('nickname')
+  /** @type HTMLElement */
+  let top
 
   function setTask(i) {
     taskIndex = i
@@ -48,6 +50,8 @@
     }
     input = (task.input || '').replace('$NAME', nickname)
     output = ''
+    $CHAT = false
+    if (top) top.scrollIntoView({ behavior: 'smooth' })
   }
 
   let hint = null
@@ -95,16 +99,18 @@
 </script>
 
 {#if task}
+  <div bind:this={top} />
   <div class="h-full flex flex-col" on:keydown|capture={keydown}>
     <div class="flex-none flex dark:bg-silver-800 bg-gray-300 items-center">
-      <span class="text-gray-700 dark:text-gray-300 ml-4 mr-3">
+      <span class="text-gray-700 dark:text-gray-500 ml-4 mr-3">
         Task {taskIndex + 1}/{tasks.length}
       </span>
       <div class="flex rounded-full overflow-hidden h-4 opacity-75">
         <div class="bg-orange-400 h-4 w-4" />
         {#each tasks as task, i (i)}
           <div
-            class="bg-{i < taskIndex ? 'orange-400' : 'gray-500'} h-4 w-16" />
+            class="{i < taskIndex ? 'bg-orange-400' : 'bg-gray-500 dark:bg-silver-500'}
+            h-4 w-16" />
         {/each}
       </div>
     </div>
@@ -146,7 +152,9 @@
           value={code}
           on:change={change}
           uri={`workspace:${student_id}/${task_id}.java`} />
-        <Hint {hint} {editor} {task_id} {code} />
+        {#each [task_id] as key (key)}
+          <Hint {hint} {editor} {task_id} {code} />
+        {/each}
         <HelpButton {code} {task_id} />
       </div>
       {#if $CHAT}

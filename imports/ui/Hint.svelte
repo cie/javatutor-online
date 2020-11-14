@@ -1,7 +1,8 @@
 <script>
-  import { onDestroy, onMount } from 'svelte'
+  import { onDestroy, onMount, tick } from 'svelte'
+  import { cubicInOut } from 'svelte/easing'
   import trackEvent from './trackEvent'
-  import { fly, fade } from 'svelte/transition'
+  import { fly, fade, slide } from 'svelte/transition'
   import marked from 'marked'
   export let hint = null
   /** @type monaco.editor.IStandaloneCodeEditor */
@@ -12,12 +13,20 @@
   export let code
 
   let hintClosed = false
+  let resolvedHint = null
+  let thanks = false
 
-  let editorWidth = NaN,
-    editorHeight = NaN
+  let editorWidth = NaN
 
   $: STUDENTS = Students.find()
   $: student = $STUDENTS && $STUDENTS[0]
+
+  /** time before the hint appears if not specified by the hint */
+  const defaultHintDelaySec = 20
+  /** time before the Good hint? question appears */
+  const resolvedHintDelaySec = 3
+  /** estimated time it takes the user to answer the Good hint? question */
+  const resolvedHintAnswerSec = 4
 
   $: if (student && student.group != 'control') {
     Meteor.call('getHint', code, task_id, (err, newHint) => {
@@ -25,25 +34,56 @@
         trackEvent({ type: 'Internal error', code, value: err })
         return
       }
-      if (JSON.stringify(hint) !== JSON.stringify(newHint)) {
+      if ((hint && hint.message) !== (newHint && newHint.message)) {
+        if (hintClosed) {
+          trackEvent({
+            type: 'Hint resolved after closed',
+            value: `${hint.line}: ${hint.message}`,
+            code
+          })
+        } else if (hint && !(now > hintTime)) {
+          trackEvent({
+            type: 'Hint resolved before shown',
+            value: `${hint.line}: ${hint.message}`,
+            code
+          })
+        } else if (hint) {
+          console.log('resolved')
+          trackEvent({
+            type: 'Hint resolved',
+            value: `${hint.line}: ${hint.message}`,
+            code
+          })
+          resolvedHint = hint
+          thanks = false
+        }
         hint = newHint
+        if (hint) {
+          const hintTimeout =
+            ((hint.delay || defaultHintDelaySec) *
+              (Meteor.isDevelopment ? 0.5 : 1) +
+              (resolvedHint
+                ? resolvedHintDelaySec + resolvedHintAnswerSec
+                : 0)) *
+            1000
+          hintTime = Date.now() + hintTimeout
+          hintTime -= 18 // just in case
+          setTimeout(() => (now = Date.now()), hintTimeout)
+        }
         hintClosed = false
+      } else {
+        hint = newHint
       }
     })
   }
 
-  let lastHintMessage = null
   let hintTime = 0
   let now = Date.now()
-  $: if (hint) {
-    if (lastHintMessage !== hint.message) {
-      lastHintMessage = hint.message
-      const hintTimeout =
-        (hint.delay || 20) * 1000 * (Meteor.isDevelopment ? 0.5 : 1)
-      hintTime = Date.now() + hintTimeout - 18 // just in case
-      setTimeout(() => (now = Date.now()), hintTimeout)
-    }
+  $: if (hint && now > hintTime && hint != resolvedHint) {
+    // once the time is up, hide the old hint's resolved view
+    resolvedHint = null
   }
+  $: console.log(resolvedHint)
 
   let top, left
   const width = 304
@@ -71,6 +111,7 @@
       left = Math.max(left, width)
     }
   }
+  $: Object.assign(window, { hint, resolvedHint, hintClosed })
 
   const hintLeftMargin = 50
   const hintTopMargin = 30
@@ -84,11 +125,33 @@
   onMount(() => (measureInterval = setInterval(measure, 500)))
   onDestroy(() => clearInterval(measure))
 
-  function goodHint() {
-    trackEvent({ type: 'Good hint', code })
+  function card(
+    node,
+    { dir = 1, delay = 0, duration = 300, easing = cubicInOut }
+  ) {
+    const transform = getComputedStyle(node).transform.replace('none', '')
+    return {
+      delay,
+      duration,
+      easing,
+      css: (t, u) =>
+        `transform: ${transform} rotateX(${
+          (u / 2) * dir
+        }turn); backface-visibility: hidden;`
+    }
   }
-  function badHint() {
+
+  async function goodHint() {
+    trackEvent({ type: 'Good hint', code })
+    thanks = true
+    await tick()
+    resolvedHint = null
+  }
+  async function badHint() {
     trackEvent({ type: 'Bad hint', code })
+    thanks = true
+    await tick()
+    resolvedHint = null
   }
   function closeHint() {
     hintClosed = true
@@ -101,23 +164,49 @@
       value: `${hint.line}: ${hint.message}`
     })
   }
-
-  function hintDisappeared() {
-    if (!hintClosed)
-      trackEvent({
-        type: 'Hint disappeared',
-        code
-      })
-  }
 </script>
 
-{#if hint && now >= hintTime && !hintClosed}
+{#if resolvedHint}
+  <div
+    data-harmony-id="Hint resolved bubble"
+    in:card|local={{ dir: -1, delay: resolvedHintDelaySec * 1000 }}
+    out:fade|local={{ duration: 500, delay: 200 }}
+    class="bubble resolved text-silver-800 px-3 py-2 rounded-lg absolute
+    shadow-md right-0 mr-16 text-center h-18"
+    class:oversize
+    style="top: {top}px; left: {left}px; width: {width}px">
+    {#if !thanks}
+      <p class="text-sm">Was this a good hint?</p>
+      <p>
+        <button
+          class="px-2 mr-4 focus:outline-none text-2xl rounded hover:bg-gray-800
+          hover:text-green-400"
+          on:click={goodHint}>
+          <i class="fa fa-smile-o" />
+          Yes
+        </button>
+        <button
+          class="px-2 focus:outline-none text-2xl rounded hover:bg-gray-800
+          hover:text-green-400"
+          on:click={badHint}>
+          <i class="fa fa-frown-o" />
+          No
+        </button>
+      </p>
+    {:else}
+      <!-- already hiding -->
+      <div class="h-full flex flex-col justify-center">
+        <p class="text-2xl">Thanks!</p>
+      </div>
+    {/if}
+  </div>
+
+{:else if hint && now >= hintTime && !hintClosed}
   <div
     data-harmony-id="Hint bubble"
     in:fly={{ x: 30, duration: 800 }}
-    out:fade={{ duration: 800 }}
+    out:card={{ delay: resolvedHint ? resolvedHintDelaySec * 1000 : 0 }}
     on:introstart={hintShown}
-    on:outrostart={hintDisappeared}
     class="bubble text-silver-800 text-sm px-3 py-2 rounded-lg absolute
     shadow-md right-0 mr-16"
     class:oversize
@@ -135,34 +224,30 @@
     <div class="hint-content" data-harmony-id="Bubble content">
       {@html marked(hint.message)}
     </div>
-    <div
-      class="goodHintButtons flex justify-end items-center"
-      style="opacity: 0.5; margin-bottom: -8px; margin-right: -8px">
-      <small class="goodHint text-xs mr-1">Good hint?</small>
-      <button class="p-1 focus:outline-none" on:click={goodHint}>
-        <i class="fa fa-smile-o" />
-      </button>
-      <button class="p-1 focus:outline-none" on:click={badHint}>
-        <i class="fa fa-frown-o" />
-      </button>
-    </div>
   </div>
 {/if}
 
 <style>
   .bubble {
-    background-color: #fcf9a5;
+    background-color: #faf089;
+    transform: perspective(50vw);
   }
   :global(.dark) .bubble {
     background-color: #faf089;
   }
-  .bubble::before,
+  .bubble.resolved {
+    background-color: #78d6a7;
+  }
+  :global(.dark) .bubble.resolved {
+    background-color: #78d6a7;
+  }
+  .bubble:not(.resolved)::before,
   .oversize-tail::before {
     content: '';
     position: absolute;
     left: -23px;
     border: solid transparent;
-    border-right-color: #fcf9a5;
+    border-right-color: #faf089;
     border-right-width: 20px;
     border-top-width: 7px;
     border-bottom-width: 7px;
@@ -183,8 +268,8 @@
     top: 0;
     right: 10px;
     width: 19px;
-    border-right: #fcf9a5 solid 6px;
-    border-top: #fcf9a5 solid 6px;
+    border-right: #faf089 solid 6px;
+    border-top: #faf089 solid 6px;
     transform: translate(0, -100%);
     border-top-right-radius: 20px;
   }
@@ -200,9 +285,6 @@
     top: -12px;
     border-top-width: 9px;
     border-bottom-width: 9px;
-  }
-  .goodHintButtons:not(:hover) > .goodHint {
-    visibility: hidden;
   }
   .hint-content :global(ul) {
     list-style: disc;

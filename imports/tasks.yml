@@ -53,7 +53,7 @@
         turn: System.out.println();
         into: System.out.println("Hello");
         next: 1
-    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list[not(.//operator)]
+    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list[not(.//name[.='name'])]
       message: Include the user's name in the output.
       delay: 9
       solution:
@@ -69,7 +69,9 @@
         next: 1
     - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list/argument/expr/*[1][.='"Hello "']
       message: |
-        Aren't you missing a comma? Think about "Let's eat, Grandma!" and "Let's eat Grandma!" <small>(credit: Kevlin Henney)</small>
+        Aren't you missing a comma? Think about "Let's eat, Grandma!" and "Let's eat Grandma!"
+
+        <small>(credit: Kevlin Henney)</small>
       delay: 9
       solution:
         turn: System.out.println("Hello " + name + "!");
@@ -89,7 +91,8 @@
     Assume that the maximum number of scores is 100.
 
     <pre class="output">
-    <code>Enter scores: (enter a negative number to signify the end): <code class="user-input user-input-line">23 76 54 -1</code>
+    <code>Enter scores: (enter a negative number to signify the end):
+    <code class="user-input user-input-line">23 76 54 -1</code>
     Average of scores: 51
     Number of scores above or equal the average: 2
     Number of scores below average: 1</code>

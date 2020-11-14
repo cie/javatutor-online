@@ -8,7 +8,9 @@
   export let experiments
 </script>
 
-<main class="h-full w-full dark:text-white text-center">
+<main
+  class="h-full w-full dark:text-white text-center bg-gray-200
+  dark:bg-transparent">
   <Logo />
   <section
     class="text-left mx-auto my-4 message"
@@ -19,8 +21,8 @@
       {#each experiments as experiment}
         <span class="mx-4 my-3 text-xl">
           <a
-            href="/experiment/${experiment._id}"
-            class="text-orange-400 hover:underline"
+            href="/experiment/{experiment._id}"
+            class="text-primary hover:underline"
             data-harmony-id="Experiment {experiment.title}">
             {experiment.title}
           </a>

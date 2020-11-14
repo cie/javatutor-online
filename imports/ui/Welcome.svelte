@@ -38,8 +38,8 @@
 </script>
 
 <main
-  class="h-full w-full dark:text-white text-center dark:bg-transparent
-  bg-gray-200">
+  class="h-full w-full dark:text-white text-center bg-gray-200
+  dark:bg-transparent ">
   <Logo />
   <section
     class="text-left mx-auto my-4 message"

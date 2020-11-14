@@ -235,11 +235,15 @@ body.dark {
   background: #a0aec0;
 }
 
+.text-white,
 .dark .dark\:text-white {
   color: white;
 }
 .dark .dark\:bg-gray-500 {
   background-color: #a0aec0;
+}
+.dark .dark\:text-gray-500 {
+  color: #a0aec0;
 }
 .dark .dark\:bg-gray-700 {
   background-color: #4a5568;
@@ -261,6 +265,9 @@ body.dark {
 }
 .dark .dark\:placeholder-silver-400::placeholder {
   color: #888;
+}
+.dark .dark\:bg-silver-500 {
+  background-color: #686868;
 }
 .dark .dark\:bg-silver-600 {
   background-color: #3e3e3e;
@@ -300,4 +307,8 @@ body.dark {
 }
 .dark .text-primary {
   color: #eaad12;
+}
+
+.h-18 {
+  height: 4.5rem;
 }
