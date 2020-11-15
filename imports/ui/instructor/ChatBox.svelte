@@ -9,7 +9,7 @@
 </script>
 
 <script>
-  export let student_id, task_id
+  export let student_id, task_id, code
   export let closable = true
   export let selection
   export let receivedSelection = undefined
@@ -45,7 +45,8 @@
       student_id,
       from: me,
       task_id,
-      selection
+      selection,
+      code
     })
     newMessage = ''
   }

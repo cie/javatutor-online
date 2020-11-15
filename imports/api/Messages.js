@@ -3,7 +3,7 @@ import { check } from 'meteor/check'
 export const Messages = new Meteor.Collection('Messages')
 
 Meteor.methods({
-  sendMessage({ text, student_id, from, task_id, selection }) {
+  sendMessage({ text, student_id, from, task_id, selection, code }) {
     //const from = this.userId === 'instructor' ? 'instructor' : 'student'
     check(student_id, String)
     check(task_id, String)
@@ -17,7 +17,8 @@ Meteor.methods({
       from,
       createdAt: +new Date(),
       task_id,
-      selection
+      selection,
+      code
     })
     Students.update(student_id, {
       $set: {

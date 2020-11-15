@@ -20,7 +20,7 @@
           </div>
           <CodeWindow code={initialCode} />
         </div>
-        <h3 class="mt-3 mb-2">Hints and expected solutions</h3>
+        <h3 class="mt-3 mb-2">Hints and expected resolutions</h3>
         {#each hints as hint}
           <div class="mb-2">
             <div
