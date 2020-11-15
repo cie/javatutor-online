@@ -142,13 +142,13 @@
   }
 
   async function goodHint() {
-    trackEvent({ type: 'Good hint', code })
+    trackEvent({ type: 'Good hint', value: resolvedHint.message, code })
     thanks = true
     await tick()
     resolvedHint = null
   }
   async function badHint() {
-    trackEvent({ type: 'Bad hint', code })
+    trackEvent({ type: 'Bad hint', value: resolvedHint.message, code })
     thanks = true
     await tick()
     resolvedHint = null

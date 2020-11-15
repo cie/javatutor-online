@@ -10,6 +10,26 @@
 
   let currentStudentId
   $: currentStudent = students.find(s => s._id === currentStudentId)
+
+  function hotkey(n) {
+    return n < 10
+      ? `Alt+${n}`
+      : n === 10
+      ? `Alt+0`
+      : n < 20
+      ? `Alt+Shift+${n - 10}`
+      : n === 20
+      ? `Alt+Shift+0`
+      : n < 30
+      ? `Ctrl+${n - 20}`
+      : n === 30
+      ? `Ctrl+0`
+      : n < 40
+      ? `Ctrl+Shift+${n - 30}`
+      : n === 40
+      ? `Ctrl+Shift+0`
+      : null
+  }
 </script>
 
 <input
@@ -18,14 +38,14 @@
   value={students.map(s => s.nickname).join(', ')} />
 
 <article class="flex-1 flex">
-  <aside style="width: 210px;">
+  <aside class="overflow-auto" style="width: 210px;">
     {#each students as student, i}
       <ClassroomStudentHeader
         {student}
         {tasks}
         active={student._id === currentStudentId}
         on:select={() => (currentStudentId = student._id)}
-        hotkey={i + 1 < 10 ? i + 1 : null} />
+        hotkey={hotkey(i + 1)} />
     {:else}No students.{/each}
   </aside>
   <main class="flex-1 flex flex-column">

@@ -10,15 +10,6 @@
   export let experiment_id
   $: EXPERIMENT = useTracker(() => Experiments.findOne(experiment_id))
   $: experiment = $EXPERIMENT
-  function toggleActive(active) {
-    if (
-      !confirm(
-        `Are you sure you want to ${active ? 'start' : 'stop'} the experiment?`
-      )
-    )
-      return
-    Experiments.update(experiment_id, { $set: { active } })
-  }
 </script>
 
 {#if experiment}
@@ -43,21 +34,18 @@
             id="classroom"
             title="Classroom"
             {experiment_id}
-            currentTab={p.currentTab} />
+            currentTab={p.currentTab}
+            disabled={!experiment.active}
+            disabledMessage="Experiment is not active" />
           <Tab
             id="results"
             title="Results"
             {experiment_id}
-            currentTab={p.currentTab} />
+            currentTab={p.currentTab}
+            disabled={experiment.active}
+            disabledMessage="Experiment is active" />
         </Route>
       </Router>
-      <ion-toggle
-        class="ml-8 my-2"
-        size="large"
-        color="success"
-        checked={!!experiment.active}
-        on:ionChange={event => toggleActive(event.detail.checked)} />
-      <span class="my-2 py-1">Active</span>
     </nav>
     <Router>
       <Route path="tasks" component={Tasks} {experiment_id} />

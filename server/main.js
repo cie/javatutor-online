@@ -3,6 +3,8 @@ import '../imports/api'
 import './languageServer'
 import './hints'
 import './run'
+import { check } from 'meteor/check'
+import { Students } from '../imports/api/Students'
 
 Meteor.startup(() => {
   Meteor.users.upsert('instructor', { username: 'instructor' })
@@ -15,7 +17,7 @@ Meteor.startup(() => {
 const groups = ['experimental', 'control']
 let group
 
-console.log(23)
+console.log(24)
 Meteor.methods({
   reauthenticate({ student_id }) {
     if (student_id === 'instructor') throw new Meteor.Error(403)
@@ -30,5 +32,10 @@ Meteor.methods({
     })
     this.setUserId(student_id)
     return { student_id, group }
+  },
+  setTask({ student_id, task_id }) {
+    check(student_id, String)
+    check(task_id, String)
+    Students.update(student_id, { $set: { task_id } })
   }
 })

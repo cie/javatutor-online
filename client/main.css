@@ -239,6 +239,9 @@ body.dark {
 .dark .dark\:text-white {
   color: white;
 }
+.dark .dark\:text-black {
+  color: #000;
+}
 .dark .dark\:bg-gray-500 {
   background-color: #a0aec0;
 }

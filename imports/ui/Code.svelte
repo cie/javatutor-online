@@ -159,7 +159,7 @@
       </div>
       {#if $CHAT}
         <div class="h-full" style="flex: 0.45;">
-          <ChatBox {student_id} />
+          <ChatBox {student_id} {task_id} />
         </div>
       {/if}
 

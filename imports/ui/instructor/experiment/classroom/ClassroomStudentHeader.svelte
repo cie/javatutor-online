@@ -5,24 +5,36 @@
   export let hotkey = null
   const dispatch = createEventDispatcher()
   function bodyKeypress(e) {
-    if (e.key == hotkey) dispatch('select')
+    if (keystroke(e) == hotkey) {
+      e.preventDefault()
+      e.stopPropagation()
+      dispatch('select')
+    }
   }
+  /** @param {KeyboardEvent} e */
+  function keystroke(e) {
+    return (
+      (e.ctrlKey ? 'Ctrl+' : '') +
+      (e.shiftKey ? 'Shift+' : '') +
+      (e.altKey ? 'Alt+' : '') +
+      e.key
+    )
+  }
+  $: unread = false
 </script>
 
-<svelte:body on:keypress={bodyKeypress} />
+<svelte:body on:keydown|capture={bodyKeypress} />
 
 <main
-  class="hover:bg-{student.helpAsked ? 'primary-800' : 'gray-800'}"
-  class:bg-gray-800={active && !student.helpAsked}
-  class:dark:bg-gray-600={active && !student.helpAsked}
-  class:bg-primary-800={active && student.helpAsked}
-  class:bg-primary-600={student.helpAsked && !active}
+  class="
+  {unread ? 'bg-primary-600' : active ? 'bg-gray-400 text-black' : 'dark:text-white '}
+  'hover:bg-gray-500 hover-text-black'"
   on:click={() => dispatch('select')}>
   <h1>{student.nickname}</h1>
 
   <span class="hotkey">
     {#if hotkey != null}
-      <span class="keystroke">{hotkey}</span>
+      <span class="text-xs text-gray-500">{hotkey}</span>
     {/if}
   </span>
 </main>

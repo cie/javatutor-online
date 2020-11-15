@@ -19,7 +19,7 @@
       if (err) {
         return
       }
-      navigate(`/instructor/experiments/${_id}`)
+      newExperimentTitle = ''
     })
   }
   function confirmSetActive(experiment, event) {

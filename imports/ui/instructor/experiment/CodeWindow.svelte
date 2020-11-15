@@ -7,7 +7,7 @@
   export let code
 </script>
 
-<pre class="codeWindow">
+<pre class="codeWindow text-sm">
   <code>
     {@html hljs.highlight('java', code).value}
   </code>
@@ -17,7 +17,6 @@
   .codeWindow {
     background-color: rgba(0, 0, 0, 0.02);
     padding: 6px;
-    height: 400px;
     overflow: auto;
   }
 </style>
