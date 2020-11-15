@@ -20,14 +20,14 @@
       e.key
     )
   }
-  $: unread = false
+  $: unread = student.unreadFromStudent == student.task_id
 </script>
 
 <svelte:body on:keydown|capture={bodyKeypress} />
 
 <main
   class="
-  {unread ? 'bg-primary-600' : active ? 'bg-gray-400 text-black' : 'dark:text-white '}
+  {active ? 'bg-gray-400 text-black' : unread ? 'bg-orange-300 text-silver-700' : 'dark:text-white '}
   'hover:bg-gray-500 hover-text-black'"
   on:click={() => dispatch('select')}>
   <h1>{student.nickname}</h1>

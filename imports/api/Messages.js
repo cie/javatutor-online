@@ -19,6 +19,22 @@ Meteor.methods({
       task_id,
       selection
     })
+    Students.update(student_id, {
+      $set: {
+        [from === 'instructor'
+          ? `unreadFromInstructor`
+          : 'unreadFromStudent']: task_id
+      }
+    })
+  },
+  readMessage({ by, student_id, task_id }) {
+    Students.update(student_id, {
+      $set: {
+        [by === 'instructor'
+          ? `unreadFromInstructor`
+          : 'unreadFromStudent']: null
+      }
+    })
   }
 })
 

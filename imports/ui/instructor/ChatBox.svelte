@@ -73,6 +73,10 @@
   onMount(() => {
     document.querySelector('#chatMessage').focus()
   })
+  onMount(() => {
+    Meteor.call('readMessage', { by: me, student_id, task_id })
+  })
+
   function isEmpty(selection) {
     return (
       selection.startLineNumber == selection.endLineNumber &&

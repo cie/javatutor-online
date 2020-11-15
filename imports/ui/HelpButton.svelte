@@ -9,14 +9,16 @@
     tick().then(() => document.querySelector('#chatMessage').focus())
     Students.update(student._id, { $set: { unreadFromInstructor: null } })
   }
-  export let student
-  $: unread = student && student.unreadFromInstructor
+  export let student, task_id
+  $: unread = student && student.unreadFromInstructor === task_id
 </script>
 
 {#if !$CHAT}
   <div class="helpButtonContainer">
     {#if unread}
-      <div class="tooltip unread">Message from instructor</div>
+      <div class="tooltip unread cursor-pointer" on:click={openChat}>
+        You have a message from the instructor
+      </div>
     {:else}
       <div class="tooltip">Chat with instructor</div>
     {/if}
@@ -86,10 +88,15 @@
     transition: opacity 0s;
   }
   .tooltip.unread {
-    background-color: #a56800;
-    color: white;
+    background-color: #f6ad55;
+    color: #333;
+    cursor: pointer;
   }
-  .helpButtonContainer .tooltip {
+  :global(.dark) .tooltip.unread {
+    background-color: #ed8936;
+    color: #000;
+  }
+  .helpButtonContainer .tooltip:not(.unread) {
     pointer-events: none;
   }
 </style>
