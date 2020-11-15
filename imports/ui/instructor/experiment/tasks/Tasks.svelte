@@ -2,7 +2,8 @@
   import tasks from '../../../../tasks.yml'
   import marked from 'marked'
   import CodeWindow from '../CodeWindow.svelte'
-  import Hint from '../../../Hint.svelte'
+  import htmldiff from 'node-htmldiff'
+  import { escape } from 'html-escaper'
 </script>
 
 <main class="flex justify-stretch items-stretch">
@@ -20,7 +21,7 @@
           </div>
           <CodeWindow code={initialCode} />
         </div>
-        <h3 class="mt-3 mb-2">Hints and expected resolutions</h3>
+        <h3 class="mt-3 mb-2">Hints and expected solutions</h3>
         {#each hints as hint}
           <div class="mb-2">
             <div
@@ -31,8 +32,14 @@
               {@html marked(hint.message)}
             </div>
             {#if hint.solution}
-              <tt class="align-top whitespace-pre text-sm inline-block">
-                {hint.solution.into || hint.solution.add}
+              <tt
+                class="hint-solution align-top whitespace-pre text-sm
+                inline-block">
+                {#if hint.solution.add}
+                  <ins>{hint.solution.add}</ins>
+                {:else}
+                  {@html htmldiff(escape(hint.solution.turn), escape(hint.solution.into))}
+                {/if}
               </tt>
             {/if}
           </div>
@@ -52,3 +59,30 @@
 
   </aside>
 </main>
+
+<style>
+  .hint-solution :global(ins) {
+    text-decoration: none;
+    background-color: none;
+  }
+  .hint-solution:hover :global(ins) {
+    background-color: #d0ffd0;
+  }
+  .hint-solution :global(del) {
+    display: none;
+    opacity: 0.75;
+    text-decoration: line-through;
+    background-color: #ffd0d0;
+  }
+  .hint-solution:hover :global(del) {
+    display: inline-block;
+    position: absolute;
+    transform: translate(0, -1.4em);
+  }
+  :global(.dark) .hint-solution:hover :global(ins) {
+    background-color: #006000;
+  }
+  :global(.dark) .hint-solution :global(del) {
+    background-color: #603030;
+  }
+</style>
