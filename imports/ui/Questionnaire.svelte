@@ -85,7 +85,7 @@
           <textarea
             rows="3"
             class="w-full py-2 px-3 rounded my-3 bg-white border-solid border
-            border-gray-700"
+            border-gray-700 dark:text-silver-700"
             bind:value={answers['other']} />
         </li>
       </ul>

@@ -196,7 +196,7 @@
     {:else}
       <!-- already hiding -->
       <div class="h-full flex flex-col justify-center">
-        <p class="text-2xl">Thanks!</p>
+        <p class="text-2xl">Thx!</p>
       </div>
     {/if}
   </div>

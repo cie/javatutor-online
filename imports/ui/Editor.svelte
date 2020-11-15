@@ -10,6 +10,7 @@
   export let editor = undefined
 
   export let growHeight = true
+  export let selection = null
 
   let editorEl, model
   const minMinHeight = 250
@@ -71,6 +72,9 @@
         readOnly
       })
       disposers.push(setupLanguageClient(editor))
+      editor.onDidChangeCursorSelection(e => {
+        selection = e.selection
+      })
     }
   }
 

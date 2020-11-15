@@ -3,16 +3,24 @@
 
   import { CHAT } from './instructor/ChatBox.svelte'
   const student_id = localStorage.getItem('student_id')
-  function toggleChat() {
-    $CHAT = !$CHAT
+  function openChat() {
+    $CHAT = true
+    trackEvent({ type: 'Open chat' })
     tick().then(() => document.querySelector('#chatMessage').focus())
+    Students.update(student._id, { $set: { unreadFromInstructor: null } })
   }
+  export let student
+  $: unread = student && student.unreadFromInstructor
 </script>
 
 {#if !$CHAT}
   <div class="helpButtonContainer">
-    <div class="tooltip">Chat with instructor</div>
-    <button class="hand" on:click|preventDefault={toggleChat} />
+    {#if unread}
+      <div class="tooltip unread">Message from instructor</div>
+    {:else}
+      <div class="tooltip">Chat with instructor</div>
+    {/if}
+    <button class="hand" on:click|preventDefault={openChat} />
   </div>
 {/if}
 
@@ -72,10 +80,14 @@
     background-color: #2b2b2b;
     color: #ddd;
   }
-  .helpButtonContainer:not(:hover) .tooltip {
+  .helpButtonContainer:not(:hover) .tooltip:not(.unread) {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0s;
+  }
+  .tooltip.unread {
+    background-color: #a56800;
+    color: white;
   }
   .helpButtonContainer .tooltip {
     pointer-events: none;

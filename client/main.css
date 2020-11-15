@@ -242,6 +242,9 @@ body.dark {
 .dark .dark\:text-black {
   color: #000;
 }
+.dark .dark\:text-silver-700 {
+  color: #333;
+}
 .dark .dark\:bg-gray-500 {
   background-color: #a0aec0;
 }
@@ -310,6 +313,12 @@ body.dark {
 }
 .dark .text-primary {
   color: #eaad12;
+}
+.bg-primary {
+  background-color: #eaad12;
+}
+.dark .bg-primary {
+  background-color: #a56800;
 }
 
 .h-18 {

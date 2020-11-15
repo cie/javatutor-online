@@ -14,6 +14,6 @@
   draggable="false"
   title={disabled ? disabledMessage : undefined}
   data-harmony-id="{title} tab"
-  href={disabled ? '' : `/instructor/experiments/${experiment_id}/${id}`}>
+  href={disabled ? undefined : `/instructor/experiments/${experiment_id}/${id}`}>
   {title}
 </a>

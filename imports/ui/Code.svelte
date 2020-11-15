@@ -9,6 +9,8 @@
   import Hint from './Hint.svelte'
   import { onMount, tick } from 'svelte'
   import ChatBox, { CHAT } from './instructor/ChatBox.svelte'
+  import { useTracker } from 'meteor/rdb:svelte-meteor-data'
+  import { WillSaveTextDocumentWaitUntilRequest } from 'monaco-languageclient'
 
   let taskIndex,
     code,
@@ -25,9 +27,34 @@
   })
 
   const student_id = localStorage.getItem('student_id')
+  $: STUDENT = useTracker(() => Students.findOne(student_id))
+  $: student = $STUDENT
   const nickname = localStorage.getItem('nickname')
   /** @type HTMLElement */
   let top
+  let receivedSelection
+  let selectionDecorations = []
+  $: if (editor && receivedSelection) {
+    const newDecorations = isEmpty(receivedSelection)
+      ? []
+      : [
+          {
+            options: {
+              className: 'bg-primary'
+            },
+            range: receivedSelection
+          }
+        ]
+    selectionDecorations = editor
+      .getModel()
+      .deltaDecorations(selectionDecorations, newDecorations)
+  }
+  function isEmpty(selection) {
+    return (
+      selection.startLineNumber == selection.endLineNumber &&
+      selection.startColumn == selection.endColumn
+    )
+  }
 
   function setTask(i) {
     taskIndex = i
@@ -155,11 +182,11 @@
         {#each [task_id] as key (key)}
           <Hint {hint} {editor} {task_id} {code} />
         {/each}
-        <HelpButton {code} {task_id} />
+        <HelpButton {code} {task_id} {student} />
       </div>
       {#if $CHAT}
         <div class="h-full" style="flex: 0.45;">
-          <ChatBox {student_id} {task_id} />
+          <ChatBox {student_id} {task_id} bind:receivedSelection />
         </div>
       {/if}
 

@@ -3,6 +3,7 @@
   import { writable } from 'svelte/store'
   import { slide, fly } from 'svelte/transition'
   import { onMount } from 'svelte'
+  import trackEvent from '../trackEvent'
   export const CHAT = writable(false)
   const isInstructor = location.pathname.startsWith('/instructor')
 </script>
@@ -10,6 +11,8 @@
 <script>
   export let student_id, task_id
   export let closable = true
+  export let selection
+  export let receivedSelection = undefined
   $: me = isInstructor ? 'instructor' : 'student'
   $: window.me = me
   $: Meteor.subscribe('MessagesOf', { student_id, task_id })
@@ -27,20 +30,55 @@
   }
 
   function send() {
+    if (me === 'student') {
+      trackEvent({ type: 'Chat message to instructor', value: newMessage })
+    } else {
+      Meteor.call('event', {
+        student_id,
+        task_id,
+        type: 'Chat message from instructor',
+        value: newMessage
+      })
+    }
     Meteor.call('sendMessage', {
       text: newMessage,
       student_id,
       from: me,
-      task_id
+      task_id,
+      selection
     })
     newMessage = ''
   }
   function close() {
+    trackEvent({ type: 'Close chat' })
     $CHAT = false
+  }
+  function messageArrived(message) {
+    receivedSelection = message.selection
+    if (me === 'student' && message.from === 'instructor') {
+      const {
+        startLineNumber,
+        endLineNumber,
+        startColumn,
+        endColumn
+      } = receivedSelection
+      trackEvent({
+        type: 'Highlighted code from teacher',
+        value: isEmpty(receivedSelection)
+          ? 'None'
+          : `${startLineNumber}:${startColumn}-${endLineNumber}:${endColumn}`
+      })
+    }
   }
   onMount(() => {
     document.querySelector('#chatMessage').focus()
   })
+  function isEmpty(selection) {
+    return (
+      selection.startLineNumber == selection.endLineNumber &&
+      selection.startColumn == selection.endColumn
+    )
+  }
 </script>
 
 <main
@@ -58,6 +96,7 @@
     {#each messages as message, i (i)}
       <div
         in:slide|local={{}}
+        on:introend={() => messageArrived(message)}
         class="text-sm my-1 rounded px-2 py-1 whitespace-pre-wrap
         dark:text-black"
         title={moment().format('LT')}
@@ -76,7 +115,8 @@
       id="chatMessage"
       class="text-sm bg-white dark:text-white dark:bg-silver-600
       dark:placeholder-silver-400 rounded"
-      placeholder="Message to {me === 'instructor' ? 'student' : 'instructor'}"
+      placeholder="Message to {me === 'instructor' ? `student
+(Select code to highlight for the student)` : 'instructor'}"
       bind:value={newMessage}
       on:keypress={handleKeydown}
       rows="3" />
