@@ -258,6 +258,14 @@
         - turn: int num = in.nextInt();
           into: arr[i] = in.nextInt();
           next: +1
+    - match: //for[1]/block/block_content/expr_stmt[
+        .//index/../following-sibling::*[1][self::operator='=']][
+        not(./preceding-sibling::*//break)]
+      message: Don't add the negative number to the array. (How? you can use an `if` statement with a `break` to exit the `for` loop.)
+      solution:
+        - after: int num = in.nextInt();
+          add: if (num < -1) break;
+          next: +1
     - match: //for[1][not(
         .//expr_stmt/expr[
         ./*[1] = 'sum' and
