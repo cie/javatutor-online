@@ -245,9 +245,9 @@
         after: for (int i = 0; i < 100; ++i) {
         add: int num = in.nextInt();
         next: +1
-    - match: //expr[.//name[contains(.,'nextInt')]][not(
+    - match: //expr[.//name[contains(.,'nextInt')] and not(.//index)][not(
         .//following::expr_stmt[
-        .//expr/name[index[./name]]
+        .//expr/name[index[./expr/name]]
         /following-sibling::*[1][self::operator='=']
         ])]
       message: Store the number in the array
@@ -258,11 +258,12 @@
         - turn: int num = in.nextInt();
           into: arr[i] = in.nextInt();
           next: +1
-    - match: //expr_stmt[.//name[contains(.,'nextInt')]][not(
-        .//following-sibling:expr_stmt[
-        ./expr/*[1] = 'sum' and
+    - match: //for[1][not(
+        .//expr_stmt/expr[
+        ./*[1] = 'sum' and
         (operator = '+=' or
-        operator[.='=' and ./following::operator='+'])])]
+        operator[.='=' and ..//operator='+'])])]
+        /block/block_content/*[last()]
       message: Add the number to `sum`
       solution:
         - after: int num = in.nextInt();

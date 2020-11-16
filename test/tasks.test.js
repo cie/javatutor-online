@@ -37,6 +37,7 @@ describe('tasks', () => {
         hints.forEach((hint, i) => {
           if (!hint.solution) return it(hint.message + ' - no solution given')
           const solutions = [].concat(hint.solution)
+          let codeAfterHint
           solutions.forEach((solution, solutionIndex) => {
             const oldCode = solution.code || code
             const { turn, into, after, add } = solution
@@ -53,7 +54,7 @@ describe('tasks', () => {
               turn && into
                 ? oldCode.replace(turn, into)
                 : oldCode.replace(after, `${after}\n${add}`)
-            if (!solution.code && solutionIndex == 0) code = newCode
+            if (!solution.code && solutionIndex == 0) codeAfterHint = newCode
 
             const { message } = hint
 
@@ -124,6 +125,8 @@ describe('tasks', () => {
               })
             }
           })
+          if (!codeAfterHint) fail('First solution should not have code:')
+          code = codeAfterHint
         })
       })
     }
