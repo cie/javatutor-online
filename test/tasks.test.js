@@ -1,5 +1,6 @@
 require('@babel/register')
 require('array-flat-polyfill')
+const globToRegexp = require('glob-to-regexp')
 global.globalThis = global
 const { safeLoad } = require('js-yaml')
 const assert = require('assert').strict
@@ -35,76 +36,88 @@ describe('tasks', () => {
         const { hints = [] } = task
         hints.forEach((hint, i) => {
           if (!hint.solution) return it(hint.message + ' - no solution given')
-          const oldCode = hint.solution.code || code
-          const { turn, into, after, add } = hint.solution
-          if (
-            !(
-              (turn && into && !after && !add) ||
-              (!turn && !into && after && add)
-            )
-          )
-            throw new Error(
-              `Either turn && into or after && add is required in ${hint.message}`
-            )
-          const newCode =
-            turn && into
-              ? oldCode.replace(turn, into)
-              : oldCode.replace(after, `${after}\n${add}`)
-          if (!hint.solution.code) code = newCode
-
-          const { message } = hint
-
-          it(message, async () => {
+          for (const solution of [].concat(hint.solution)) {
+            console.log(solution)
+            const oldCode = solution.code || code
+            const { turn, into, after, add } = solution
             if (
-              (turn && !~oldCode.indexOf(turn)) ||
-              (after && !~oldCode.indexOf(after))
-            ) {
+              !(
+                (turn && into && !after && !add) ||
+                (!turn && !into && after && add)
+              )
+            )
               throw new Error(
-                `Cannot find '${turn || after}' in code:\n${code}`
+                `Either turn && into or after && add is required in ${hint.message}`
               )
-            }
-            const hintsBefore = await getHints(oldCode, task.id)
-            if (!hintsBefore[0]) fail('Did not show the hint')
-            if (hintsBefore[0].message !== message) {
-              const which = hints.findIndex(
-                h => h.message === hintsBefore[0].message
-              )
-              if (which < i) fail('An earlier hint was shown')
-              else if (which > i)
-                fail('Did not show the hint, a later hint was shown')
-              else fail('Something went wrong')
-            }
-            const hintsAfter = await getHints(newCode, task.id)
-            if (hintsAfter[0] && hintsAfter[0].message === message)
-              fail('Hint did not disappear after change')
+            const newCode =
+              turn && into
+                ? oldCode.replace(turn, into)
+                : oldCode.replace(after, `${after}\n${add}`)
+            if (!solution.code) code = newCode
 
-            if (!hint.solution.done && !hint.solution.next)
-              fail('done or next is required in solution')
-            if (hint.solution.next) {
-              if (!hintsAfter[0]) fail(`After solving, no hint was shown`)
-              const which = hints.findIndex(
-                h => h.message === hintsAfter[0].message
-              )
-              if (which !== i + hint.solution.next)
-                fail(
-                  `After solving, hint #${which} is shown instead of #${
-                    i + hint.solution.next
-                  }`
+            const { message } = hint
+
+            it(message, async () => {
+              if (
+                (turn && !~oldCode.indexOf(turn)) ||
+                (after && !~oldCode.indexOf(after))
+              ) {
+                throw new Error(
+                  `Cannot find '${turn || after}' in code:\n${code}`
                 )
-            }
-          })
+              }
+              const hintsBefore = await getHints(oldCode, task.id)
+              if (!hintsBefore[0]) fail('Did not show the hint')
+              if (hintsBefore[0].message !== message) {
+                const which = hints.findIndex(
+                  h => h.message === hintsBefore[0].message
+                )
+                if (which < i)
+                  fail('An earlier hint was shown: ' + hintsBefore[0].message)
+                else if (which > i)
+                  fail('Did not show the hint, a later hint was shown')
+                else fail('Something went wrong')
+              }
+              const hintsAfter = await getHints(newCode, task.id)
+              if (hintsAfter[0] && hintsAfter[0].message === message)
+                fail('Hint did not disappear after change')
 
-          if (hint.solution.done) {
-            if (!task.expectedOutput)
-              return it(hint.message + ' - no expectedOutput')
-            it('runs', async () => {
-              const output = await run({
-                code,
-                input: task.input,
-                student_id: 'test'
-              })
-              assert.equal(output.trim(), task.expectedOutput.trim())
+              if (!solution.done && !solution.next)
+                fail('done or next is required in solution')
+              if (solution.next) {
+                if (!hintsAfter[0]) fail(`After solving, no hint was shown`)
+                const which = hints.findIndex(
+                  h => h.message === hintsAfter[0].message
+                )
+                if (which !== i + solution.next)
+                  fail(
+                    `After solving, hint #${which} is shown instead of #${
+                      i + solution.next
+                    }`
+                  )
+              }
             })
+
+            if (solution.done) {
+              if (!task.expectedOutput)
+                return it(hint.message + ' - no expectedOutput')
+              it('runs', async () => {
+                const output = await run({
+                  code,
+                  input: task.input,
+                  student_id: 'test'
+                })
+                try {
+                  if (
+                    output
+                      .trim()
+                      .match(globToRegexp(task.expectedOutput.trim()))
+                  )
+                    return
+                } catch {}
+                assert.equal(output.trim(), task.expectedOutput.trim())
+              })
+            }
           }
         })
       })

@@ -159,11 +159,51 @@
         add: String sth;
         next: +1
       message: Think what varaibles you need right now and to initialize them.
-    - match:
-        //function[name='main']/block//decl[type//index or name//index][normalize-space(init//index/expr) = '100']
-        /following::*/descendant-or-self::decl[not(//name[.=''])]
+    - match: //function[name='main']/block/block_content
+        [not(.//decl[name='sum'] and .//decl[name='numberOfScores'])]
+        /*[last()]
       message: |
-        Decare three `int` variables: `average` for
+        Declare a variable for storing the sum of the numbers (call it `sum`) and one for
+        the number of scores entered (call it `numberOfScores`).
+      solution:
+        turn: String sth;
+        into: int sum, numberOfScores;
+        next: +1
+    - match: //decl[name='sum'][not(following::for)]
+      message: Use a `for` loop to read the scores and calculate their sum.
+      solution:
+        after: int sum, numberOfScores;
+        add: |
+          for (int i = 0; i < ; ++i) {
+          } // end of first for
+        next: +1
+    - match: |
+        //for[1]/control[
+          condition//operator[not(
+            .='<' and following-sibling::*[1]='100'
+            or .='<=' and following-sibling::*[1]='99'
+            or following-sibling::*[.//name='length'])]
+          or init//literal != 0]
+      message: The for loop should start from 0 and end before 100.
+      solution:
+        - turn: for (int i = 0; i < ; ++i) {
+          into: for (int i = 0; i < 100; ++i) {
+          next: +1
+        - code: |
+            import java.util.Scanner;
+
+            public class Lab12_E1 {
+                public static void main(String[] args) {
+                    Scanner in = new Scanner(System.in);
+                    int[] arr = new int[100];
+                    int sum, numberOfScores;
+                    for (int i = 1; i < 100; ++i) {
+                    }
+                }
+            }
+          turn: for (int i = 1; i < 100; ++i) {
+          into: for (int i = 0; i < 100; ++i) {
+          next: +1
 
 #--------------------------------------------------------------------------
 - id: Lab12_E2
@@ -173,6 +213,21 @@
     0 and 9 and displays the count for each number. 
 
     (Hint: Use an array of ten integers, say counts, to store the counts for the number of 0s, 1s, . . . , 9s.)
+
+
+    <pre class="output">
+    <code>Count for each number between 0 and 9:
+    0 s: 11
+    1 s: 12
+    2 s: 11
+    3 s: 8
+    4 s: 11
+    5 s: 6
+    6 s: 10
+    7 s: 9
+    8 s: 13
+    9 s: 9
+    </pre>
   initialCode: |
     public class Lab12_E2 {
         public static void main(String[] args) {
@@ -180,6 +235,18 @@
         }
     }
   input: ''
+  expectedOutput: |
+    Count for each number between 0 and 9:
+    0 s: *
+    1 s: *
+    2 s: *
+    3 s: *
+    4 s: *
+    5 s: *
+    6 s: *
+    7 s: *
+    8 s: *
+    9 s: *
   hints:
     - match: //function[name='main']/block[not(.//decl[.//index])]
       message: Let's start with an array of `int`s
@@ -198,15 +265,108 @@
       solution:
         after: int[] counts = new int[10];
         add: |
-          for (int i = 1; i < 100; i++) {
+          for (int i = 1; i < 10; i++) {
 
+          } // end of first for
+        next: +1
+    - match: |
+        //function[name='main']//for[1][
+          not(
+            control/init/decl/init/expr=1
+            and control/condition//operator='<='
+            and control/condition//literal = 100
+            or
+            control/init/decl/init/expr=0
+            and control/condition//operator='<'
+            and control/condition//literal = 100)]
+      message: The `i` in the for loop should have a max of 100
+      solution:
+        - turn: for (int i = 1; i < 10; i++) {
+          into: for (int i = 1; i <= 100; i++) {
+          next: +1
+        - code: |
+            public class Lab12_E2 {
+                public static void main(String[] args) {
+                    Scanner in = new Scanner(System.in);
+                    System.out.println("Enter some scores:");
+                    int[] counts = new int[10];
+                    for (int i = 1; i < 100; i++) {
+                    }
+                }
+            }
+          turn: for (int i = 1; i < 100; i++) {
+          into: for (int i = 0; i < 100; i++) {
+          next: +1
+    - match: //function[name='main']//for[1][not(.//name[.='Math.random'])]
+      message: Remebmer, to generate random numbers,
+        you can use `Math.random()` function. It will give double nubmers between `0.0` and `1.0`
+      solution:
+        after: for (int i = 1; i <= 100; i++) {
+        add: Math.random;
+        next: +1
+    - match: //name[.='Math.random'][not(parent::call)]
+      message: '`Math.random` is a function, call it by putting `()` after it.'
+      solution:
+        turn: Math.random;
+        into: Math.random();
+        next: +1
+    - match: //call[name='Math.random'][not(../operator[.='*'])]
+      message: To generate random numbers within 0 to 9 you can write `Math.random() * 10`.
+      solution:
+        turn: Math.random();
+        into: Math.random() * 10;
+        next: +1
+    - match: //expr[.//call[name='Math.random']][not(
+        .//*[.='(']
+        /following-sibling::*[1][.='int']
+        /following-sibling::*[1][.=')'])]
+      message: We need integers, so we use *casting* [`(int)number`] to turn double to integer.
+      solution:
+        turn: Math.random() * 10;
+        into: (int)Math.random() * 10;
+        next: +1
+    - match: //expr[.//call[name='Math.random']]
+        //*[.='(']
+        /following-sibling::*[1][.='int']
+        /following-sibling::*[1][.=')']
+        /following-sibling::*[1][self::call and name='Math.random']
+        /following-sibling::*[1][.='*']
+        /following-sibling::*[1][.='10']
+      message: |
+        `(int)` has higher priority than `*`, so you are converting `Math.random()` to
+        integer and then multiplying. Which is a problem because `Math.random()` is always <1,
+        so its integer value is always 0. Use parentheses to fix this.
+      solution:
+        turn: (int)Math.random() * 10;
+        into: (int)(Math.random() * 10);
+        next: +1
+    - match: //expr_stmt[.//call[name='Math.random']][not(
+        .//index and .//operator[.='+=' or .='++']
+        )]
+      message: Remeber to increse the count of the generated digit in your counts array.
+      solution:
+        turn: (int)(Math.random() * 10);
+        into: counts[(int)(Math.random() * 10)]++;
+        next: +1
+    - match:
+        //for[.//expr_stmt[.//call[name='Math.random']][.//index and .//operator[.='+=' or .='++']]]
+        [not(following-sibling::for)]
+        /block
+      hook: end
+      message: To display the results in the array, we need a for loop.
+      solution:
+        after: '} // end of first for'
+        add: |
+          System.out.println("Count for each number between 0 and 9:");
+          for (int i = 0; i < counts.length; i++) {
           }
         next: +1
-    - match: //function[name='main']//for[
-        control/init/decl/init/expr=1
-        and control/condition//operator='<'
-        and control/condition//literal = 100]
-      message: The `i` in the for loop has a max of 100 - ( i=0, i<100) or (i=1, i<=100)
+    - match: //for[2]/block/block_content[not(./*)]
+      message: Display the results.
+      solution:
+        after: for (int i = 0; i < counts.length; i++) {
+        add: 'System.out.println(i + " s: " + counts[i]);'
+        done: true
 
 #--------------------------------------------------------------------------
 - id: Lab12_E3

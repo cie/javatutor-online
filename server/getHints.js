@@ -27,7 +27,7 @@ export default async function getHints(code, task_id) {
         if (!n) return null
         const start = n.getAttributeNS(
           'http://www.srcML.org/srcML/position',
-          'start'
+          hint.hook || 'start'
         )
         const line = start ? +start.split(':')[0] : 1
         return {
