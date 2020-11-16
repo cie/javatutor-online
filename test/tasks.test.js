@@ -34,7 +34,7 @@ describe('tasks', () => {
         let code = task.initialCode
         const { hints = [] } = task
         hints.forEach((hint, i) => {
-          if (!hint.solution) return
+          if (!hint.solution) return it(hint.message + ' - no solution given')
           const oldCode = hint.solution.code || code
           const { turn, into, after, add } = hint.solution
           if (
@@ -78,6 +78,8 @@ describe('tasks', () => {
             if (hintsAfter[0] && hintsAfter[0].message === message)
               fail('Hint did not disappear after change')
 
+            if (!hint.solution.done && !hint.solution.next)
+              fail('done or next is required in solution')
             if (hint.solution.next) {
               if (!hintsAfter[0]) fail(`After solving, no hint was shown`)
               const which = hints.findIndex(
@@ -93,6 +95,8 @@ describe('tasks', () => {
           })
 
           if (hint.solution.done) {
+            if (!task.expectedOutput)
+              return it(hint.message + ' - no expectedOutput')
             it('runs', async () => {
               const output = await run({
                 code,

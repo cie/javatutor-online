@@ -180,7 +180,33 @@
         }
     }
   input: ''
-  hints: []
+  hints:
+    - match: //function[name='main']/block[not(.//decl[.//index])]
+      message: Let's start with an array of `int`s
+      solution:
+        after: public static void main(String[] args) {
+        add: int[] counts = new int[100];
+        next: +1
+    - match: //function[name='main']/block//decl/init//index[expr!='10']
+      message: Make sure the size of the array is 10
+      solution:
+        turn: int[] counts = new int[100];
+        into: int[] counts = new int[10];
+        next: +1
+    - match: //function[name='main']/block[not(.//for)]/block_content/*[last()]
+      message: To store the 100 numbers in the array, we need a for loop.
+      solution:
+        after: int[] counts = new int[10];
+        add: |
+          for (int i = 1; i < 100; i++) {
+
+          }
+        next: +1
+    - match: //function[name='main']//for[
+        control/init/decl/init/expr=1
+        and control/condition//operator='<'
+        and control/condition//literal = 100]
+      message: The `i` in the for loop has a max of 100 - ( i=0, i<100) or (i=1, i<=100)
 
 #--------------------------------------------------------------------------
 - id: Lab12_E3
