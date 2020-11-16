@@ -91,10 +91,10 @@
     Assume that the maximum number of scores is 100.
 
     <pre class="output">
-    <code>Enter scores: (enter a negative number to signify the end):
+    <code>Enter scores: (enter a negative number to signify the end): 
     <code class="user-input user-input-line">23 76 54 -1</code>
     Average of scores: 51
-    Number of scores above or equal the average: 2
+    Number of scores above or equal to average: 2
     Number of scores below average: 1</code>
     </pre>
 
@@ -107,6 +107,12 @@
         }
     }
   input: 23 76 54 -1
+  expectedOutput: |
+    Enter scores: (enter a negative number to signify the end): 
+
+    Average of scores: 51
+    Number of scores above or equal to average: 2
+    Number of scores below average: 1
   hints:
     - match: //function[name='main']/block[not(//decl/type//name[.='Scanner'])]
       message: Start by making a Scanner variable to take inputs from the user
@@ -169,12 +175,12 @@
         * a variable for the number of scores entered (let's call it `numberOfScores`).
       solution:
         turn: String sth;
-        into: int sum, numberOfScores;
+        into: int sum = 0, numberOfScores = 0;
         next: +1
     - match: //decl[name='sum'][not(following::for)]
       message: Use a `for` loop to read the scores and calculate their sum.
       solution:
-        after: int sum, numberOfScores;
+        after: int sum = 0, numberOfScores = 0;
         add: |
           for (int i = 0; i < ; ++i) {
           } // end of first for
@@ -199,7 +205,7 @@
                     Scanner in = new Scanner(System.in);
                     System.out.println("Enter some scores");
                     int[] arr = new int[100];
-                    int sum, numberOfScores;
+                    int sum = 0, numberOfScores = 0;
                     for (int i = 1; i < 100; ++i) {
                     }
                 }
@@ -215,7 +221,7 @@
                     Scanner in = new Scanner(System.in);
                     System.out.println("Enter some scores");
                     int[] arr = new int[100];
-                    int sum, numberOfScores;
+                    int sum = 0, numberOfScores = 0;
                     for (int i = 0; i <= 100; ++i) {
                     }
                 }
@@ -231,7 +237,7 @@
                     Scanner in = new Scanner(System.in);
                     System.out.println("Enter some scores");
                     int[] arr = new int[100];
-                    int sum, numberOfScores;
+                    int sum = 0, numberOfScores = 0;
                     for (int i = 0; i <; ++i) {
                     }
                 }
@@ -264,7 +270,7 @@
       message: Don't add the negative number to the array. (How? you can use an `if` statement with a `break` to exit the `for` loop.)
       solution:
         - after: int num = in.nextInt();
-          add: if (num < -1) break;
+          add: if (num < 0) break;
           next: +1
     - match: //for[1][not(
         .//expr_stmt/expr[
@@ -274,15 +280,26 @@
         /block/block_content/*[last()]
       message: Add the number to `sum`
       solution:
-        - after: int num = in.nextInt();
+        - after: if (num < 0) break;
           add: sum += num;
           next: +1
-        - after: int num = in.nextInt();
+        - after: if (num < 0) break;
           add: sum = sum + num;
           next: +1
-        - after: int num = in.nextInt();
+        - after: if (num < 0) break;
           add: sum = sum + arr[i];
           next: +1
+    - match: |
+        //for[1][not(
+          .//expr_stmt[
+            .//name[.='numberOfScores']
+            and .//operator[.='++' or .='+=' or .='+']]
+        )]/block/block_content/*[last()]
+      message: Don't forget the to increment the number of scores.
+      solution:
+        after: sum += num;
+        add: ++numberOfScores;
+        next: +1
     - match: //for[1][not(following::*//expr
         //operator[.='/']
         )]
@@ -290,22 +307,41 @@
       message: Don't forget to calculate the average.
       solution:
         after: '} // end of first for'
-        add: double average = sum / numberOfScores;
+        add: int average = sum / numberOfScores;
         next: +1
     - match: //for[1][not(following::for)]
       message: Now we need to count the scores above and below the average.
       solution:
-        - after: double average = sum / numberOfScores;
+        - after: int average = sum / numberOfScores;
           add: |
             int aboveOrEqual = 0;				
             int below = 0;							
-            for (int i = 0; i < numberOfScores; i++) {
-              if (scores[i] >= average)
+            for (int i = 0; i < sth; i++) {
+              if (arr[i] >= average)
                 aboveOrEqual++;			
               else
                 below++;						
-            }
+            } // end of second for
           next: +1
+    - match: //for[2]/control/condition/expr/operator[
+        .='<' and following-sibling::*[1]!='numberOfScores']
+      message: Make sure the loop ends at the number of scores.
+      solution:
+        - turn: for (int i = 0; i < sth; i++) {
+          into: for (int i = 0; i < numberOfScores; i++) {
+          next: +1
+    - match: //for[2][not(following::*//name[contains(.,'print')])]
+      hook: end
+      message: Display your results.
+      solution:
+        after: '} // end of second for'
+        add: |
+          System.out.println("\nAverage of scores: " + average);
+          System.out.println(
+            "Number of scores above or equal to average: " + aboveOrEqual);
+          System.out.println(
+            "Number of scores below average: " + below);
+        done: true
 
 #--------------------------------------------------------------------------
 - id: Lab12_E2
