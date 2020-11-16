@@ -275,6 +275,29 @@
         - after: int num = in.nextInt();
           add: sum = sum + arr[i];
           next: +1
+    - match: //for[1][not(following::*//expr
+        //operator[.='/']
+        )]
+      hook: end
+      message: Don't forget to calculate the average.
+      solution:
+        after: '} // end of first for'
+        add: double average = sum / numberOfScores;
+        next: +1
+    - match: //for[1][not(following::for)]
+      message: Now we need to count the scores above and below the average.
+      solution:
+        - after: double average = sum / numberOfScores;
+          add: |
+            int aboveOrEqual = 0;				
+            int below = 0;							
+            for (int i = 0; i < numberOfScores; i++) {
+              if (scores[i] >= average)
+                aboveOrEqual++;			
+              else
+                below++;						
+            }
+          next: +1
 
 #--------------------------------------------------------------------------
 - id: Lab12_E2
