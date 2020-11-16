@@ -7,7 +7,7 @@
     "test": "if [ -f ../../.env ]; then cp -f ../../.env .; fi && harmony >> harmony.log 2>> harmony.log",
     "test:tasks": "mocha",
     "pmd:designer": "./private/pmd/bin/run.sh designer",
-    "test:tasks:watch": "mocha --watch",
+    "test:tasks:watch": "while inotifywait -e close_write imports/tasks.yml test/tasks.test.js; do mocha --timeout 3000; done ",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha --timeout 3000",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
     "deploy": ".deploy/upload_ls.sh && mup setup --config .deploy/mup.js && mup deploy --config .deploy/mup.js --settings .deploy/settings.json"
@@ -63,6 +63,7 @@
     "html-webpack-plugin": "^4.5.0",
     "imports-loader": "^1.1.0",
     "jest": "^26.4.2",
+    "mocha": "^8.2.1",
     "monaco": "^1.201704190613.0",
     "mup": "^1.5.1",
     "style-loader": "^1.3.0",

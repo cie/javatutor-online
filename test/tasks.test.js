@@ -12,9 +12,9 @@ const run = require('../server/run').default
 const schema = JSON.parse(
   fs.readFileSync(__dirname + '/../tasks.schema.json').toString()
 )
-const tasks = safeLoad(fs.readFileSync(__dirname + '/../imports/tasks.yml'))
 
 describe('tasks', () => {
+  const tasks = safeLoad(fs.readFileSync(__dirname + '/../imports/tasks.yml'))
   it('tasks file is valid', () => {
     const valid = new Ajv().validate(schema, tasks)
     if (!valid) throw new Error('tasks file is not valid.')
@@ -36,8 +36,8 @@ describe('tasks', () => {
         const { hints = [] } = task
         hints.forEach((hint, i) => {
           if (!hint.solution) return it(hint.message + ' - no solution given')
-          for (const solution of [].concat(hint.solution)) {
-            console.log(solution)
+          const solutions = [].concat(hint.solution)
+          solutions.forEach((solution, solutionIndex) => {
             const oldCode = solution.code || code
             const { turn, into, after, add } = solution
             if (
@@ -53,7 +53,7 @@ describe('tasks', () => {
               turn && into
                 ? oldCode.replace(turn, into)
                 : oldCode.replace(after, `${after}\n${add}`)
-            if (!solution.code) code = newCode
+            if (!solution.code && solutionIndex == 0) code = newCode
 
             const { message } = hint
 
@@ -67,7 +67,7 @@ describe('tasks', () => {
                 )
               }
               const hintsBefore = await getHints(oldCode, task.id)
-              if (!hintsBefore[0]) fail('Did not show the hint')
+              if (!hintsBefore[0]) fail('Did not show the hint: ' + oldCode)
               if (hintsBefore[0].message !== message) {
                 const which = hints.findIndex(
                   h => h.message === hintsBefore[0].message
@@ -75,25 +75,30 @@ describe('tasks', () => {
                 if (which < i)
                   fail('An earlier hint was shown: ' + hintsBefore[0].message)
                 else if (which > i)
-                  fail('Did not show the hint, a later hint was shown')
+                  fail(
+                    'Did not show the hint, a later hint was shown: ' + oldCode
+                  )
                 else fail('Something went wrong')
               }
               const hintsAfter = await getHints(newCode, task.id)
               if (hintsAfter[0] && hintsAfter[0].message === message)
-                fail('Hint did not disappear after change')
+                fail('Hint did not disappear after change\n' + newCode)
 
               if (!solution.done && !solution.next)
                 fail('done or next is required in solution')
               if (solution.next) {
-                if (!hintsAfter[0]) fail(`After solving, no hint was shown`)
+                if (!hintsAfter[0])
+                  fail(`ALMOST GOOD, but after solving, no hint was shown`)
                 const which = hints.findIndex(
                   h => h.message === hintsAfter[0].message
                 )
+                if (!~which)
+                  fail('Some unknown hint is shown: ' + hintsAfter[0].message)
                 if (which !== i + solution.next)
                   fail(
-                    `After solving, hint #${which} is shown instead of #${
-                      i + solution.next
-                    }`
+                    `After solving, hint #${which + 1} is shown instead of #${
+                      i + solution.next + 1
+                    }:  ${hintsAfter[0].message}\n${newCode}`
                   )
               }
             })
@@ -118,7 +123,7 @@ describe('tasks', () => {
                 assert.equal(output.trim(), task.expectedOutput.trim())
               })
             }
-          }
+          })
         })
       })
     }

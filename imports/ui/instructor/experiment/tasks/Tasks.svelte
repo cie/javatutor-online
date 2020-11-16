@@ -32,15 +32,18 @@
               {@html marked(hint.message)}
             </div>
             {#if hint.solution}
-              <tt
-                class="hint-solution align-top whitespace-pre text-sm
-                inline-block">
-                {#if hint.solution.add}
-                  <ins>{hint.solution.add}</ins>
-                {:else}
-                  {@html htmldiff(escape(hint.solution.turn), escape(hint.solution.into))}
-                {/if}
-              </tt>
+              <div class="inline-block">
+                {#each [].concat(hint.solution) as solution}
+                  <tt
+                    class="hint-solution align-top whitespace-pre text-sm block">
+                    {#if solution.add}
+                      <ins>{solution.add}</ins>
+                    {:else if solution.turn && solution.into}
+                      {@html htmldiff(escape(solution.turn), escape(solution.into))}
+                    {/if}
+                  </tt>
+                {/each}
+              </div>
             {/if}
           </div>
         {/each}

@@ -87,7 +87,7 @@ export default class LSPRouter {
     if (this.initializedId === null) {
       this.initializedId = this.callToServer(client, message)
     } else {
-      this.sendToClient(client, this.initializedResponse)
+      this.sendToClient(client, { id: message.id, result: null })
       for (const message of this.broadcastMessages)
         this.callToClient(client, message)
     }

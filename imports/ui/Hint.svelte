@@ -153,6 +153,14 @@
     await tick()
     resolvedHint = null
   }
+  function closeResolvedHint() {
+    trackEvent({
+      type: 'Close Good hint question',
+      value: resolvedHint.message,
+      code
+    })
+    resolvedHint = null
+  }
   function closeHint() {
     hintClosed = true
     trackEvent({ type: 'Close hint', code })
@@ -179,6 +187,13 @@
     shadow-md right-0 mr-16 text-center h-18"
     class:oversize
     style="top: {top}px; left: {left}px; width: {width}px">
+    <div
+      class="absolute text-black top-0 right-0 mr-1 opacity-50 hover:opacity-75
+      cursor-pointer"
+      style="margin-top: -1px;"
+      on:click={closeResolvedHint}>
+      <i class="fa fa-times text-sm" />
+    </div>
     {#if !thanks}
       <p class="text-sm">Was this a good hint?</p>
       <p>
