@@ -1,84 +1,84 @@
+--- #--------------------------------------------------------------------------
 # yaml-language-server: $schema=file:///home/cie/git/javatutor/tasks.schema.json
 
-- id: HelloWorld
-  title: Hello, $NAME!
-  description: |
-    Welcome and thanks for participating! 
-    This is a warm-up task so you can get familiar with the environment.
-    Whenever you are stuck, feel free to use the
-    <img src="/hand.png" alt="hand" width=30 height=30 style="transform: rotate(15deg); opacity: 0.9; display: inline-block; vertical-align:middle">
-    button to chat with the instructor.
+#- id: HelloWorld
+#  title: Hello, $NAME!
+#  description: |
+#    Welcome and thanks for participating!
+#    This is a warm-up task so you can get familiar with the environment.
+#    Whenever you are stuck, feel free to use the
+#    <img src="/hand.png" alt="hand" width=30 height=30 style="transform: rotate(15deg); opacity: 0.9; display: inline-block; vertical-align:middle">
+#    button to chat with the instructor.
+#
+#    Write a program that asks for the name of the user and then greets them:
+#
+#    <pre class="output">
+#    <code>Enter your name: <code class="user-input user-input-line">$NAME</code>
+#    Hello, $NAME!</code>
+#    </pre>
+#
+#    The **Input** box below contains the user input that will be sent to your program when you press Run.
+#    One line in the box is one line entered.
+#
+#    You can run the program with the
+#    <span class="bg-green-600 dark:text-white rounded px-2 py-1 text-sm" style="color: white; box-shadow: 1px 2px 6px -2px inset rgba(255, 255, 255, 0.6), -1px -2px 5px -2px inset rgba(0, 0, 0, 0.4), 1px 3px 5px -1px rgba(0, 0, 0, 0.2);">Run</span>
+#    button and see its output in the **Output** box.
+#
+#  initialCode: |
+#    import java.util.Scanner;
+#
+#    public class HelloWorld {
+#        public static void main(String [] args) {
+#            Scanner input = new Scanner(System.in);
+#            System.out.println("Enter your name: ");
+#            String name = input.nextLine();
+#        }
+#    }
+#  input: $NAME
+#  expectedOutput: |
+#    Enter your name:
+#    Hello, $NAME!
+#  hints:
+#    - match: //block_content/*[.//name[.="nextLine"]][not(following-sibling::*[contains(., "print")])]
+#      message: Use another System.out.println() call.
+#      delay: 20
+#      first: true
+#      solution:
+#        after: String name = input.nextLine();
+#        add: System.out.println();
+#        next: 1
+#    - match: //name[.="print" or .="println"]/../../argument_list[not(*)]
+#      message: Add an argument. What do you want to output?
+#      delay: 15
+#      solution:
+#        turn: System.out.println();
+#        into: System.out.println("Hello");
+#        next: 1
+#    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list[not(.//name[.='name'])]
+#      message: Include the user's name in the output.
+#      delay: 9
+#      solution:
+#        turn: System.out.println("Hello");
+#        into: System.out.println("Hello " + name);
+#        next: 1
+#    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list/argument[expr/*[last()]="name"]
+#      message: You are missing the exclamation mark at the end.
+#      delay: 7
+#      solution:
+#        turn: System.out.println("Hello " + name);
+#        into: System.out.println("Hello " + name + "!");
+#        next: 1
+#    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list/argument/expr/*[1][.='"Hello "']
+#      message: |
+#        Aren't you missing a comma? Think about "Let's eat, Grandma!" and "Let's eat Grandma!"
+#
+#        <small>(credit: Kevlin Henney)</small>
+#      delay: 9
+#      solution:
+#        turn: System.out.println("Hello " + name + "!");
+#        into: System.out.println("Hello, " + name + "!");
+#        done: true
 
-    Write a program that asks for the name of the user and then greets them:
-
-    <pre class="output">
-    <code>Enter your name: <code class="user-input user-input-line">$NAME</code>
-    Hello, $NAME!</code>
-    </pre>
-
-    The **Input** box below contains the user input that will be sent to your program when you press Run.
-    One line in the box is one line entered.
-
-    You can run the program with the
-    <span class="bg-green-600 dark:text-white rounded px-2 py-1 text-sm" style="color: white; box-shadow: 1px 2px 6px -2px inset rgba(255, 255, 255, 0.6), -1px -2px 5px -2px inset rgba(0, 0, 0, 0.4), 1px 3px 5px -1px rgba(0, 0, 0, 0.2);">Run</span>
-    button and see its output in the **Output** box.
-
-  initialCode: |
-    import java.util.Scanner;
-
-    public class HelloWorld {
-        public static void main(String [] args) {
-            Scanner input = new Scanner(System.in);
-            System.out.println("Enter your name: ");
-            String name = input.nextLine();
-        }
-    }
-  input: $NAME
-  expectedOutput: |
-    Enter your name: 
-    Hello, $NAME!
-  hints:
-    - match: //block_content/*[.//name[.="nextLine"]][not(following-sibling::*[contains(., "print")])]
-      message: Use another System.out.println() call.
-      delay: 20
-      first: true
-      solution:
-        after: String name = input.nextLine();
-        add: System.out.println();
-        next: 1
-    - match: //name[.="print" or .="println"]/../../argument_list[not(*)]
-      message: Add an argument. What do you want to output?
-      delay: 15
-      solution:
-        turn: System.out.println();
-        into: System.out.println("Hello");
-        next: 1
-    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list[not(.//name[.='name'])]
-      message: Include the user's name in the output.
-      delay: 9
-      solution:
-        turn: System.out.println("Hello");
-        into: System.out.println("Hello " + name);
-        next: 1
-    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list/argument[expr/*[last()]="name"]
-      message: You are missing the exclamation mark at the end.
-      delay: 7
-      solution:
-        turn: System.out.println("Hello " + name);
-        into: System.out.println("Hello " + name + "!");
-        next: 1
-    - match: .//name[.="nextLine"]/following::*//name[.="print" or .="println"]/../../argument_list/argument/expr/*[1][.='"Hello "']
-      message: |
-        Aren't you missing a comma? Think about "Let's eat, Grandma!" and "Let's eat Grandma!"
-
-        <small>(credit: Kevlin Henney)</small>
-      delay: 9
-      solution:
-        turn: System.out.println("Hello " + name + "!");
-        into: System.out.println("Hello, " + name + "!");
-        done: true
-
-#--------------------------------------------------------------------------
 - id: Lab12_E1
   title: Analyze scores
   description: |
@@ -89,6 +89,8 @@
     The user has to enter a negative number to signify the end of the input.
 
     Assume that the maximum number of scores is 100.
+
+    **Sample run:**
 
     <pre class="output">
     <code>Enter scores: (enter a negative number to signify the end): 
@@ -352,6 +354,7 @@
 
     (Hint: Use an array of ten integers, say counts, to store the counts for the number of 0s, 1s, . . . , 9s.)
 
+    **Sample run:**
 
     <pre class="output">
     <code>Count for each number between 0 and 9:
@@ -522,6 +525,8 @@
     The program prompts the user to enter the total number of students, then prompts
     the user to enter all of the scores, and concludes by displaying the grades.
 
+    **Sample run:**
+
     <pre class="output">
     <code>Enter the number of students: <code class="user-input user-input-line">4</code>
     Enter 4 scores: <code class="user-input user-input-line">40 55 70 58</code></code>
@@ -536,7 +541,7 @@
   initialCode: |
     import java.util.Scanner;
 
-    public class Lab12_E2 {
+    public class Lab12_E3 {
         public static void main(String[] args) {
 
         }
@@ -646,7 +651,7 @@
         done: true
 
 #--------------------------------------------------------------------------
-- id: Exercise_07_05
+- id: Lab12_E4
   title: Print distinct numbers
   description: |
     Write a program that reads in ten numbers and displays
@@ -658,6 +663,8 @@
     After the input, the array contains the distinct numbers.
 
 
+    **Sample run:**
+
     <pre class="output">
     <code>Enter ten numbers: <code class="user-input user-input-line">1 2 3 2 1 6 3 4 5 2</code>
     The number of distinct numbers is 6
@@ -667,14 +674,14 @@
   initialCode: |
     import java.util.Scanner;
 
-    public class Exercise_07_05 {
+    public class Lab12_E4 {
         public static void main(String[] args) {
 
         }
     }
   input: 1 2 3 2 1 6 3 4 5 2
   hints: []
-- id: Lab_12_E5
+- id: Lab12_E5
   title: Strictly identical arrays
   description: |
     The arrays list1 and list2 are strictly identical if their corresponding
@@ -682,6 +689,8 @@
       
     Write a program that prompts the user to enter two lists of integers and
     displays whether the two are strictly identical.
+
+    **Sample runs:**
 
     <pre class="output">
     <code>Enter list1: <code class="user-input user-input-line">5 2 5 6 1 6</code>
@@ -697,7 +706,7 @@
   initialCode: |
     import java.util.Scanner;
 
-    public class Lab_12_E05 {
+    public class Lab12_E5 {
         public static void main(String[] args) {
 
         }

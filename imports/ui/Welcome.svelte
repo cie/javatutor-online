@@ -44,7 +44,7 @@
   <section
     class="text-left mx-auto my-4 message"
     style="max-width: 32em; font-size: 19px;">
-    Please choose a nickname. This doesn't have to be your real name.
+    Please enter your name with your university id (e.g. Bob_1234567):
   </section>
   <p class="my-2">
     <input
