@@ -529,10 +529,10 @@
     Student 1 score is 55 and grade is B
     Student 2 score is 70 and grade is A
     Student 3 score is 58 and grade is B</code>
+    </pre>
 
     Hint: Start by breaking your problem into smaller ones to make it easier
     to understand and code.
-    </pre>
   initialCode: |
     import java.util.Scanner;
 

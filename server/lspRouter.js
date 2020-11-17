@@ -17,9 +17,9 @@ export default class LSPRouter {
     this.workspaceFolders = {}
     this.clients = {}
     this.initializeId = null
-    this.initializedId = null
     this.initializeResponse = null
-    this.initializedResponse = null
+    this.initializedDone = false
+    this.initializeQueue = []
   }
   receivedFromServer(message) {
     let client
@@ -31,7 +31,6 @@ export default class LSPRouter {
     )
     if ('result' in message)
       if (message.id === this.initializeId) this.initializeDone(message)
-      else if (message.id === this.initializedId) this.initializedDone(message)
       else this.returnFromServer(message)
     else if ('method' in message)
       if (
@@ -71,59 +70,60 @@ export default class LSPRouter {
     delete this.clients[client]
   }
   initialize(client, message) {
-    //console.log('initialize', client, message)
     if (this.initializeId === null) {
       this.initializeId = this.callToServer(client, message)
     } else {
-      this.sendToClient(client, this.initializeResponse)
+      if (this.initializeResponse)
+        this.sendToClient(client, this.initializeResponse)
+      else this.initializeQueue.push({ client, id: message.id })
     }
   }
   initializeDone(message) {
     this.initializeResponse = message
     const client = this.returnFromServer(message)
+    this.initializeQueue.forEach(({ client, id }) => {
+      this.sendToClient(client, { ...message, id })
+    })
   }
   initialized(client, message) {
-    console.log('initialized', client, message)
-    if (this.initializedId === null) {
-      this.initializedId = this.callToServer(client, message)
-    } else {
+    if (message.id != null) {
+      console.log('sending response for initialized')
       this.sendToClient(client, { id: message.id, result: null })
+    }
+    if (this.initializedDone === false) {
+      this.sendToServer(message)
+      this.initializedDone = true
+    } else {
       for (const message of this.broadcastMessages)
         this.callToClient(client, message)
     }
   }
   initializedDone(message) {
-    console.log('initializedDone', message)
     this.initializedResponse = message
     const client = this.returnFromServer(message)
   }
   callToServer(client, message) {
     const sid = this.clientToServerCalls.push({ client, id: message.id }) - 1
     this.sendToServer({ ...message, id: sid })
-    //console.log('sendToServer', { ...message, id: sid })
     return sid
   }
   returnFromServer(message) {
     const { client, id } = this.clientToServerCalls[message.id]
     this.sendToClient(client, { ...message, id })
-    //console.log('sendToClient', client, { ...message, id })
     return client
   }
   callToClient(client, message) {
     if (!message.hasOwnProperty('id')) {
       this.sendToClient(client, message)
-      //console.log('sendToClient', client, message)
       return
     }
     if (!this.serverToClientCalls[client]) this.serverToClientCalls[client] = []
     const id = this.serverToClientCalls[client].push(message.id) - 1
     this.sendToClient(client, { ...message, id })
-    //console.log('sendToClient', client, { ...message, id })
   }
   returnFromClient(client, message) {
     const sid = this.serverToClientCalls[client][message.id]
     this.sendToServer({ ...message, id: sid })
-    //console.log('sendToServer', { ...message, id: sid })
   }
   broadcast(message) {
     for (const client of Object.keys(this.clients))

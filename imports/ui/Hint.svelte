@@ -29,6 +29,10 @@
   const resolvedHintAnswerSec = 4
 
   $: if (student && student.group != 'control') {
+    getHint(code, task_id)
+  }
+
+  function getHint(code, task_id) {
     Meteor.call('getHint', code, task_id, (err, newHint) => {
       if (err) {
         trackEvent({ type: 'Internal error', code, value: err })
@@ -180,7 +184,7 @@
     in:card|local={{ dir: -1, delay: resolvedHintDelaySec * 1000 }}
     out:fade|local={{ duration: 500, delay: 200 }}
     on:introend={() => trackEvent({
-        type: 'Was this useful?',
+        type: 'Was this hint useful?',
         value: resolvedHint.message
       })}
     class="bubble resolved text-silver-800 px-3 py-2 rounded-lg absolute
@@ -195,7 +199,7 @@
       <i class="fa fa-times text-sm" />
     </div>
     {#if !thanks}
-      <p class="text-sm">Was this a good hint?</p>
+      <p class="text-sm">Was this hint useful?</p>
       <p>
         <button
           class="px-2 mr-4 focus:outline-none text-2xl rounded hover:bg-gray-800
