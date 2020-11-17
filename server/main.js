@@ -17,7 +17,7 @@ Meteor.startup(() => {
 const groups = ['experimental', 'control']
 let group
 
-console.log(27)
+console.log(28)
 Meteor.methods({
   reauthenticate({ student_id }) {
     if (student_id === 'instructor') throw new Meteor.Error(403)
@@ -37,7 +37,7 @@ Meteor.methods({
     check(student_id, String)
     check(task_id, String)
     check(input, String)
-    Students.update(student_id, { $set: { task_id, input } })
+    Students.update(student_id, { $set: { task_id, input, highlight: null } })
   },
   setInput({ student_id, task_id, input }) {
     if (!input) return

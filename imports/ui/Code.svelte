@@ -29,27 +29,52 @@
   const student_id = localStorage.getItem('student_id')
   $: STUDENT = useTracker(() => Students.findOne(student_id))
   $: student = $STUDENT
+  $: highlight = student && student.highlight
   const nickname = localStorage.getItem('nickname')
   /** @type HTMLElement */
   let top
-  let receivedSelection
-  let selectionDecorations = []
-  $: if (editor && receivedSelection) {
-    const newDecorations = isEmpty(receivedSelection)
-      ? []
-      : [
-          {
-            options: {
-              className: 'bg-primary'
-            },
-            range: receivedSelection
-          }
-        ]
+  var selectionDecorations = []
+  $: if (editor) {
+    const newDecorations =
+      highlight && !isEmpty(highlight) && $CHAT
+        ? [
+            {
+              options: {
+                className: 'bg-primary'
+              },
+              range: highlight
+            }
+          ]
+        : []
     selectionDecorations = editor
       .getModel()
       .deltaDecorations(selectionDecorations, newDecorations)
+    const { startLineNumber, endLineNumber, startColumn, endColumn } =
+      highlight || {}
+    trackEvent({
+      type: 'Highlighted code from teacher',
+      value: isEmpty(highlight)
+        ? 'None'
+        : `${startLineNumber}:${startColumn}-${endLineNumber}:${endColumn}`
+    })
+  }
+  $: if (editor) setUpChangeListener()
+  function setUpChangeListener() {
+    editor.getModel().onDidChangeContent(evt => {
+      console.log(evt)
+      if (
+        highlight &&
+        evt.changes.some(
+          change =>
+            change.range.startLineNumber <= highlight.endLineNumber &&
+            change.range.endLineNumber >= highlight.startLineNumber
+        )
+      )
+        Meteor.call('editedHighlight', { student_id })
+    })
   }
   function isEmpty(selection) {
+    if (!selection) return true
     return (
       selection.startLineNumber == selection.endLineNumber &&
       selection.startColumn == selection.endColumn
@@ -82,7 +107,7 @@
   }
   $: Meteor.call('setInput', { student_id, task_id, input })
 
-  let hint = null
+  let chatting
 
   function run() {
     trackEvent({ type: 'Run', value: input, code })
@@ -181,13 +206,13 @@
           on:change={change}
           uri={`workspace:${student_id}/${task_id}.java`} />
         {#each [task_id] as key (key)}
-          <Hint {hint} {editor} {task_id} {code} />
+          <Hint {editor} {task_id} {code} />
         {/each}
         <HelpButton {code} {task_id} {student} />
       </div>
       {#if $CHAT}
         <div class="h-full" style="flex: 0.45;">
-          <ChatBox {student_id} {task_id} bind:receivedSelection />
+          <ChatBox {student_id} {task_id} />
         </div>
       {/if}
 

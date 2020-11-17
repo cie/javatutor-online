@@ -24,7 +24,8 @@ Meteor.methods({
       $set: {
         [from === 'instructor'
           ? `unreadFromInstructor`
-          : 'unreadFromStudent']: task_id
+          : 'unreadFromStudent']: task_id,
+        highlight: selection
       }
     })
   },
@@ -32,10 +33,13 @@ Meteor.methods({
     Students.update(student_id, {
       $set: {
         [by === 'instructor'
-          ? `unreadFromInstructor`
-          : 'unreadFromStudent']: null
+          ? `unreadFromStudent`
+          : 'unreadFromInstructor']: null
       }
     })
+  },
+  editedHighlight({ student_id }) {
+    Students.update(student_id, { $set: { highlight: null } })
   }
 })
 

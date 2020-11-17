@@ -2,6 +2,7 @@
   import { tick } from 'svelte'
 
   import { CHAT } from './instructor/ChatBox.svelte'
+  import trackEvent from './trackEvent'
   const student_id = localStorage.getItem('student_id')
   function openChat() {
     $CHAT = true

@@ -2,7 +2,7 @@
   import moment from 'moment'
   import { writable } from 'svelte/store'
   import { slide, fly } from 'svelte/transition'
-  import { onMount } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
   import trackEvent from '../trackEvent'
   export const CHAT = writable(false)
   const isInstructor = location.pathname.startsWith('/instructor')
@@ -12,7 +12,7 @@
   export let student_id, task_id, code
   export let closable = true
   export let selection
-  export let receivedSelection = undefined
+  const dispatch = createEventDispatcher()
   $: me = isInstructor ? 'instructor' : 'student'
   $: window.me = me
   $: Meteor.subscribe('MessagesOf', { student_id, task_id })
@@ -55,21 +55,8 @@
     $CHAT = false
   }
   function messageArrived(message) {
-    receivedSelection = message.selection
-    if (me === 'student' && message.from === 'instructor') {
-      const {
-        startLineNumber,
-        endLineNumber,
-        startColumn,
-        endColumn
-      } = receivedSelection
-      trackEvent({
-        type: 'Highlighted code from teacher',
-        value: isEmpty(receivedSelection)
-          ? 'None'
-          : `${startLineNumber}:${startColumn}-${endLineNumber}:${endColumn}`
-      })
-    }
+    Meteor.call('readMessage', { by: me, student_id, task_id })
+    dispatch('messageArrived', { message })
   }
   onMount(() => {
     document.querySelector('#chatMessage').focus()

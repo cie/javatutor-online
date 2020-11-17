@@ -5,7 +5,7 @@
   export let hotkey = null
   const dispatch = createEventDispatcher()
   function bodyKeypress(e) {
-    if (keystroke(e) == hotkey) {
+    if (hotkey && keystroke(e) == hotkey) {
       e.preventDefault()
       e.stopPropagation()
       dispatch('select')

@@ -2,35 +2,53 @@
   import Editor from '../../../Editor.svelte'
   import ChatBox from '../../ChatBox.svelte'
   import tasks from '../../../../tasks.yml'
+  import { onMount, tick } from 'svelte'
 
   export let student
   $: task = tasks.find(t => t.id === student.task_id)
-  $: taskTitle = task && task.title
+  $: taskTitle = task ? task.title : student.task_id
   let selection
   let editor
+  let model
+  $: highlight = student.highlight
 
-  let receivedSelection
-  let selectionDecorations = []
-  $: if (editor && receivedSelection) {
-    const newDecorations = isEmpty(receivedSelection)
-      ? []
-      : [
-          {
-            options: {
-              className: 'bg-primary'
-            },
-            range: receivedSelection
-          }
-        ]
-    selectionDecorations = editor
-      .getModel()
-      .deltaDecorations(selectionDecorations, newDecorations)
+  const highlights = {}
+  $: if (
+    student &&
+    model &&
+    highlight &&
+    student.code &&
+    ~model.uri.indexOf(student._id)
+  )
+    updateHighlight()
+
+  function updateHighlight() {
+    const newDecorations =
+      highlight && !isEmpty(highlight)
+        ? [
+            {
+              options: {
+                className: 'bg-primary'
+              },
+              range: highlight
+            }
+          ]
+        : []
+    highlights[student._id] = model.deltaDecorations(
+      highlights[student._id] || [],
+      newDecorations
+    )
   }
   function isEmpty(selection) {
     return (
       selection.startLineNumber == selection.endLineNumber &&
       selection.startColumn == selection.endColumn
     )
+  }
+  let lastValue
+  $: if (model && student.code != lastValue) {
+    lastValue = student.code
+    updateHighlight()
   }
 </script>
 
@@ -46,6 +64,7 @@
         growHeight={false}
         bind:selection
         bind:editor
+        bind:model
         uri={`workspace:instructor/${student._id}/Code.java`} />
       <div class="flex h-20">
         <div class="flex-1">
@@ -62,10 +81,9 @@
       {#each [student._id] as key (key)}
         <ChatBox
           student_id={student._id}
-          task_id={task.id}
+          task_id={student.task_id}
           closable={false}
           {selection}
-          bind:receivedSelection
           code={student.code} />
       {/each}
     </div>

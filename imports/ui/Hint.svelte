@@ -4,6 +4,7 @@
   import trackEvent from './trackEvent'
   import { fly, fade, slide } from 'svelte/transition'
   import marked from 'marked'
+  import { CHAT } from './instructor/ChatBox.svelte'
   export let hint = null
   /** @type monaco.editor.IStandaloneCodeEditor */
   export let editor
@@ -12,8 +13,8 @@
   /** @type string */
   export let code
 
-  let hintClosed = false
-  let resolvedHint = null
+  export let hintClosed = false
+  export let resolvedHint = null
   let thanks = false
 
   let editorWidth = NaN
@@ -178,7 +179,7 @@
   }
 </script>
 
-{#if resolvedHint}
+{#if resolvedHint && !$CHAT}
   <div
     data-harmony-id="Hint resolved bubble"
     in:card|local={{ dir: -1, delay: resolvedHintDelaySec * 1000 }}

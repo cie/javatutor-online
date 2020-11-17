@@ -11,13 +11,21 @@
 
   export let growHeight = true
   export let selection = null
+  export let model = undefined
 
-  let editorEl, model
+  let editorEl
   const minMinHeight = 250
   const margin = 20
   let minHeight = minMinHeight
   const dispatch = createEventDispatcher()
 
+  $: if (editor && model && model.uri !== uri) {
+    model = monaco.editor.getModel(uri)
+    if (!model) {
+      model = monaco.editor.createModel(value, 'java', uri)
+    }
+    editor.setModel(model)
+  }
   $: if (editor && model) {
     if (model.getValue() !== value) model.setValue(value)
   }
