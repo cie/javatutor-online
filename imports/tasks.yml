@@ -347,7 +347,7 @@
 - id: Lab12_E2
   title: Count single digits
   description: |
-    Write a program that generates 100 random integers between  
+    Write a program that generates 100 random integers between
     0 and 9 and displays the count for each number. 
 
     (Hint: Use an array of ten integers, say counts, to store the counts for the number of 0s, 1s, . . . , 9s.)
@@ -521,11 +521,123 @@
 
     The program prompts the user to enter the total number of students, then prompts
     the user to enter all of the scores, and concludes by displaying the grades.
+
+    <pre class="output">
+    <code>Enter the number of students: <code class="user-input user-input-line">4</code>
+    Enter 4 scores: <code class="user-input user-input-line">40 55 70 58</code></code>
+    Student 0 score is 40 and grade is C
+    Student 1 score is 55 and grade is B
+    Student 2 score is 70 and grade is A
+    Student 3 score is 58 and grade is B</code>
+
+    Hint: Start by breaking your problem into smaller ones to make it easier
+    to understand and code.
+    </pre>
   initialCode: |
     public class Lab12_E2 {
         public static void main(String[] args) {
 
         }
     }
-  input: ''
+  input: |
+    4
+    40 55 70 58
+  hints:
+    - match: //function[name='main']/block[not(//decl/type//name[.='Scanner'])]
+      message: Let's start by making a Scanner variable to take inputs from the user
+      solution:
+        after: public static void main(String[] args) {
+        add: Scanner in = new Scanner(System.in);
+        next: +1
+    - message: We need an array for scores and an array for the grades (what type would be each? int and char).
+      match: //function[name='main']/block[not(
+        //decl[type[.//name[.='int'] and .//index]] and
+        //decl[type[.//name[.='char'] and .//index]]
+        )]
+      solution:
+        after: Scanner in = new Scanner(System.in);
+        add: |
+          int [] scores;
+          char[] grades;
+        next: +1
+    - message: Read the number of students and assign it to be both arrays' length.
+      match: //function[name='main']/block/block_content[
+        not(.//name[contains(., 'nextInt')])
+        ]/*[last()]
+      solution:
+        after: char[] grades;
+        add: |
+          int n = in.nextInt();
+          scores = new int[n];
+          grades = new int[n];
+          for (int i = 1; )
+        next: +1
+    - message: Remember, array indices start from 0.
+      match: //for[control/init/decl/init/expr/literal = 1]
+      solution:
+        turn: for (int i = 1; )
+        into: |
+          for (int i = 0; i < n; ++i) {
+          } // end of first for
+
+#--------------------------------------------------------------------------
+- id: Exercise_07_05
+  title: Print distinct numbers
+  description: |
+    Write a program that reads in ten numbers and displays
+    the number of distinct numbers and the distinct numbers separated by exactly one
+    space (i.e., if a number appears multiple times, it is displayed only once). 
+
+    (Hint: Read a number and store it to an array if it is new. 
+    If the number is already in the array, ignore it.) 
+    After the input, the array contains the distinct numbers.
+
+
+    <pre class="output">
+    <code>Enter ten numbers: <code class="user-input user-input-line">1 2 3 2 1 6 3 4 5 2</code>
+    The number of distinct numbers is 6
+    The distinct numbers are 1 2 3 6 4 5</code>
+    </pre>
+
+  initialCode: |
+    import java.util.Scanner;
+
+    public class Exercise_07_05 {
+        public static void main(String[] args) {
+
+        }
+    }
+  input: 1 2 3 2 1 6 3 4 5 2
+  hints: []
+- id: Lab_12_E5
+  title: Strictly identical arrays
+  description: |
+    The arrays list1 and list2 are strictly identical if their corresponding
+    elements are equal.
+      
+    Write a program that prompts the user to enter two lists of integers and
+    displays whether the two are strictly identical.
+
+    <pre class="output">
+    <code>Enter list1: <code class="user-input user-input-line">5 2 5 6 1 6</code>
+    Enter list2: <code class="user-input user-input-line">5 2 5 6 1 6</code>
+    Two lists are strictly identical</code>
+    </pre>
+
+    <pre class="output">
+    <code>Enter list1: <code class="user-input user-input-line">5 2 5 6 6 1</code>
+    Enter list2: <code class="user-input user-input-line">5 2 5 6 1 6</code>
+    Two lists are not strictly identical</code>
+    </pre>
+  initialCode: |
+    import java.util.Scanner;
+
+    public class Lab_12_E05 {
+        public static void main(String[] args) {
+
+        }
+    }
+  input: |
+    5 2 5 6 6 1
+    5 2 5 6 1 6
   hints: []
