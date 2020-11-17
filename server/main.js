@@ -33,9 +33,17 @@ Meteor.methods({
     this.setUserId(student_id)
     return { student_id, group }
   },
-  setTask({ student_id, task_id }) {
+  setTask({ student_id, task_id, input }) {
     check(student_id, String)
     check(task_id, String)
-    Students.update(student_id, { $set: { task_id } })
+    check(input, String)
+    Students.update(student_id, { $set: { task_id, input } })
+  },
+  setInput({ student_id, task_id, input }) {
+    if (!input) return
+    check(student_id, String)
+    check(task_id, String)
+    check(input, String)
+    Students.update(student_id, { $set: { input } })
   }
 })

@@ -1,3 +1,6 @@
+import { Students } from '../imports/api/Students'
+import { Promise } from 'meteor/promise'
+
 const fs = require('fs')
 const { mkdirSync } = fs
 const child_process = require('child_process')
@@ -33,4 +36,12 @@ export default async function run({ code, input, student_id }) {
   return result
 }
 
-if (typeof Meteor !== 'undefined') Meteor.methods({ run })
+if (typeof Meteor !== 'undefined')
+  Meteor.methods({
+    async run(opts) {
+      const output = Promise.await(run(opts))
+      const { student_id } = opts
+      Students.update(student_id, { $set: { output } })
+      return output
+    }
+  })

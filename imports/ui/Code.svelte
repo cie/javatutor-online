@@ -60,6 +60,7 @@
     taskIndex = i
     task = tasks[taskIndex]
     task_id = task.id
+    input = (task.input || '').replace('$NAME', nickname)
     if (localStorage.getItem('task_id') === task.id) {
       const c = localStorage.getItem('code')
       if (c !== undefined) {
@@ -72,14 +73,14 @@
       code = task.initialCode
       localStorage.setItem('code', code)
       trackEvent({ type: 'Start task', value: task_id })
-      Meteor.call('setTask', { student_id, task_id })
+      Meteor.call('setTask', { student_id, task_id, input })
       Meteor.call('editCode', { student_id, code })
     }
-    input = (task.input || '').replace('$NAME', nickname)
     output = ''
     $CHAT = false
     if (top) top.scrollIntoView({ behavior: 'smooth' })
   }
+  $: Meteor.call('setInput', { student_id, task_id, input })
 
   let hint = null
 

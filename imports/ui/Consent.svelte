@@ -30,20 +30,23 @@ Hello and Welcome to the Java Tutor, a research project for programming lab sess
 The purpose of this research project is to help students during their
 introductory programming lab session.
 
-The procedure involves you using the Java Tutor project to solve and code
-certain predefined programming exercises that are available in the course lab
-manual. After you are done, a short survey will be presented to you to fill
-and the researcher will conduct an interview with you in order to collect
-information and find out about your level of satisfaction about the reach
-project usage. The estimated time of participation is around 60 min.
+The experiment procedure involves you using the Java Tutor project to solve
+and code certain predefined programming exercises that are available in the
+course lab manual. You will be presented with a Pre-Survey before using the
+Java tutor system and a Post-Survey after you are done, for the purpose of
+collecting information and finding out about your level of satisfaction about
+the reach project usage.
+
+The estimated time of participation is around 90 min.
 
 Your work will be recorded and collected for later use of the study. Your
 responses will be confidential. All data is stored in a password protected
-electronic format. To help protect your confidentiality, the surveys will not
-contain information that will personally identify you. The results of this
-study will be used for scholarly purposes only.
+electronic format. You are asked for your University ID in order to connect
+the data collected from the surveys and the Java Tutor system. The results of
+this experiment will be used for scholarly purposes only.
 
-If you have any questions about the research study, please contact the researcher, Samar Mahrous, at smahrous000${x}@stu.kau.edu.sa
+If you have any questions about the research study, please contact the
+researcher, Samar Mahrous, at smahrous000${x}@stu.kau.edu.sa
 
 By clicking on the "agree" button below indicates that:
 

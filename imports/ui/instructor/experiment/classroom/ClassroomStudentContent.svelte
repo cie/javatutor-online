@@ -47,6 +47,16 @@
         bind:selection
         bind:editor
         uri={`workspace:instructor/${student._id}/Code.java`} />
+      <div class="flex h-20">
+        <div class="flex-1">
+          <h3 class="mt-3 mb-2">Input</h3>
+          <pre class="mr-4 user-input">{student.input || ''}</pre>
+        </div>
+        <div class="flex-1">
+          <h3 class="mt-3 mb-2">Output</h3>
+          <pre class="output">{student.output || ''}</pre>
+        </div>
+      </div>
     </div>
     <div class="h-full" style="flex: 0.45;">
       {#each [student._id] as key (key)}
