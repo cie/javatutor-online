@@ -180,7 +180,7 @@
     in:card|local={{ dir: -1, delay: resolvedHintDelaySec * 1000 }}
     out:fade|local={{ duration: 500, delay: 200 }}
     on:introend={() => trackEvent({
-        type: 'Was this a good hint?',
+        type: 'Was this useful?',
         value: resolvedHint.message
       })}
     class="bubble resolved text-silver-800 px-3 py-2 rounded-lg absolute

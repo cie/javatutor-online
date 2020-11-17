@@ -534,11 +534,21 @@
     to understand and code.
     </pre>
   initialCode: |
+    import java.util.Scanner;
+
     public class Lab12_E2 {
         public static void main(String[] args) {
 
         }
     }
+  expectedOutput: |
+    Enter the number of students: 
+    Enter 4 scores: 
+    Student 0 score is 40 and grade is C
+    Student 1 score is 55 and grade is B
+    Student 2 score is 70 and grade is A
+    Student 3 score is 58 and grade is B
+
   input: |
     4
     40 55 70 58
@@ -567,18 +577,73 @@
       solution:
         after: char[] grades;
         add: |
+          System.out.println("Enter the number of students: ");
           int n = in.nextInt();
           scores = new int[n];
-          grades = new int[n];
+          grades = new char[n];
           for (int i = 1; )
         next: +1
     - message: Remember, array indices start from 0.
-      match: //for[control/init/decl/init/expr/literal = 1]
+      match: //function[name='main']//for[control/init/decl/init/expr/literal = 1]
       solution:
         turn: for (int i = 1; )
         into: |
+          System.out.println("Enter " + scores.length + " scores: ");
           for (int i = 0; i < n; ++i) {
+            scores[i] = in.nextInt();
           } // end of first for
+        next: +1
+    - message: |
+        You can use a method to easily calculate the best score and
+        then assign the grades. (What will it take as inputs? the scores and grades array.)
+      match: //class[count(./block/function) = 1]
+      hook: end
+      solution:
+        turn: |
+          }
+          }
+        into: |
+          getGrades(scores, grades);
+          // Display results
+          for (int i = 0; i < scores.length; i++) {
+            System.out.println("Student " + i + " score is " + scores[i] + " and grade is " + grades[i]);
+          }
+          } // end of main()
+          static void getGrades(int[] scores, char[] grades) {
+            for (int i = 0; i < scores.length; ++i) { // in getGrades
+
+            } // end of first for in getGrades()
+          } // end of getGrades()
+          } // end of class
+        next: +1
+    - message: Find the highest score (How? use an if statment)
+      match: //function[not(name='main')]//for/block/block_content[not(.//if)]
+      solution:
+        turn: for (int i = 0; i < scores.length; ++i) { // in getGrades
+        into: |
+          int max = scores[0];
+          for (int i = 1; i < scores.length; ++i) { // in getGrades
+            if (scores[i] > max) max = scores[i];
+        next: +1
+    - message: Now use the grading scheme provided in the question to fill the grades array according to the scores (use nested if-else statement).
+      match: //function[not(name='main')][not(.//else)]/block/block_content/*[last()]
+      hook: end
+      solution:
+        after: '} // end of first for in getGrades()'
+        add: |
+          for (int i = 0; i < scores.length; i++) {
+            if (scores[i] >= max - 10)
+              grades[i] = 'A';
+            else if (scores[i] >= max - 20)
+              grades[i] = 'B';
+            else if (scores[i] >= max - 30)
+              grades[i] = 'C';
+            else if (scores[i] >= max - 40)
+              grades[i] = 'D';
+            else
+              grades[i] = 'F';
+          }
+        done: true
 
 #--------------------------------------------------------------------------
 - id: Exercise_07_05
