@@ -177,6 +177,7 @@
       value: `${hint.line}: ${hint.message}`
     })
   }
+  $: if ($CHAT && resolvedHint) resolvedHint = false
 </script>
 
 {#if resolvedHint && !$CHAT}
