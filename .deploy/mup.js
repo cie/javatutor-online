@@ -1,7 +1,7 @@
 module.exports = {
   servers: {
     one: {
-      host: 'javatutor-staging2.launchpad.hu',
+      host: 'javatutor.tk',
       username: 'root',
       pem: '~/.ssh/id_rsa_javatutor'
       // or neither for authenticate from ssh-agent
@@ -25,7 +25,7 @@ module.exports = {
     },
 
     env: {
-      ROOT_URL: 'http://javatutor-staging2.launchpad.hu',
+      ROOT_URL: 'http://javatutor.tk',
       MONGO_URL: 'mongodb://mongodb/meteor',
       MONGO_OPLOG_URL: 'mongodb://mongodb/local'
     },
