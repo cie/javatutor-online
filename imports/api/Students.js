@@ -19,7 +19,7 @@ if (Meteor.isServer) {
 
 Meteor.methods({
   editCode({ student_id, code }) {
-    console.log(''+new Date, 'editCode', student_id)
+    console.log(editCode, student_id, '' + new Date())
     console.log(code)
     console.log('---')
     Students.update(student_id, { $set: { code } })
