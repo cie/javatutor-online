@@ -2,7 +2,14 @@ export const Events = new Meteor.Collection('Events')
 
 Meteor.methods({
   event({ student_id, task_id, type, value, code }) {
-    console.log('event', student_id, task_id, type, value)
+    console.log(
+      'event',
+      new Date().toISOString(),
+      student_id,
+      task_id,
+      type,
+      value
+    )
     console.log(code)
     console.log('---')
     Events.insert({

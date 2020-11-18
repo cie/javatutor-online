@@ -9,7 +9,14 @@ Meteor.methods({
     check(task_id, String)
     check(from, String)
     check(text, String)
-    console.log('message', student_id, task_id, from, selection)
+    console.log(
+      'message',
+      new Date().toISOString(),
+      student_id,
+      task_id,
+      from,
+      selection
+    )
     console.log(code)
     console.log('---')
     if (selection) check(selection, Object)
