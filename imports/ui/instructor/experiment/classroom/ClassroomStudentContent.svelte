@@ -56,8 +56,7 @@
   {#if student.code}
     <div class="flex-1 flex flex-col">
       <p class="py-1 px-2">
-        <strong>{student.nickname}</strong>
-        &nbsp;&nbsp;
+        <strong class="w-40 inline-block mr-4">{student.nickname}</strong>
         {#if student.task_id}{taskTitle}{/if}
       </p>
       <Editor

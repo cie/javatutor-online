@@ -21,9 +21,9 @@
       : n === 20
       ? `Ctrl+0`
       : n < 30
-      ? `Ctrl+Shift+${n - 20}`
+      ? `Ctrl+Alt+${n - 20}`
       : n === 30
-      ? `Ctrl+Shift+0`
+      ? `Ctrl+Alt+0`
       : null
   }
 </script>
