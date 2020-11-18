@@ -37,13 +37,29 @@ Meteor.methods({
     check(student_id, String)
     check(task_id, String)
     check(input, String)
+    try {
+      console.log(
+        'setTask,',
+        [new Date().toISOString(), student_id || '', task_id || '', input || '']
+          .map(JSON.stringify)
+          .join(', ')
+      )
+    } catch {}
     Students.update(student_id, { $set: { task_id, input, highlight: null } })
   },
   setInput({ student_id, task_id, input }) {
-    if (!input) return
+    if (input == null) return
     check(student_id, String)
     check(task_id, String)
     check(input, String)
+    try {
+      console.log(
+        'input',
+        [new Date().toISOString(), student_id || '', task_id || '', input || '']
+          .map(JSON.stringify)
+          .join(', ')
+      )
+    } catch {}
     Students.update(student_id, { $set: { input } })
   }
 })

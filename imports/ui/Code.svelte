@@ -10,7 +10,6 @@
   import { onMount, tick } from 'svelte'
   import ChatBox, { CHAT } from './instructor/ChatBox.svelte'
   import { useTracker } from 'meteor/rdb:svelte-meteor-data'
-  import { WillSaveTextDocumentWaitUntilRequest } from 'monaco-languageclient'
 
   let taskIndex,
     code,
@@ -33,7 +32,7 @@
   const nickname = localStorage.getItem('nickname')
   /** @type HTMLElement */
   let top
-  var selectionDecorations = []
+  var oldDecorations = []
   $: if (editor) {
     const newDecorations =
       highlight && !isEmpty(highlight) && $CHAT
@@ -46,17 +45,19 @@
             }
           ]
         : []
-    selectionDecorations = editor
+    if (highlight && oldDecorations.length === 0) {
+      const { startLineNumber, endLineNumber, startColumn, endColumn } =
+        highlight || {}
+      trackEvent({
+        type: 'Highlighted code from teacher',
+        value: isEmpty(highlight)
+          ? 'None'
+          : `${startLineNumber}:${startColumn}-${endLineNumber}:${endColumn}`
+      })
+    }
+    oldDecorations = editor
       .getModel()
-      .deltaDecorations(selectionDecorations, newDecorations)
-    const { startLineNumber, endLineNumber, startColumn, endColumn } =
-      highlight || {}
-    trackEvent({
-      type: 'Highlighted code from teacher',
-      value: isEmpty(highlight)
-        ? 'None'
-        : `${startLineNumber}:${startColumn}-${endLineNumber}:${endColumn}`
-    })
+      .deltaDecorations(oldDecorations, newDecorations)
   }
   $: if (editor) setUpChangeListener()
   function setUpChangeListener() {
@@ -69,8 +70,10 @@
             change.range.startLineNumber <= highlight.endLineNumber &&
             change.range.endLineNumber >= highlight.startLineNumber
         )
-      )
+      ) {
+        trackEvent({ type: 'Edited code around highlight' })
         Meteor.call('editedHighlight', { student_id })
+      }
     })
   }
   function isEmpty(selection) {
@@ -99,7 +102,7 @@
       localStorage.setItem('code', code)
       trackEvent({ type: 'Start task', value: task_id })
       Meteor.call('setTask', { student_id, task_id, input })
-      Meteor.call('editCode', { student_id, code })
+      Meteor.call('editCode', { student_id, task_id, code })
     }
     output = ''
     $CHAT = false

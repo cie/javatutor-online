@@ -9,16 +9,21 @@ Meteor.methods({
     check(task_id, String)
     check(from, String)
     check(text, String)
-    console.log(
-      'message',
-      new Date().toISOString(),
-      student_id,
-      task_id,
-      from,
-      selection
-    )
-    console.log(code)
-    console.log('---')
+    try {
+      console.log(
+        [
+          'message',
+          new Date().toISOString(),
+          student_id || '',
+          task_id || '',
+          from || '',
+          text || '',
+          selection || ''
+        ]
+          .map(JSON.stringify)
+          .join(', ')
+      )
+    } catch {}
     if (selection) check(selection, Object)
     console.log(selection)
     Messages.insert({

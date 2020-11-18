@@ -2,16 +2,21 @@ export const Events = new Meteor.Collection('Events')
 
 Meteor.methods({
   event({ student_id, task_id, type, value, code }) {
-    console.log(
-      'event',
-      new Date().toISOString(),
-      student_id,
-      task_id,
-      type,
-      value
-    )
-    console.log(code)
-    console.log('---')
+    try {
+      console.log(
+        [
+          'event',
+          new Date().toISOString(),
+          student_id || '',
+          task_id || '',
+          type || '',
+          value || '',
+          code || ''
+        ]
+          .map(JSON.stringify)
+          .join(', ')
+      )
+    } catch {}
     Events.insert({
       student_id,
       task_id,

@@ -18,10 +18,15 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  editCode({ student_id, code }) {
-    console.log('editCode', new Date().toISOString(), student_id)
-    console.log(code)
-    console.log('---')
+  editCode({ student_id, task_id, code }) {
+    try {
+      console.log(
+        'editCode',
+        [new Date().toISOString(), student_id || '', task_id || '', code || '']
+          .map(JSON.stringify)
+          .join(', ')
+      )
+    } catch {}
     Students.update(student_id, { $set: { code } })
   }
 })
