@@ -41,10 +41,11 @@
 
 <style>
   main {
+    font-size: 85%;
     width: 100%;
     position: relative;
     cursor: pointer;
-    padding: 8px 10px;
+    padding: 0.5px 2px;
   }
   h1 {
     display: inline;

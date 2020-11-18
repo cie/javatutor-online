@@ -17,16 +17,12 @@
       : n === 10
       ? `Alt+0`
       : n < 20
-      ? `Alt+Shift+${n - 10}`
+      ? `Ctrl+${n - 10}`
       : n === 20
-      ? `Alt+Shift+0`
-      : n < 30
-      ? `Ctrl+${n - 20}`
-      : n === 30
       ? `Ctrl+0`
-      : n < 40
-      ? `Ctrl+Shift+${n - 30}`
-      : n === 40
+      : n < 30
+      ? `Ctrl+Shift+${n - 20}`
+      : n === 30
       ? `Ctrl+Shift+0`
       : null
   }

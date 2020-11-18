@@ -55,9 +55,11 @@
 <section class="flex">
   {#if student.code}
     <div class="flex-1 flex flex-col">
-      {#if student.task_id}
-        <p>{taskTitle}</p>
-      {/if}
+      <p class="py-1 px-2">
+        <strong>{student.nickname}</strong>
+        &nbsp;&nbsp;
+        {#if student.task_id}{taskTitle}{/if}
+      </p>
       <Editor
         value={student.code}
         readOnly
