@@ -23,6 +23,20 @@
     model = monaco.editor.getModel(uri)
     if (!model) {
       model = monaco.editor.createModel(value, 'java', uri)
+      model.onDidChangeContent(() => {
+        const value = model.getValue()
+        dispatch('change', { value })
+        if (growHeight) {
+          const newMinHeight = Math.max(
+            minMinHeight,
+            editor.getTopForLineNumber(model.getLineCount() + 1) + margin
+          )
+          if (minHeight != newMinHeight) {
+            minHeight = newMinHeight
+            tick().then(() => window.dispatchEvent(new Event('resize')))
+          }
+        }
+      })
     }
     editor.setModel(model)
   }

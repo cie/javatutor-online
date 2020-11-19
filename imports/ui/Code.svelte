@@ -25,6 +25,8 @@
     setTask(~i ? i : 0)
   })
 
+  $: Object.assign(window, { code, editor })
+
   const student_id = localStorage.getItem('student_id')
   $: STUDENT = useTracker(() => Students.findOne(student_id))
   $: student = $STUDENT
@@ -146,6 +148,7 @@
     nextTask()
   }
   function change(e) {
+    console.log(e)
     code = e.detail.value
     localStorage.setItem('code', code)
     trackEvent({ type: 'Edit code', code })
@@ -194,11 +197,6 @@
 
       </aside>
 
-      <input
-        type="hidden"
-        data-harmony-id="Java code"
-        bind:value={code}
-        on:change={e => e.currentTarget.dispatchEvent(new Event('input'))} />
       <div
         class="flex-1 grid grid-rows-1 items-stretch content-stretch relative
         py-2 md:mt-0"
