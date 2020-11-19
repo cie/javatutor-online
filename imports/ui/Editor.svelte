@@ -94,10 +94,12 @@
 
   function onResize() {
     if (!editor) return
-    // ugly hack
-    editor._domElement.style.display = 'none'
+    // hack - do not invalidate editor variable
+    const e = editor
+    // hack - let the editor re-layout itself
+    e._domElement.style.display = 'none'
     editor.layout()
-    editor._domElement.style.display = ''
+    e._domElement.style.display = ''
     editor.layout()
   }
 

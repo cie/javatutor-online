@@ -128,7 +128,7 @@
   let measureInterval
   // for some reason this does not work with window on:resize...
   onMount(() => (measureInterval = setInterval(measure, 500)))
-  onDestroy(() => clearInterval(measure))
+  onDestroy(() => clearInterval(measureInterval))
 
   function card(
     node,
