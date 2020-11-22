@@ -205,7 +205,7 @@
           bind:editor
           value={code}
           on:change={change}
-          uri={`workspace:${student_id}/${task_id}.java`} />
+          uri={`workspace:${task_id}.java`} />
         {#each [task_id] as key (key)}
           <Hint {editor} {task_id} {code} />
         {/each}

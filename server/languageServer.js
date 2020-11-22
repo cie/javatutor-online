@@ -1,5 +1,6 @@
 import child_process from 'child_process'
 import { Random } from 'meteor/random'
+import fs from 'fs'
 import LSPRouter from './lspRouter'
 
 const lspDir = Meteor.isDevelopment
@@ -77,9 +78,11 @@ function start() {
       })
     },
     getWorkspaceFolder(client) {
-      return `file://${workspace}/asdf/src/`
+      const folder = `${workspace}/asdf/src/${client}/`
+      fs.mkdirSync(folder)
+      return `file://${folder}`
     },
-    workspaceFolderRegExp: /^file:\/\/.*\/asdf\/src\//
+    workspaceFolderRegExp: /^file:\/\/.*\/asdf\/src\/\w+\//
   })
 }
 

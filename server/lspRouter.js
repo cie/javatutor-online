@@ -58,6 +58,11 @@ export default class LSPRouter {
     else console.log('sth different fron client', client, message)
   }
   findWorkspaceFolder(client) {
+    console.log(
+      'findWorkspaceFolder',
+      client,
+      (this.clients[client] || {}).folder
+    )
     if (!this.clients[client]) this.clients[client] = {}
     if (this.clients[client].folder) return this.clients[client].folder
     const folder = this.getWorkspaceFolder(client)
@@ -113,6 +118,7 @@ export default class LSPRouter {
     return client
   }
   callToClient(client, message) {
+    console.log('callToClient', client, message)
     if (!message.hasOwnProperty('id')) {
       this.sendToClient(client, message)
       return
@@ -139,7 +145,9 @@ function convertURIs(message, convertURI) {
       typeof this.key === 'string' &&
       this.key.match(/uri$/i)
     ) {
-      this.update(convertURI(value))
+      const newValue = convertURI(value)
+      console.log('uri', value, newValue)
+      this.update(newValue)
     }
   })
 }

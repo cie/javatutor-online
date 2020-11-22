@@ -140,3 +140,5 @@
   bind:this={editorEl}
   on:wheel|capture={onWheel}
   style="{growHeight ? `min-height: ${minHeight}px;` : ''} flex: 1;" />
+
+<input type="hidden" data-harmony-id="Java code" bind:value />
