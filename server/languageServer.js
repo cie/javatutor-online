@@ -2,6 +2,7 @@ import child_process from 'child_process'
 import { Random } from 'meteor/random'
 import fs from 'fs'
 import LSPRouter from './lspRouter'
+import path from 'path'
 
 const lspDir = Meteor.isDevelopment
   ? '../../../../../docker/org.eclipse.jdt.ls'
@@ -77,12 +78,28 @@ function start() {
         message: JSON.stringify(message)
       })
     },
-    getWorkspaceFolder(client) {
-      const folder = `${workspace}/asdf/src/${client}/`
-      fs.mkdirSync(folder)
-      return `file://${folder}`
+    convertUriToClient(uri) {
+      if (!uri.startsWith(`file://${workspace}/asdf/src/`)) {
+        console.error('Invalid uri from server', uri)
+        return uri
+      }
+      const filenameInProject = uri.substr(
+        `file://${workspace}/asdf/src/`.length
+      )
+      const [, client, pathname] = filenameInProject.match(/^([^/]+)\/(.*)$/)
+      return { client, uri: `workspace:${pathname}` }
     },
-    workspaceFolderRegExp: /^file:\/\/.*\/asdf\/src\/\w+\//
+    convertUriToServer(client, uri) {
+      if (!uri.startsWith('workspace:')) {
+        console.error('Invalid uri from client', uri)
+        return uri
+      }
+      const pathname = uri.substr('workspace:'.length)
+      const filename = `${workspace}/asdf/src/${client}/${pathname}`
+      const folder = path.dirname(filename)
+      fs.mkdirSync(folder, { recursive: true })
+      return `file://${filename}`
+    }
   })
 }
 

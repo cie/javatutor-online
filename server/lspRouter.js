@@ -4,17 +4,16 @@ export default class LSPRouter {
   constructor({
     sendToServer,
     sendToClient,
-    getWorkspaceFolder,
-    workspaceFolderRegExp
+    convertUriToClient,
+    convertUriToServer
   }) {
     this.sendToServer = sendToServer
     this.sendToClient = sendToClient
-    this.getWorkspaceFolder = getWorkspaceFolder
-    this.workspaceFolderRegExp = workspaceFolderRegExp
+    this.convertUriToClient = convertUriToClient
+    this.convertUriToServer = convertUriToServer
     this.clientToServerCalls = []
     this.serverToClientCalls = {}
     this.broadcastMessages = []
-    this.workspaceFolders = {}
     this.clients = {}
     this.initializeId = null
     this.initializeResponse = null
@@ -22,13 +21,12 @@ export default class LSPRouter {
     this.initializeQueue = []
   }
   receivedFromServer(message) {
-    let client
-    message = convertURIs(message, uri =>
-      uri.replace(this.workspaceFolderRegExp, folder => {
-        client = this.workspaceFolders[folder]
-        return 'workspace:'
-      })
-    )
+    let clientFromUri
+    message = convertURIs(message, uri => {
+      const { client, uri: newUri } = this.convertUriToClient(uri)
+      clientFromUri = client
+      return newUri
+    })
     if ('result' in message)
       if (message.id === this.initializeId) this.initializeDone(message)
       else this.returnFromServer(message)
@@ -40,15 +38,16 @@ export default class LSPRouter {
         console.log(message.params.message)
       } else if (message.method === 'client/registerCapability')
         this.broadcast(message)
-      else if (message.method === 'textDocument/publishDiagnostics' && client)
-        this.callToClient(client, message)
+      else if (
+        message.method === 'textDocument/publishDiagnostics' &&
+        clientFromUri
+      )
+        this.callToClient(clientFromUri, message)
       else console.log('unknown call from server', message)
     else console.log('sth different from server', message)
   }
   receivedFromClient(client, message) {
-    message = convertURIs(message, uri =>
-      uri.replace(/^workspace:/, this.findWorkspaceFolder(client))
-    )
+    message = convertURIs(message, uri => this.convertUriToServer(client, uri))
     if ('method' in message && !message.method.startsWith('$/'))
       if (message.method === 'initialize') this.initialize(client, message)
       else if (message.method === 'initialized')
@@ -56,19 +55,6 @@ export default class LSPRouter {
       else this.callToServer(client, message)
     else if ('result' in message) this.returnFromClient(client, message)
     else console.log('sth different fron client', client, message)
-  }
-  findWorkspaceFolder(client) {
-    console.log(
-      'findWorkspaceFolder',
-      client,
-      (this.clients[client] || {}).folder
-    )
-    if (!this.clients[client]) this.clients[client] = {}
-    if (this.clients[client].folder) return this.clients[client].folder
-    const folder = this.getWorkspaceFolder(client)
-    this.clients[client].folder = folder
-    this.workspaceFolders[folder] = client
-    return folder
   }
   clientConnected(client) {}
   clientDisconnected(client) {
@@ -145,9 +131,7 @@ function convertURIs(message, convertURI) {
       typeof this.key === 'string' &&
       this.key.match(/uri$/i)
     ) {
-      const newValue = convertURI(value)
-      console.log('uri', value, newValue)
-      this.update(newValue)
+      this.update(convertURI(value))
     }
   })
 }
