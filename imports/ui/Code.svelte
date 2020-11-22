@@ -234,7 +234,7 @@
       </div>
       <div
         class="flex items-center justify-center content-center flex-col md:h-40">
-        <Button on:click={run} data-harmony-id="Run">
+        <Button on:click={run} data-harmony-id="Run" disabled={running}>
           Run
           <span class="ml-2 font-mono">▶</span>
         </Button>
