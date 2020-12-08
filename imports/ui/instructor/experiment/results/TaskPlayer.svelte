@@ -1,5 +1,7 @@
 <script>
+  import { type } from 'os'
   import CodeWindow from '../CodeWindow.svelte'
+  import EventsTimeline from './EventsTimeline.svelte'
   export let events
   $: someEvents = events.length > 0
   $: maxSec = someEvents && events[events.length - 1].sec - events[0].sec
@@ -20,7 +22,7 @@
     }
   }
   $: sec = currentSec !== -1 ? currentSec : maxSec
-  let hintIntervals
+  /*let hintIntervals
   $: {
     hintIntervals = []
     for (let i = 0; i < events.length - 1; ++i) {
@@ -35,6 +37,15 @@
         })
       }
     }
+  }*/
+  const eventsByType = {}
+  $: {
+    for (let i = 0; i < events.length - 1; ++i) {
+      const { type } = events[i]
+      if (!eventsByType[type]) eventsByType[type] = []
+      eventsByType[type].push(events[i])
+    }
+    console.log(eventsByType)
   }
 </script>
 
@@ -52,13 +63,7 @@
         pin="true"
         value={sec}
         on:ionChange={e => (currentSec = e.detail.value === maxSec ? -1 : e.detail.value)} />
-      <div class="eventMarkers">
-        {#each hintIntervals as int}
-          <span
-            class="eventMarker"
-            style="left: {(int.start / maxSec) * 100}%; width: {(int.length / maxSec) * 100}%" />
-        {/each}
-      </div>
+      <EventsTimeline {eventsByType} />
     {/if}
   {/if}
 </div>
@@ -81,17 +86,16 @@
     padding: 0;
   }
   .eventMarkers {
-    z-index: 0;
-    position: absolute;
-    bottom: 21px;
-    left: 0;
-    right: 0;
+    position: relative;
+    height: 12px;
   }
   .eventMarker {
     position: absolute;
-    width: 12px;
     height: 12px;
     left: 40px;
+    width: 12px;
+    white-space: nowrap;
+    overflow: visible;
     top: 0;
     transform: translate(6px, -50%);
     border-radius: 100px;
