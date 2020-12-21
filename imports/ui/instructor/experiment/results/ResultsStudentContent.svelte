@@ -20,35 +20,24 @@
       currentTaskId = task_ids[0]
     }
   }
-  $: studentCurrentTaskId = task_ids && task_ids[task_ids.length - 1]
   $: someEvents = $EVENTS && $EVENTS.length > 0
 </script>
 
 <section>
   <span class="group">{student.group}</span>
+  {#key student}
   {#if $EVENTS}
     {#if someEvents}
-      <nav>
-        {#each task_ids as task_id}
-          <button
-            class="tab mx-2 my-1 outline-none"
-            class:active={currentTaskId === task_id}
-            class:studentCurrent={studentCurrentTaskId === task_id}
-            on:click={() => {
-              currentTaskId = task_id
-            }}>
-            {task_id}
-          </button>
-        {/each}
-      </nav>
       <TaskPlayer
         {student}
-        events={$EVENTS
-          .filter(e => e.task_id === currentTaskId)
-          .map(e => ({ ...e, sec: +new Date(e.createdAt) / 1000 }))} />
+        events={$EVENTS.map(e => ({
+          ...e,
+          sec: +new Date(e.createdAt) / 1000
+        }))} />
     {:else}
       <p>No code received</p>
     {/if}
+    <!--
     <h1 class="mt-4 mb-2 text-lg">Events</h1>
     <table>
       <thead>
@@ -75,8 +64,9 @@
           </tr>
         {/each}
       </tbody>
-    </table>
+    </table>-->
   {:else}...{/if}
+  {/key}
 </section>
 
 <style>
@@ -102,9 +92,6 @@
     border-bottom: transparent 2px solid;
     outline: none;
     color: #777;
-  }
-  .tab.studentCurrent {
-    color: white;
   }
   .tab.active {
     border-bottom: royalblue 2px solid;

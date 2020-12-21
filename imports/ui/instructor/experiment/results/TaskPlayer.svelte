@@ -7,7 +7,7 @@
   $: maxSec = someEvents && events[events.length - 1].sec - events[0].sec
   let currentSec = -1
   let currentEvent
-  $: {
+  /*$: {
     console.log('computing currentEvent')
     if (currentSec == -1) {
       console.log('-1')
@@ -21,7 +21,7 @@
       console.log('currentEvent', currentEvent)
     }
   }
-  $: sec = currentSec !== -1 ? currentSec : maxSec
+  $: sec = currentSec !== -1 ? currentSec : maxSec*/
   /*let hintIntervals
   $: {
     hintIntervals = []
@@ -51,19 +51,21 @@
 
 <div class="panel">
   {#if events.length}
-    <CodeWindow code={currentEvent.code} />
-    {#if currentEvent.hintSource}
+    <!--{#if currentEvent.hintSource}
       <div class="hint">{currentEvent.hintSource.replace(/^!/, '')}</div>
-    {/if}
+    {/if}-->
     {#if someEvents}
-      <ion-range
+      <!--<ion-range
         min="0"
         max={maxSec}
         step="1"
         pin="true"
         value={sec}
-        on:ionChange={e => (currentSec = e.detail.value === maxSec ? -1 : e.detail.value)} />
-      <EventsTimeline {eventsByType} />
+        on:ionChange={e => (currentSec = e.detail.value === maxSec ? -1 : e.detail.value)} />-->
+      <EventsTimeline {eventsByType} bind:currentEvent />
+    {/if}
+    {#if currentEvent}
+      <CodeWindow code={currentEvent.code || ''} />
     {/if}
   {/if}
 </div>
