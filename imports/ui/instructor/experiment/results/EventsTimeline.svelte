@@ -98,4 +98,7 @@
   .tooltip.right::before {
     right: 1.65rem;
   }
+  :global(.line-label) {
+    font-size: 12px;
+  }
 </style>
